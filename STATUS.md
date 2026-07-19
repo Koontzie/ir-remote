@@ -64,11 +64,12 @@ sleep 20 | arduino-cli monitor -p <PORT> -c baudrate=115200
 ```
 
 ## Next step
-1. **Bluefy on iPhone via GitHub Pages.** ⚠️ The repo is **private**
-   (`github.com/Koontzie/ir-remote`), and **GitHub Pages will not serve a private
-   repo on a free account** — it must be made public first, or the plan changes.
-   Then serve `app/` over HTTPS and open it in Bluefy (iOS Safari has no Web
-   Bluetooth). The app itself needs no changes.
+1. **Bluefy on iPhone via GitHub Pages.** Repo is **public** at
+   `github.com/Koontzie/ir-remote`, so Pages is unblocked. Enable Pages (Settings →
+   Pages → deploy from `main`), then open the served `app/` URL in Bluefy on iOS —
+   HTTPS is mandatory for Web Bluetooth, and iOS Safari has no Web Bluetooth at all.
+   The app itself needs no changes. Note `app/index.html` is at the repo's `app/`
+   path, so the Pages URL will be `.../ir-remote/app/`.
 2. **Phase 3: physical buttons (GPIO5/6) + the NPN driver stage.** Do the transistor
    first — everything so far runs at ~13mA, which is why range is inches.
 
@@ -131,11 +132,12 @@ After live-soldering, every sketch went silent. Diagnosis (2026-07-18):
   reinstalled cleanly with `dfu-util` present, and IRremoteESP8266 2.9.0
   reinstalled through the library manager so it's properly tracked. No local
   patches remain; `core update-index` is safe to run.
-  **However the block came back within the hour** — it appears to follow which
-  network Tyler is on, so treat it as intermittent rather than fixed. NimBLE-Arduino
-  2.5.0 and ArduinoJson 7.4.3 therefore also had to be installed from GitHub release
-  tags rather than `arduino-cli lib install`. GitHub and Espressif hosts have stayed
-  reachable throughout; only `arduino.cc` is affected.
+  The block briefly returned mid-session — the Mac had been auto-joining a bad
+  network — which is why NimBLE-Arduino 2.5.0 and ArduinoJson 7.4.3 were installed
+  from GitHub release tags rather than `arduino-cli lib install`. Network since
+  fixed; `arduino.cc` verified reachable again. GitHub and Espressif hosts were
+  never affected. **Root cause was the network, never the toolchain** — if
+  downloads start failing again, check the Wi-Fi before touching arduino-cli.
 - **Library install fallback** (when `arduino.cc` is blocked): download the release
   zip from GitHub into `~/Documents/Arduino/libraries/<LibName>`. Verify with
   `grep '^version' <LibName>/library.properties`.
