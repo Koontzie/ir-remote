@@ -4,7 +4,35 @@
 **Updated:** 2026-07-19
 
 ## Where it's at
-Phase 0 (salvage) done. **Phase 1 and Phase 2 both COMPLETE** (2026-07-19).
+Phase 0 (salvage) done. **Phases 1, 2, 2.5 and 3 all COMPLETE** (2026-07-19).
+
+### Phase 3 — NPN driver stage + physical buttons ✅
+
+**Circuit as built** (fed from the devkit's 5V/VBUS pin):
+```
+5V ──33Ω──► IR LED1 (+)─(−) ──► IR LED2 (+)─(−) ──► COLLECTOR
+GPIO4 ──1kΩ──► BASE                                 EMITTER ──► GND
+```
+- Transistor **2N2222**, TO-92 plastic. Pinout identified empirically with a
+  multimeter (diode mode) rather than assumed — E/C order varies by vendor even
+  for the same part number. Middle pin is Base; of the outer two, the one reading
+  the *higher* forward drop from Base is the Emitter.
+- **Two salvaged IR LEDs in series** (the second tested as a genuine IR emitter on
+  a selfie cam, not a red indicator). ~64mA pulses, vs ~13mA on the old direct
+  GPIO drive.
+- Buttons: **GPIO5 → slot 1**, **GPIO2 → slot 2**, `INPUT_PULLUP`, pin→button→GND.
+
+**Pass-gate results:**
+- ✅ **Range: ~5ft → 20–30ft.** The single biggest win of the phase.
+- ✅ Physical button 1 toggles the TV from across the room.
+- ✅ **Standalone** — works with Bluefy fully disconnected. It is a real remote,
+  not a BLE accessory.
+- ✅ Debounce verified clean at millisecond resolution: one press → exactly one
+  event, no chatter. (A Samsung frame takes **109ms** to transmit — measured.)
+- ✅ `pressed:1` notifies the app and flashes the matching slot row.
+- ⏭️ **Button 2 not built** — no second button on hand, and GPIO6 (the originally
+  planned pin) is not broken out on this devkit, hence the move to GPIO2. Firmware
+  path is in place and untested on hardware.
 
 **Phase 2 pass gate met: the TV toggled from a button in the browser.** Full chain
 verified end to end — Chrome (Web Bluetooth) → BLE GATT write → JSON parse → NVS →
@@ -64,14 +92,18 @@ sleep 20 | arduino-cli monitor -p <PORT> -c baudrate=115200
 ```
 
 ## Next step
-1. **Bluefy on iPhone via GitHub Pages.** Repo is **public** at
-   `github.com/Koontzie/ir-remote`, so Pages is unblocked. Enable Pages (Settings →
-   Pages → deploy from `main`), then open the served `app/` URL in Bluefy on iOS —
-   HTTPS is mandatory for Web Bluetooth, and iOS Safari has no Web Bluetooth at all.
-   The app itself needs no changes. Note `app/index.html` is at the repo's `app/`
-   path, so the Pages URL will be `.../ir-remote/app/`.
-2. **Phase 3: physical buttons (GPIO5/6) + the NPN driver stage.** Do the transistor
-   first — everything so far runs at ~13mA, which is why range is inches.
+**Phase 4 — battery + deep sleep.** EXT1 wake on the button pins (**GPIO5 and
+GPIO2** — note GPIO2, not the GPIO6 in the original plan; both are RTC-capable on
+the S3, which EXT1 requires). Wake → send → sleep.
+
+Open questions carried in from PLAN.md's tripwires: the devkit's AMS1117 LDO wants
+~4.4V+ in, and the onboard USB-UART chip leaks mA even in deep sleep — so this
+likely means 2×AA + a boost converter, or moving to a bare WROOM module. The
+circuit currently runs off **5V/VBUS, which only exists while USB is plugged in**;
+battery power changes that rail and the 33Ω value should be rechecked against
+whatever new supply voltage is chosen.
+
+Also outstanding, small: build button 2 on GPIO2 when a second switch is on hand.
 
 ## Blocked on
 Nothing. Phases 1 and 2 both fully verified, including their physical pass gates.

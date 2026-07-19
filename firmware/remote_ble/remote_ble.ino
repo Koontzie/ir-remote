@@ -10,10 +10,14 @@
  *   trigger (WRITE)  {"slot":1}
  *   status  (NOTIFY) "saved:1" / "sent:1" / "err:..."
  *
- * Wiring is still Phase 1's direct drive: GPIO4 -> 150R -> IR LED -> GND.
- * ~13mA, so range is inches. The NPN stage in PLAN.md comes before Phase 3.
+ * Phase 3 hardware — NPN driver stage off the 5V rail, ~64mA through two IR
+ * LEDs in series (was ~13mA on direct GPIO drive, inches of range; now 20-30ft):
+ *   5V --33R--> LED1(+)-(-) --> LED2(+)-(-) --> COLLECTOR
+ *   GPIO4 --1k--> BASE           EMITTER --> GND
  *
- * Buttons (GPIO5/6) are deliberately NOT handled here — that's Phase 3.
+ * Phase 3 buttons: GPIO5 -> slot 1, GPIO2 -> slot 2. INPUT_PULLUP, wired
+ * pin -> button -> GND, so pressed reads LOW. Fixed mapping, button N -> slot N.
+ * Buttons work with no BLE client connected — the remote is standalone.
  */
 
 #include <Arduino.h>
@@ -29,10 +33,30 @@
 #define TRIGGER_UUID "58397514-04a3-4265-9590-9d910c4e99d2"
 #define STATUS_UUID  "b8ddfe01-519f-430d-bd4e-aba0dd852e2c"
 
-static const uint16_t kIrLedPin = 4;
-static const uint8_t  kMinSlot  = 1;
-static const uint8_t  kMaxSlot  = 5;
-static const char*    kDevName  = "IR-Remote";
+static const uint16_t kIrLedPin   = 4;
+static const uint8_t  kMinSlot    = 1;
+static const uint8_t  kMaxSlot    = 5;
+static const char*    kDevName    = "IR-Remote";
+static const uint32_t kDebounceMs = 30;
+
+// Button N -> slot N, fixed mapping. Pressed = LOW (INPUT_PULLUP to GND).
+struct ButtonState {
+  uint8_t  pin;
+  uint8_t  slot;
+  int      stable;        // debounced level; HIGH = released
+  int      lastRead;
+  uint32_t lastChangeMs;
+};
+
+// Button 2 is on GPIO2, not the GPIO6 originally planned — GPIO6 is not broken
+// out on this devkit. GPIO2 is safe on the S3: its strapping pins are only
+// 0/3/45/46 (GPIO2 is a strapping pin on the *classic* ESP32, not this one), and
+// it is RTC-capable, so Phase 4's EXT1 deep-sleep wake still works.
+static ButtonState buttons[] = {
+  { 5, 1, HIGH, HIGH, 0 },
+  { 2, 2, HIGH, HIGH, 0 },
+};
+static const size_t kNumButtons = sizeof(buttons) / sizeof(buttons[0]);
 
 IRsend      irsend(kIrLedPin);
 Preferences prefs;
@@ -80,6 +104,54 @@ bool sendIr(const String& proto, uint64_t code, uint16_t bits) {
   if (proto == "SAMSUNG")  { irsend.sendSAMSUNG(code, bits);        return true; }
   if (proto == "SONY")     { irsend.sendSony(code, bits, 2);        return true; }
   return false;  // Sony wants >=2 repeats to be accepted by most sets
+}
+
+// ── shared send path (BLE trigger and button presses both land here) ────────
+void fireSlot(uint8_t slot) {
+  String   proto = prefs.getString(keyFor('p', slot).c_str());
+  uint64_t code  = prefs.getULong64(keyFor('c', slot).c_str());
+  uint16_t bits  = prefs.getUShort(keyFor('b', slot).c_str());
+
+  Serial.printf("[ir] slot %u -> %s 0x%llX (%u bits)\n",
+                slot, proto.c_str(), (unsigned long long)code, bits);
+
+  if (sendIr(proto, code, bits)) {
+    pushStatus(String("sent:") + slot);
+  } else {
+    pushStatus(String("err:unknown proto ") + proto);
+  }
+}
+
+// ── buttons ─────────────────────────────────────────────────────────────────
+// Fires on the press edge only, so holding a button does not repeat.
+void pollButtons() {
+  const uint32_t now = millis();
+
+  for (size_t i = 0; i < kNumButtons; i++) {
+    ButtonState& b = buttons[i];
+    const int level = digitalRead(b.pin);
+
+    if (level != b.lastRead) {          // still bouncing — restart the timer
+      b.lastRead = level;
+      b.lastChangeMs = now;
+      continue;
+    }
+    if (now - b.lastChangeMs < kDebounceMs) continue;   // not settled yet
+    if (level == b.stable) continue;                    // no edge
+
+    b.stable = level;
+    if (level != LOW) continue;         // release edge — ignore
+
+    Serial.printf("[btn] GPIO%u pressed -> slot %u\n", b.pin, b.slot);
+    pushStatus(String("pressed:") + b.slot);
+
+    if (!slotConfigured(b.slot)) {
+      Serial.printf("[btn] slot %u is empty — nothing to send\n", b.slot);
+      pushStatus(String("err:empty:") + b.slot);
+      continue;
+    }
+    fireSlot(b.slot);
+  }
 }
 
 // ── config characteristic ───────────────────────────────────────────────────
@@ -167,10 +239,16 @@ void setup() {
   Serial.begin(115200);
   delay(2000);                       // let USB CDC enumerate before logging
   Serial.println();
-  Serial.println("=== IR-Remote Phase 2 — BLE GATT + IR ===");
+  Serial.println("=== IR-Remote Phase 3 — BLE GATT + IR + buttons ===");
 
   irsend.begin();
   prefs.begin("irremote", false);
+
+  for (size_t i = 0; i < kNumButtons; i++) {
+    pinMode(buttons[i].pin, INPUT_PULLUP);
+    Serial.printf("[btn] GPIO%u -> slot %u (INPUT_PULLUP, pressed = LOW)\n",
+                  buttons[i].pin, buttons[i].slot);
+  }
 
   // Seed slot 1 with the Samsung power code proven in Phase 1, first boot only.
   if (!slotConfigured(1)) {
@@ -235,19 +313,9 @@ void loop() {
   uint8_t slot = pendingSlot;
   if (slot) {
     pendingSlot = 0;
-
-    String   proto = prefs.getString(keyFor('p', slot).c_str());
-    uint64_t code  = prefs.getULong64(keyFor('c', slot).c_str());
-    uint16_t bits  = prefs.getUShort(keyFor('b', slot).c_str());
-
-    Serial.printf("[ir] slot %d -> %s 0x%llX (%u bits)\n",
-                  slot, proto.c_str(), (unsigned long long)code, bits);
-
-    if (sendIr(proto, code, bits)) {
-      pushStatus(String("sent:") + slot);
-    } else {
-      pushStatus(String("err:unknown proto ") + proto);
-    }
+    fireSlot(slot);
   }
-  delay(10);
+
+  pollButtons();
+  delay(5);   // 5ms poll is well inside the 30ms debounce window
 }

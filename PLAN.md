@@ -14,11 +14,15 @@ wires soldered/clipped on for breadboarding; ideal for the final enclosure)
 |---|---|---|
 | IR LED (via NPN) | 4 | Plain GPIO, RMT-capable |
 | Button 1 | 5 | RTC-capable → deep-sleep EXT1 wake later |
-| Button 2 | 6 | Same |
+| Button 2 | **2** (was 6) | GPIO6 is not broken out on this devkit. GPIO2 is RTC-capable, so EXT1 wake still works |
 | (Buttons 3–5 later) | 7, 15, 16 | Same |
 
 Avoid: 0/3/45/46 (strapping), 19/20 (USB), 26–37 (flash/PSRAM on many S3 modules).
 Buttons wire GPIO→button→GND, `INPUT_PULLUP`, pressed = LOW.
+
+⚠️ **GPIO2 is a strapping pin on the *classic* ESP32 but not on the S3** — most
+"avoid these pins" lists online are written for the classic part. On the S3 the
+strapping pins are only 0/3/45/46.
 
 ---
 
@@ -57,10 +61,18 @@ Buttons wire GPIO→button→GND, `INPUT_PULLUP`, pressed = LOW.
 
 ## Phases
 
-**Phase 0 — Salvage audit.** Crack open donors, harvest the table above.
-**Phase 1 — IR transmit proof.** Breadboard: GPIO4 → 1kΩ → NPN base, LED+resistor on collector. Flash a sketch that sends one known power code from Flipper-IRDB at a real device every 3s. *Gate: a TV turns off.*
-**Phase 2 — BLE + web app.** GATT service on ESP32; HTML app on GitHub Pages; program a button from the phone via Bluefy. Config persists in NVS.
-**Phase 3 — Physical buttons.** 3–5 GPIOs with internal pullups, debounce, each fires its stored code.
+**Phase 0 — Salvage audit.** ✅ Done.
+**Phase 1 — IR transmit proof.** ✅ Done 2026-07-19 — Samsung TV toggled. Ran
+direct GPIO drive (no NPN, ~13mA, inches of range) — transistor stage moved to Phase 3.
+**Phase 2 — BLE + web app.** ✅ Done 2026-07-19 — TV toggled from a browser button.
+Chrome → GATT → NVS → IR chain verified; artifacts `firmware/remote_ble/` +
+`app/index.html`. GATT UUIDs and payload shapes recorded in STATUS.md.
+**Phase 2.5 — Bluefy on iPhone.** ✅ Done — iPhone → Bluefy → BLE → IR → TV verified.
+**Phase 3 — NPN driver stage + physical buttons.** ✅ Done 2026-07-19. 2N2222 off
+the 5V rail (33Ω, two IR LEDs in series, 1kΩ base) took range from ~5ft to
+**20–30ft**. Button 1 (GPIO5) fires slot 1 standalone with no phone connected;
+presses notify `pressed:N` and flash the slot in the app. Button 2 wired in
+firmware on GPIO2, hardware not built yet.
 **Phase 4 — Battery + deep sleep.** EXT1 wake on any button, send, sleep.
 **Phase 5 — Enclosure.** Donor remote shell or printed case.
 

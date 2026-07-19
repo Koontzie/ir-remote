@@ -98,6 +98,15 @@
   }
   #status.ok  { color: var(--ok); }
   #status.err { color: var(--err); }
+  /* physical button press on the device flashes the matching slot */
+  @keyframes slotFlash {
+    0%   { border-color: var(--accent); background: #23303f; }
+    100% { border-color: var(--edge);   background: var(--card); }
+  }
+  .slot.pressed { animation: slotFlash 900ms ease-out; }
+  @media (prefers-reduced-motion: reduce) {
+    .slot.pressed { animation: none; border-color: var(--accent); }
+  }
   .warn {
     background: #2a2113;
     border: 1px solid #5c4718;
@@ -158,6 +167,14 @@ function setStatus(msg, kind) {
   statusEl.className = kind || '';
 }
 
+function flashSlot(slot) {
+  const el = document.getElementById(`slot${slot}`);
+  if (!el) return;
+  el.classList.remove('pressed');
+  void el.offsetWidth;          // reflow so the animation restarts on rapid presses
+  el.classList.add('pressed');
+}
+
 function connected() {
   return device && device.gatt && device.gatt.connected;
 }
@@ -175,6 +192,7 @@ function buildSlots() {
     const d = DEFAULTS[slot];
     const el = document.createElement('div');
     el.className = 'slot';
+    el.id = `slot${slot}`;
     el.innerHTML = `
       <h2>Slot ${slot}</h2>
       <div class="row">
@@ -237,6 +255,15 @@ async function connect() {
     statusChar.addEventListener('characteristicvaluechanged', (ev) => {
       const text = new TextDecoder().decode(ev.target.value);
       setStatus(`device: ${text}`, text.startsWith('err') ? 'err' : 'ok');
+
+      // A physical button on the device reports "pressed:N" — flash that slot so
+      // it is obvious which button was hit, and distinct from an app-driven send.
+      const pressed = /^pressed:(\d+)$/.exec(text);
+      if (pressed) flashSlot(Number(pressed[1]));
+
+      // "err:empty:N" means that button has no code stored yet.
+      const empty = /^err:empty:(\d+)$/.exec(text);
+      if (empty) setStatus(`slot ${empty[1]} is empty — save a code to it first`, 'err');
     });
 
     setStatus('connected', 'ok');
