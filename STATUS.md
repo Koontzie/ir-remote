@@ -4,11 +4,47 @@
 **Updated:** 2026-07-19
 
 ## Where it's at
-Phase 0 (salvage) done. **Phase 1 COMPLETE — pass gate met 2026-07-19: the Samsung
-TV toggled power.** IR path proven end to end: firmware → GPIO4 → LED → real device.
+Phase 0 (salvage) done. **Phase 1 and Phase 2 both COMPLETE** (2026-07-19).
 
-`firmware/phase1_ir_test` sends Samsung power `0xE0E040BF` (`sendSAMSUNG`, 32 bits)
-on GPIO4 every 3s; serial shows the banner then a clean 3.00s `sent` cadence.
+**Phase 2 pass gate met: the TV toggled from a button in the browser.** Full chain
+verified end to end — Chrome (Web Bluetooth) → BLE GATT write → JSON parse → NVS →
+IR send → real device. Serial confirmed each layer:
+```
+[ble] config write: {"slot":1,"proto":"SAMSUNG","code":"0xE0E040BF","bits":32}
+[nvs] slot 1 <- SAMSUNG 0xE0E040BF (32 bits)   [status] saved:1
+[ble] trigger write: {"slot":1}
+[ir]  slot 1 -> SAMSUNG 0xE0E040BF (32 bits)   [status] sent:1
+```
+NVS persistence proven by power-cycling: second boot skipped seeding and read
+slot 1 back from flash.
+
+**Phase 1 pass gate met** earlier the same day: the Samsung TV toggled power.
+`firmware/phase1_ir_test` sends `0xE0E040BF` (`sendSAMSUNG`, 32 bits) on GPIO4
+every 3s. Kept in the repo as the minimal known-good IR proof.
+
+### Phase 2 artifacts
+- `firmware/remote_ble/remote_ble.ino` — BLE GATT + IR, 5 NVS-backed slots
+- `app/index.html` — self-contained Web Bluetooth app, no build step
+
+**GATT — device name `IR-Remote`:**
+
+| Role | UUID |
+|---|---|
+| service | `b457c32b-22b1-425f-8a88-4d6dc37ba4eb` |
+| `config` (WRITE) | `d997012d-7d2b-47de-ae87-bae14df446ef` |
+| `trigger` (WRITE) | `58397514-04a3-4265-9590-9d910c4e99d2` |
+| `status` (NOTIFY) | `b8ddfe01-519f-430d-bd4e-aba0dd852e2c` |
+
+`config` payload `{"slot":1,"proto":"SAMSUNG","code":"0xE0E040BF","bits":32}`
+(slots 1–5; protocols NEC, SAMSUNG, SONY). `trigger` payload `{"slot":1}`.
+`status` notifies `saved:N` / `sent:N` / `err:...`.
+
+**Run the web app locally:**
+```
+cd ~/dev/ir-remote/app && python3 -m http.server 8000
+```
+Open `http://localhost:8000` in **desktop Chrome** — `localhost` counts as a secure
+context, so Web Bluetooth works without HTTPS. Safari has no Web Bluetooth, ever.
 
 **Range is only a few inches** — expected, not a defect. Direct GPIO drive
 (GPIO4 → 150Ω → LED → GND) is ~13mA where a real remote pulses its LED at 100mA+.
@@ -28,10 +64,29 @@ sleep 20 | arduino-cli monitor -p <PORT> -c baudrate=115200
 ```
 
 ## Next step
-Phase 2: BLE GATT (NimBLE-Arduino) + Bluefy web app — see PLAN.md.
+1. **Bluefy on iPhone via GitHub Pages.** ⚠️ The repo is **private**
+   (`github.com/Koontzie/ir-remote`), and **GitHub Pages will not serve a private
+   repo on a free account** — it must be made public first, or the plan changes.
+   Then serve `app/` over HTTPS and open it in Bluefy (iOS Safari has no Web
+   Bluetooth). The app itself needs no changes.
+2. **Phase 3: physical buttons (GPIO5/6) + the NPN driver stage.** Do the transistor
+   first — everything so far runs at ~13mA, which is why range is inches.
 
 ## Blocked on
-Nothing. Phase 1 fully verified including the physical pass gate.
+Nothing. Phases 1 and 2 both fully verified, including their physical pass gates.
+
+### RESOLVED — web app couldn't find the board over BLE
+Symptom: Chrome's device chooser scanned forever, found nothing, while the board's
+serial insisted it was advertising.
+**Cause: BLE advertising payload overflow.** The advertisement is capped at 31
+bytes; flags (3) + a 128-bit service UUID (18) + the name `IR-Remote` (11) = 32.
+The name was silently dropped/truncated, so the app's `filters: [{name: ...}]`
+could never match. Nothing was wrong with the Mac or the hardware.
+**Fix, both sides:** firmware now puts the UUID in the advertisement and the name
+in the *scan response* (its own 31 bytes) via explicit `NimBLEAdvertisementData`;
+the app filters on `services: [SERVICE_UUID]` instead of the name.
+**Lesson:** a 128-bit UUID leaves almost no room in an advertisement — put the name
+in the scan response and filter by service UUID, never by name.
 
 ### RESOLVED — "LED doesn't light from GPIO4"
 Symptom: LED lit when wired to 3V3, appeared dead when driven from GPIO4.
@@ -76,6 +131,14 @@ After live-soldering, every sketch went silent. Diagnosis (2026-07-18):
   reinstalled cleanly with `dfu-util` present, and IRremoteESP8266 2.9.0
   reinstalled through the library manager so it's properly tracked. No local
   patches remain; `core update-index` is safe to run.
+  **However the block came back within the hour** — it appears to follow which
+  network Tyler is on, so treat it as intermittent rather than fixed. NimBLE-Arduino
+  2.5.0 and ArduinoJson 7.4.3 therefore also had to be installed from GitHub release
+  tags rather than `arduino-cli lib install`. GitHub and Espressif hosts have stayed
+  reachable throughout; only `arduino.cc` is affected.
+- **Library install fallback** (when `arduino.cc` is blocked): download the release
+  zip from GitHub into `~/Documents/Arduino/libraries/<LibName>`. Verify with
+  `grep '^version' <LibName>/library.properties`.
 - **Wiring deviates from PLAN.md on purpose:** GPIO4 → 150Ω → IR LED → GND, no NPN.
   That's ~13mA vs the 100mA+ pulses the transistor drive is for, so **range will be
   inches, not across the room.** If the TV doesn't toggle at close range, suspect the
