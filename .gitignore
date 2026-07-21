@@ -11,6 +11,10 @@ build/
 *.d
 *.o
 
+# Python
+__pycache__/
+*.pyc
+
 # Editor / IDE
 .vscode/
 .idea/

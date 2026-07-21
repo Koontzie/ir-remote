@@ -1,0 +1,1 @@
+[{"name":"power_toggle","orig":"Power","brand":"Gigabyte","model":"AORUS_Monitor","proto":"NEC","code":"0x00FF58A7","bits":32},{"name":"vol_up","orig":"Vol_up","brand":"Gigabyte","model":"AORUS_Monitor","proto":"NEC","code":"0x00FF8877","bits":32},{"name":"vol_dn","orig":"Vol_dn","brand":"Gigabyte","model":"AORUS_Monitor","proto":"NEC","code":"0x00FFCC33","bits":32}]

@@ -1,0 +1,1 @@
+[{"name":"vol_up","orig":"Vol_up","brand":"Telenet","model":"telenet","proto":"RC6","code":"0x10","bits":20,"verify":true},{"name":"vol_dn","orig":"Vol_down","brand":"Telenet","model":"telenet","proto":"RC6","code":"0x11","bits":20,"verify":true},{"name":"mute","orig":"Mute","brand":"Telenet","model":"telenet","proto":"RC6","code":"0xD","bits":20,"verify":true}]

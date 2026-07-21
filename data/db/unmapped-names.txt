@@ -1,0 +1,3249 @@
+# Button names with no canonical mapping (kept as other:<name>).
+# 3246 distinct names, 15713 occurrences.
+
+   508  Up
+   499  Down
+   498  Left
+   497  Right
+   284  1
+   284  2
+   283  4
+   283  5
+   282  3
+   279  6
+   279  7
+   279  8
+   278  9
+   276  Ok
+   267  Ch_prev
+   266  Ch_next
+   264  0
+   242  Stop
+   229  Back
+   218  Exit
+   212  Play
+   200  Pause
+   200  Info
+   183  Home
+   143  Enter
+   111  Guide
+   104  Netflix
+   103  Return
+   102  Rewind
+   101  Red
+   101  Sleep
+   100  Green
+    99  Blue
+    98  Yellow
+    92  Next
+    85  Prev
+    83  Audio
+    75  Subtitle
+    66  Display
+    61  Settings
+    60  Freeze
+    52  OK
+    50  Eject
+    49  Fast_fo
+    49  Fast_ba
+    46  Play_pause
+    46  Repeat
+    43  Forward
+    40  Bluetooth
+    39  Select
+    38  Aspect
+    37  Setup
+    37  Options
+    37  Record
+    37  Cc
+    35  Fav
+    34  Zoom
+    33  Tv
+    33  List
+    32  Previous
+    31  Ch_list
+    31  Rec
+    29  B
+    28  Mode
+    28  UP
+    28  DOWN
+    28  Search
+    28  Tools
+    27  LEFT
+    27  USB
+    27  TV
+    27  Text
+    26  RIGHT
+    25  Clear
+    25  Music
+    24  Video
+    24  Fwd
+    23  A
+    23  C
+    23  Aux
+    22  Auto
+    22  Play/Pause
+    22  Picture
+    22  D
+    22  Youtube
+    21  Play_Pause
+    21  Game
+    20  Reset
+    20  Fast_forward
+    20  CH-
+    19  -
+    19  Help
+    19  CH+
+    18  3D
+    18  Rew
+    18  CD
+    17  Blank
+    17  Angle
+    17  Tuner
+    16  Fastforward
+    16  Top_menu
+    15  Keystone
+    15  Usb
+    15  Prime
+    15  Play_pa
+    15  Prime_video
+    15  Dash
+    14  Epg
+    14  Sound
+    14  Txt
+    14  Apps
+    14  Surround
+    14  Optical
+    13  Favorite
+    13  Pre_ch
+    13  Bass_up
+    12  STOP
+    12  Fast Forward
+    12  Hulu
+    12  _
+    12  YouTube
+    12  CC
+    12  FF
+    12  AUX
+    12  Last
+    12  Ch_up
+    12  Movie
+    12  Phono
+    11  BACK
+    11  Esc
+    11  Computer
+    11  R
+    11  G
+    11  EPG
+    11  Play/pause
+    11  Teletext
+    11  Recall
+    11  Title
+    11  Dimmer
+    11  EQ
+    10  Brightness
+    10  Contrast
+    10  Vudu
+    10  Mts
+    10  Disney+
+    10  Option
+    10  Wide
+    10  Replay
+    10  FM
+    10  BT
+     9  Minus
+     9  Timer
+     9  ENTER
+     9  Cinema
+     9  Muting
+     9  Prev_ch
+     9  Amazon
+     9  Backward
+     9  Reverse
+     9  Smart_hub
+     8  Pc
+     8  Page_up
+     8  TXT
+     8  Format
+     8  Skip_back
+     8  Hold
+     8  Subtitles
+     8  On_off
+     8  Av
+     8  Voice
+     8  Fast_fwd
+     8  Tape
+     8  Bass
+     8  Bass_dn
+     7  Focus
+     7  Plus
+     7  NEXT
+     7  PLAY
+     7  Swap
+     7  Fast_Forward
+     7  Dwn
+     7  User
+     7  VIDEO
+     7  Function
+     7  Skip_forward
+     7  Skip
+     7  Pattern
+     7  Size
+     7  Tv_radio
+     7  Subpage
+     7  Ff
+     7  P_mode
+     7  S_mode
+     7  Dot
+     7  Skip_fwd
+     7  Prime_Video
+     7  Lang
+     7  .
+     7  REC
+     7  Opt
+     7  Av_mode
+     7  Rwd
+     7  Star
+     7  DVD
+     7  Favorites
+     7  Prog
+     7  Shuffle
+     7  Program
+     7  BLUETOOTH
+     7  Treble_up
+     7  Open_Close
+     7  Slow
+     6  Ratio
+     6  PC
+     6  PIP
+     6  +
+     6  Pointer
+     6  HOME
+     6  Network
+     6  DISPLAY
+     6  MTS
+     6  Status
+     6  Picture_mode
+     6  Position
+     6  F
+     6  REWIND
+     6  Smode
+     6  Reveal
+     6  Index
+     6  Media
+     6  Language
+     6  RED
+     6  GREEN
+     6  BLUE
+     6  Stereo
+     6  Cancel
+     6  FastForward
+     6  Ch_down
+     6  Flashback
+     6  Ad
+     6  Simplink
+     6  Y
+     6  P_size
+     6  123
+     6  Memory
+     6  Jump
+     6  SLEEP
+     6  Pic
+     6  Cd
+     6  Standard
+     6  Top Menu
+     6  BASS+
+     6  INFO
+     6  PopUp
+     5  Mouse
+     5  Test
+     5  Pip
+     5  Zoom_up
+     5  Eco
+     5  Image
+     5  Zoom+
+     5  Zoom-
+     5  Q_menu
+     5  PLAY_PAUSE
+     5  Disney
+     5  Twin
+     5  Picture Mode
+     5  Pmode
+     5  Radio
+     5  Tv_guide
+     5  Quick_menu
+     5  YELLOW
+     5  Goto
+     5  Fw
+     5  Sub
+     5  Rev
+     5  Chlist
+     5  Caption
+     5  Sling
+     5  I
+     5  Open_close
+     5  Next_track
+     5  Left_arrow
+     5  Theater
+     5  Advance
+     5  A_B
+     5  Random
+     5  AM
+     5  BASS-
+     5  Eq
+     5  MOVIE
+     5  Open/Close
+     4  Hide
+     4  PREV
+     4  REW
+     4  Sound_Mode
+     4  SRS
+     4  User1
+     4  User2
+     4  Bright
+     4  Sharp
+     4  Default
+     4  Keystone+
+     4  Keystone-
+     4  Lan
+     4  Av_mute
+     4  LAN
+     4  AV_Mute
+     4  FREEZE
+     4  Center
+     4  Page_down
+     4  Page_dn
+     4  Mic
+     4  V_down
+     4  Lens Shift
+     4  + D Zoom
+     4  - D Zoom
+     4  APA
+     4  E
+     4  Resolution
+     4  Refresh
+     4  AV
+     4  Time
+     4  Aspect_ratio
+     4  A-B
+     4  Tubi
+     4  Energy_saving
+     4  Ch+
+     4  Bkwd
+     4  Psm
+     4  Movies
+     4  Ch_dn
+     4  Still
+     4  Ent
+     4  Channel_up
+     4  E-manual
+     4  Bw
+     4  Sports
+     4  Extra
+     4  Ad_subt
+     4  Ttx_mix
+     4  Play_mode
+     4  Marker
+     4  Xumo
+     4  On/Off
+     4  Bt
+     4  Coax
+     4  Popup
+     4  Cbl_sat
+     4  Streambox
+     4  OPT
+     4  TREBLE-
+     4  TREBLE+
+     4  10+
+     4  BD_DVD
+     4  MUSIC
+     4  Treble_dn
+     4  News
+     4  Bass_down
+     4  Bt_pair
+     4  Sound_effect
+     4  Bass_Up
+     4  Bass_Down
+     4  OSD
+     4  PBC
+     3  Pause/Play
+     3  Zoom_in
+     3  Zoom_out
+     3  PAUSE
+     3  FWD
+     3  HDR
+     3  User3
+     3  Invert
+     3  Color_temp
+     3  Gamma
+     3  Sound_mode
+     3  Page+
+     3  Page-
+     3  Auto_PC
+     3  Zoom_down
+     3  Focus_up
+     3  Func
+     3  Keystone_up
+     3  Split
+     3  Pg_up
+     3  Page_Up
+     3  Num1
+     3  Num2
+     3  Num3
+     3  Num4
+     3  Num5
+     3  Num6
+     3  Num7
+     3  Num8
+     3  Num9
+     3  Num0
+     3  PgUp
+     3  M
+     3  Playpause
+     3  Resize
+     3  PageUp
+     3  PageDown
+     3  MODE
+     3  ZOOM
+     3  Unknown_1
+     3  Unknown_2
+     3  SETTINGS
+     3  Play / Pause
+     3  Souce
+     3  V_up
+     3  Samsung_tv_plus
+     3  Disney_plus
+     3  MEMORY
+     3  PLAY/PAUSE
+     3  Loop
+     3  Dtv
+     3  Dvd
+     3  V_chip
+     3  Browser
+     3  Disney_Plus
+     3  Clock
+     3  Update
+     3  Dn
+     3  CCD
+     3  Arrow_up
+     3  Arrow_down
+     3  Arrow_right
+     3  Arrow_left
+     3  Sap
+     3  Pic_size
+     3  Brightness_dn
+     3  A_red
+     3  B_green
+     3  C_yellow
+     3  D_blue
+     3  ARC
+     3  Peacock
+     3  10
+     3  Red_a
+     3  Green_b
+     3  Yellow_c
+     3  Blue_d
+     3  Fast_fw
+     3  Skipback
+     3  Captions
+     3  Q.view
+     3  3d
+     3  Rec/*
+     3  Rakuten_tv
+     3  Ch-
+     3  Flashbk
+     3  Set
+     3  Bright_up
+     3  Picturemode
+     3  FAV
+     3  Disc_menu
+     3  Prog_up
+     3  Google_Play
+     3  Now
+     3  Mix
+     3  Imput
+     3  Ambilight
+     3  Chan_up
+     3  Chan_down
+     3  E-Manual
+     3  P.Size
+     3  Ttx/mix
+     3  Ad/subt.
+     3  RWD
+     3  Keypad
+     3  P.size
+     3  E_manual
+     3  Vcr
+     3  Pr_up
+     3  Pr_down
+     3  Accessibility_shortcut
+     3  Not_availible
+     3  Smart Hub
+     3  Ypbpr
+     3  Up_arrow
+     3  Right_arrow
+     3  Alarm
+     3  Sync_menu
+     3  Ffw
+     3  Fast-forward
+     3  F1
+     3  Skip_bk
+     3  Crackle
+     3  Redbox
+     3  Speaker
+     3  10_0
+     3  Bookmark
+     3  PHONO
+     3  TUNER
+     3  Tape_Stop
+     3  Bd_dvd
+     3  Net
+     3  Light
+     3  Dialog
+     3  Tuner/Band
+     3  Center +
+     3  Center -
+     3  Groove
+     3  SAT_CATV
+     3  DIMMER
+     3  GAME
+     3  HDMI ARC
+     3  FAST_FORWARD
+     3  SUB+
+     3  SUB-
+     3  Treble_down
+     3  OPTICAL
+     3  Skip_Back
+     3  AV_Sync
+     3  Track_back
+     3  Track_fwd
+     3  Night
+     3  TEXT
+     3  Topmenu
+     3  Top_Menu
+     3  Popup_Menu
+     3  Pop Up/Menu
+     3  RETURN
+     2  ReSync
+     2  Eco_Blank
+     2  Pic_Mode
+     2  ColorTemp
+     2  Wireless
+     2  Menu_Exit
+     2  Right_VolUp
+     2  Mode_Enter
+     2  Color
+     2  Tint
+     2  Finetune
+     2  Color_manage
+     2  Test_pattern
+     2  Pic_mode
+     2  Vup
+     2  Vdwn
+     2  ESC
+     2  Keystone_down
+     2  Page
+     2  Focus_dn
+     2  Pg_down
+     2  Color_mode
+     2  Dpad_up
+     2  ID
+     2  Zoom_In
+     2  Zoom_Out
+     2  ColorMode
+     2  AVMute
+     2  A_V_Mute
+     2  Color_Mode
+     2  Overscan
+     2  Auto_image
+     2  Custom
+     2  Presets
+     2  OsdMsg
+     2  PbyP
+     2  MagnifyOn
+     2  MagnifyOff
+     2  Focus+
+     2  Focus-
+     2  Geometry
+     2  Interactive
+     2  Del
+     2  OPTION
+     2  GUIDE
+     2  YPbPr
+     2  S-Video
+     2  Resync
+     2  Composite
+     2  Unknown_3
+     2  Unknown_4
+     2  Unknown_5
+     2  Unknown_6
+     2  Unknown_7
+     2  Svideo
+     2  S_Video
+     2  HDBaseT
+     2  MHL
+     2  Lamp
+     2  Fast forward
+     2  Up arrow
+     2  Left arrow
+     2  Right arrow
+     2  Down arrow
+     2  Prime Video
+     2  Normal
+     2  Ref
+     2  Recent_apps
+     2  Alexa
+     2  Reclist
+     2  S.mode
+     2  P.mode
+     2  Pandora
+     2  Aspect_Ratio
+     2  Fav+
+     2  Fav-
+     2  Home_menu
+     2  Set_ok
+     2  Mts_sap
+     2  Ccd
+     2  Prev_channel
+     2  Disc Menu
+     2  Play Pause
+     2  Yelow
+     2  TV Guide
+     2  PrimeVideo
+     2  Brightness_up
+     2  Live_tv
+     2  11
+     2  12
+     2  Multimedia
+     2  Num_1
+     2  Num_2
+     2  Num_3
+     2  Num_4
+     2  Num_5
+     2  Num_6
+     2  Num_7
+     2  Num_8
+     2  Num_9
+     2  Num_0
+     2  Last_ch
+     2  Rr
+     2  Arrowup
+     2  SAP
+     2  Q.menu
+     2  Recent
+     2  T.opt
+     2  Tv/rad
+     2  Red_button
+     2  Green_button
+     2  Yellow_button
+     2  Blue_button
+     2  T_opt
+     2  Smart
+     2  Live_zoom
+     2  Audio_select
+     2  Live Zoom
+     2  AD
+     2  Adj
+     2  In_start
+     2  Arc
+     2  Ssm
+     2  Speed
+     2  Prog_dwn
+     2  Google
+     2  Last_track
+     2  T_shift
+     2  Again
+     2  Apple_tv
+     2  Espn
+     2  Roku_channel
+     2  CBS
+     2  White
+     2  Information
+     2  Sttl
+     2  Ehelp
+     2  P_up
+     2  P_down
+     2  Channel_down
+     2  ChUp
+     2  RW
+     2  Subs
+     2  Input PC
+     2  Sound Mode
+     2  Media_p
+     2  Lock
+     2  Prech
+     2  Ctr
+     2  Red/a
+     2  Green/b
+     2  Yellow/c
+     2  Blue/d
+     2  Emanual
+     2  Factory
+     2  Cable
+     2  VCR
+     2  Media Player
+     2  Dual
+     2  Return/back
+     2  Pre_CH
+     2  CH_List
+     2  E_Manual
+     2  P_Size
+     2  Samsung_TV_Plus
+     2  RGYB
+     2  Multi_view
+     2  Check
+     2  Red_triangle
+     2  Blue_circle
+     2  Green_square
+     2  Yellow_x
+     2  Backwards
+     2  Pre-ch
+     2  Tv_plus
+     2  Virtual_numarical_pad
+     2  Bixby
+     2  Pre-Ch
+     2  Virtual Surround
+     2  End
+     2  Closedcaption
+     2  View_mode
+     2  Down_arrow
+     2  Google_play
+     2  Tv/radio
+     2  I-manual
+     2  Scene
+     2  Dmex
+     2  Fast_rewind
+     2  DVR
+     2  Bbw
+     2  Digital/analog
+     2  Action
+     2  Discover
+     2  Chn_up
+     2  Tv_Radio
+     2  Instant_replay
+     2  Smart_home
+     2  Q-menu
+     2  P_guide
+     2  1st_ch
+     2  Ch_net_type
+     2  F_forward
+     2  Dvd_menu
+     2  X
+     2  Link
+     2  Watchfree
+     2  Onscreen Console
+     2  Restart
+     2  Sel
+     2  Open
+     2  Bright_dn
+     2  Preset_up
+     2  Change_Input
+     2  Snooze
+     2  Bass Up
+     2  Bass Down
+     2  TAPE
+     2  Tune-
+     2  Tune+
+     2  Blu-ray
+     2  Channel_dn
+     2  Video_1
+     2  Video_2
+     2  CD_Stop
+     2  Band
+     2  +10_10_D.Tun Dimmer
+     2  0_11
+     2  Clr_12_Sleep
+     2  Tunner
+     2  Loop_shuffle
+     2  Previous_track
+     2  Movie_tv
+     2  Disk
+     2  Preset_1
+     2  Preset_2
+     2  Preset_3
+     2  F2
+     2  FN
+     2  SELECT
+     2  Dir+
+     2  Dir-
+     2  Balance Left
+     2  Balance Right
+     2  Rear +
+     2  Rear -
+     2  Tuning +
+     2  Preset +
+     2  Album +
+     2  Disc +
+     2  Preset EQ
+     2  Disc -
+     2  Album -
+     2  Tuning -
+     2  Preset -
+     2  Test Tone
+     2  5.1 ch
+     2  Video (MD)
+     2  Pro Logic
+     2  MD/TAPE
+     2  |<<
+     2  >>|
+     2  <<
+     2  >>
+     2  Amp_Menu
+     2  SA-CD_CD
+     2  Line1
+     2  Line2
+     2  CD_DVD
+     2  Other
+     2  PREVIOUS
+     2  SOUND
+     2  VolumeMute
+     2  BassUp
+     2  BassDown
+     2  InputAux
+     2  TrebleUp
+     2  TrebleDown
+     2  PrevTrack
+     2  LED
+     2  Pure
+     2  Feedback
+     2  Skip_Forward
+     2  Auto_power
+     2  DRC
+     2  SkipForward
+     2  SkipBack
+     2  SoundEffect
+     2  Sound Effect
+     2  Pause_mute
+     2  Treble_Up
+     2  Treble_Down
+     2  Pair
+     2  Bass +
+     2  Bass -
+     2  Treble +
+     2  Treble -
+     2  Voice_Up
+     2  Voice_Down
+     2  Input+
+     2  Input-
+     2  Woofer_up
+     2  Woofer_dn
+     2  BT_Pair
+     2  Woofer
+     2  Sound_control
+     2  HDMI_ARC
+     2  ANALOG
+     2  EQ_Music
+     2  EQ_Movie
+     2  Carnation
+     2  SLOW
+     2  AUX_VA
+     2  Sub_up
+     2  Sub_dn
+     2  Dim
+     2  CLEAR_VOICE
+     2  SURROUND
+     2  STEREO
+     2  RECORD
+     2  Day_up
+     2  PPV
+     2  Pound
+     2  PVR
+     2  P+
+     2  P-
+     2  Active
+     2  A/V
+     2  TV_AV
+     2  Xfinity
+     2  Pop Up Menu
+     2  +10
+     2  TopMenu
+     2  Sen
+     2  Pop_up_menu
+     2  Substile
+     2  Digest
+     2  Scan_back
+     2  Scan_fwd
+     2  Step
+     2  CLEAR
+     2  FORWARD
+     2  TITLE
+     2  REPEAT
+     2  Search_mode
+     2  SETUP
+     1  RatioN
+     1  No Display
+     1  Up Keystone
+     1  Down Keystone
+     1  Vol_u
+     1  Vol_d
+     1  Page_next
+     1  Page_prev
+     1  SHAPE
+     1  PIC_MODE
+     1  LUMIEXPERT_BOOST
+     1  SOUND_MODE
+     1  ECO_BLANK
+     1  Light_Mode
+     1  Dyn_Iris
+     1  Cin_Master
+     1  Det_Enhance
+     1  Lumi_Expert
+     1  ECO_Blank
+     1  Sharpness
+     1  ColorManage
+     1  Gamme
+     1  EcoBlank
+     1  Left_VolDwn
+     1  Eco_blank
+     1  Fine_tune
+     1  Calibrate_auto
+     1  Lumi_expert
+     1  Cinema_master
+     1  Dynamic_iris
+     1  Light_mode
+     1  Eco_bank
+     1  Up_Trapez
+     1  Down_Trapez
+     1  Left_VolDown
+     1  User_1
+     1  User_2
+     1  User_3
+     1  Color_Temp
+     1  Projection
+     1  Src
+     1  Allume
+     1  Zoom_Plus
+     1  Zoom_Moins
+     1  Background
+     1  Mouse Mode
+     1  Keystone DOWN
+     1  Keystone UP
+     1  Zoom_dwn
+     1  Focus_dwn
+     1  Keyst_up
+     1  Keyst_d
+     1  Video Mode
+     1  Auto Adjust
+     1  Blank Screen
+     1  Lil_up
+     1  Lil_down
+     1  D_zoom_up
+     1  D_zoom_dn
+     1  No_show
+     1  Mouse_up
+     1  Mouse_left
+     1  Mouse_right
+     1  Mouse_down
+     1  Left_click
+     1  Right_click
+     1  P_timer
+     1  Computer_1
+     1  Computer_2
+     1  Lens_up
+     1  Lens_dn
+     1  D_zoom_Up
+     1  D_zoom_down
+     1  P_Timer
+     1  No_Show
+     1  Lamp_Control
+     1  CHA+
+     1  CHA-
+     1  ?
+     1  Dispaly_port
+     1  S_video
+     1  Hd_base_t
+     1  Sdi
+     1  E_zoom_up
+     1  E_zoom_down
+     1  Frezze
+     1  D_pad_right
+     1  D_pad_down
+     1  D_pad_left
+     1  Click_enter
+     1  Source Search
+     1  HDMI_Video
+     1  Esc_RC
+     1  Enter_LC
+     1  Page_Dwn
+     1  SourceSRC
+     1  HDMI/ANAL
+     1  USBPC
+     1  PGUP
+     1  PGDWN
+     1  ZOOMIN
+     1  ZOOMOUT
+     1  MUTESRC
+     1  SPLIT
+     1  SourceSearch
+     1  Ezoom+
+     1  Ezoom-
+     1  Src_usb
+     1  Black_screen
+     1  Splitscreen
+     1  src/Computer
+     1  src/HDMI
+     1  src/USB
+     1  src/LAN
+     1  src/Search
+     1  SrcSearch
+     1  7_Auto
+     1  8_Aspect
+     1  9_ColorMode
+     1  Esc_RightClk
+     1  Back_LeftClk
+     1  PgDown
+     1  ZoomPlus
+     1  ZoomMinus
+     1  E_Zoom_up
+     1  E_Zoom_down
+     1  Off_on
+     1  Source_Search
+     1  Source_search
+     1  Ezoom_in
+     1  Ezoom_out
+     1  Freeze_esc
+     1  Cur_up
+     1  Cur_left
+     1  Cur_right
+     1  Cur_down
+     1  Cur_left_btn
+     1  Cur_right_btn
+     1  S
+     1  Hamburger
+     1  V+
+     1  V-
+     1  P0wer
+     1  Sorce
+     1  Natural
+     1  Dynamic
+     1  Menu_exit
+     1  Flip
+     1  ZoomIN
+     1  RAW_3
+     1  ZoomOUT
+     1  AV mute
+     1  L_Click
+     1  R_Click
+     1  Zoom_IN
+     1  Zoom_OUT
+     1  Page_Back
+     1  Page_NexT
+     1  DVI
+     1  DP1
+     1  DP2
+     1  MEDIA PLAYER
+     1  COMPUTE MODULE
+     1  OPTION MENU
+     1  ENT
+     1  AUTO SETUP
+     1  EXIT
+     1  SET POINT ZOOM
+     1  CH +
+     1  CH -
+     1  PICTURE MODE
+     1  AR
+     1  AUDIO INPUT
+     1  STILL ON/OFF
+     1  CAPTURE
+     1  IMAGE FLIP
+     1  ACTIVE PICTURE
+     1  MULTI PICTURE ON/OFF
+     1  CHANGE
+     1  F_left
+     1  F_right
+     1  D-sub
+     1  Source Lock
+     1  4:3
+     1  16:9
+     1  LBX
+     1  Native
+     1  EdgeMask
+     1  V Keystone
+     1  SWITCH
+     1  RESYNC
+     1  L
+     1  UP_DPAD
+     1  LEFT_DPAD
+     1  RIGHT_DPAD
+     1  DOWN_DPAD
+     1  ENTER_DPAD
+     1  PAGE-
+     1  PAGE+
+     1  KEYSTONE-
+     1  KEYSTONE+
+     1  BRIGHTNESS
+     1  VGA_1
+     1  DYNAMIC_BLACK
+     1  VGA_2
+     1  AspectRatio
+     1  DB
+     1  SleepTimer
+     1  VGA1
+     1  VGA2
+     1  Keystone_dn
+     1  DVI_D
+     1  Dvi_d
+     1  Composit
+     1  Pic_adj
+     1  Mem_load
+     1  VieraLink
+     1  Waveform
+     1  SubMenu
+     1  AUTOFOCUS
+     1  LIST
+     1  ArrowUp
+     1  ArrowDown
+     1  ArrowLeft
+     1  ArrowRight
+     1  ReturnArrow
+     1  Rotate
+     1  Skipbackwards
+     1  HIDE
+     1  123 l Setting
+     1  Play l Pause
+     1  Back Button
+     1  V_Up
+     1  V_Down
+     1  CH_up
+     1  CH_down
+     1  Guide Channel
+     1  Samsung_TV
+     1  Back_button
+     1  Play I Pause
+     1  S-video
+     1  Break_timer
+     1  Magnify+
+     1  Magnify-
+     1  Spot
+     1  Lclick
+     1  Rclick
+     1  Menu_help
+     1  Auto_sync
+     1  Eco+quiet
+     1  Status_ON
+     1  Status_OFF
+     1  Muting_PIC
+     1  Muting_AUDIO
+     1  RESET
+     1  BLKG
+     1  CENTR
+     1  RGB_SIZE
+     1  SHIFT
+     1  Sharp_up
+     1  Sharp_dn
+     1  Hue_up
+     1  Hue_dn
+     1  Color_up
+     1  Color_dn
+     1  Light_ON
+     1  Light_OFF
+     1  Lcd_zoom_up
+     1  Lcd_zoom_dn
+     1  Lcd_shift_up
+     1  Lcd_shift_dn
+     1  Lcd_focus_up
+     1  Lcd_focus_dn
+     1  Input_select_video
+     1  Input_select_select
+     1  A_Index
+     1  B_Index
+     1  C_Index
+     1  D_Index
+     1  1_Index
+     1  2_Index
+     1  3_Index
+     1  4_Index
+     1  5_Index
+     1  6_Index
+     1  7_Index
+     1  8_Index
+     1  9_Index
+     1  0_Index
+     1  A_Switcher
+     1  B_Switcher
+     1  C_Switcher
+     1  D_Switcher
+     1  1_Switcher
+     1  2_Switcher
+     1  3_Switcher
+     1  4_Switcher
+     1  5_Switcher
+     1  6_Switcher
+     1  7_Switcher
+     1  8_Switcher
+     1  Cut_off_r
+     1  Cut_off_g
+     1  Cut_off_b
+     1  Cut_off_cent
+     1  Cut_off_size
+     1  Cut_off_lin
+     1  Adj_r
+     1  Adj_g
+     1  Adj_b
+     1  Adj_skew
+     1  Adj_bow
+     1  Adj_key
+     1  Wb_bias
+     1  Wb_gain
+     1  Wb_pin
+     1  Wb_zone
+     1  Focus_mg_focus
+     1  Focus_lens
+     1  Position_dn
+     1  Position_up
+     1  Shift
+     1  Motion_flow
+     1  Color_space
+     1  Reality_creation
+     1  Gamma_correction
+     1  Contrast_enhancer
+     1  Advanced_iris
+     1  +Sharpness
+     1  -Sharpness
+     1  +Brightness
+     1  -Brightness
+     1  +Contrast
+     1  -Contrast
+     1  Film_1
+     1  Film_2
+     1  Photo
+     1  Brt_cine
+     1  Brt_TV
+     1  Input_A
+     1  Input_B
+     1  Input_C
+     1  Input_D
+     1  Input_E
+     1  Input_F
+     1  Lens_shift
+     1  Zoom_dn
+     1  Apa
+     1  Power_id2
+     1  Power_id3
+     1  Power_id4
+     1  Fast Rewind
+     1  Focus_Plus
+     1  Focus_Minus
+     1  Miracast
+     1  Screen Cast
+     1  UNKNOWN
+     1  FOREWARD
+     1  KEYSTONE
+     1  Auto_Sync
+     1  Pg_Down
+     1  Eco_Mode
+     1  Start
+     1  rotate
+     1  up
+     1  down
+     1  left
+     1  right
+     1  ok
+     1  home
+     1  return
+     1  rewind
+     1  fastforward
+     1  Freevie
+     1  Magnifier
+     1  Voice_view
+     1  Networking
+     1  Reboot
+     1  Factory_reset
+     1  Kd
+     1  App
+     1  Run
+     1  F-forward
+     1  Dsetup
+     1  Pgnum
+     1  Favourite
+     1  Red/goto
+     1  Green/angle
+     1  Yellow/repeat
+     1  Blue/a->b
+     1  Rw
+     1  Red_info
+     1  Green_freeze
+     1  Yellow_add_erase
+     1  Blue_fav
+     1  No_Function
+     1  Quick_Menu
+     1  Freeview_Play
+     1  Ch-list
+     1  Escalade_tv_power
+     1  Skip_bck
+     1  Satellite
+     1  App_Menu
+     1  Account
+     1  Pair_Remote
+     1  I(nfo)
+     1  Arrow_earth
+     1  Fav1
+     1  Fav2/search
+     1  Video_presets
+     1  Audio_presets
+     1  Medias
+     1  Favoris
+     1  Ch_Up
+     1  Ch_Down
+     1  SYST
+     1  Store
+     1  P100
+     1  MIX
+     1  Double
+     1  Reval
+     1  Mono AB
+     1  PS
+     1  Menue
+     1  Change
+     1  Tv_txt
+     1  Nicam_a2
+     1  Decimal
+     1  MTS_SAP
+     1  Toongoggles
+     1  Accuweather
+     1  Pause_play
+     1  Add/erase
+     1  Vchip
+     1  Around
+     1  Foreward
+     1  Add_erase
+     1  Mode_picsound
+     1  Picture_size
+     1  +10/+100
+     1  V.SURR
+     1  Search Mode
+     1  Pg +
+     1  Pg -
+     1  Last ch
+     1  Mts_audio
+     1  __
+     1  F_list
+     1  C_list
+     1  Q_Menu
+     1  O
+     1  Ch1
+     1  My_media
+     1  CH_next
+     1  CH_prev
+     1  Play&Pause
+     1  Spotify
+     1  GooglePlay
+     1  Contrast_dn
+     1  Contrast_up
+     1  0_AV
+     1  Questionmark
+     1  Contrast_plus
+     1  Contrast_minus
+     1  Brightness_plus
+     1  Brightness_minus
+     1  Hotel
+     1  MTS_sap
+     1  Pause/play
+     1  Amazonprime
+     1  Stan
+     1  Kayo
+     1  Deezer
+     1  Nba
+     1  Abc_iview
+     1  Kid
+     1  Vidaa_tv
+     1  Binge
+     1  Accounts
+     1  Assistant
+     1  Live_TV
+     1  Numbers
+     1  Livetv
+     1  Tshift
+     1  Powa
+     1  Antena
+     1  Bs
+     1  Cs
+     1  3digit
+     1  Display_info
+     1  D_data
+     1  Chanel_up
+     1  Chanel_down
+     1  Record_list
+     1  Equipment_link
+     1  Voice_switch
+     1  Nav_up
+     1  Nav_dn
+     1  Nav_lft
+     1  Nav_rgt
+     1  Nav_ok
+     1  Nav_setting
+     1  Nav_menu
+     1  Nav_back
+     1  Nav_exit
+     1  Sport
+     1  Add_rew
+     1  Add_play
+     1  Add_ffd
+     1  Add_stop
+     1  Add_pause
+     1  Add_rec
+     1  Fn_menu
+     1  Fn_youtube
+     1  Fn_netflix
+     1  Fn_media
+     1  Himedia
+     1  Hismart
+     1  Seek_fwd
+     1  GoogleAssist
+     1  Qmenu
+     1  Star1
+     1  Star2
+     1  Internet
+     1  Fast_back
+     1  Back_to_tv_maybe
+     1  Audio Lang
+     1  Skipfwd
+     1  Fav_ch
+     1  Room_controls
+     1  Accessibility
+     1  Stream
+     1  Arrowleft
+     1  Arrowright
+     1  Closed_cap
+     1  _d_
+     1  P+/up
+     1  P-/down
+     1  Q Menu
+     1  Brt+
+     1  Brt-
+     1  Reader_mode
+     1  Custom1
+     1  Custom2
+     1  Dts
+     1  Sound_output
+     1  My_apps
+     1  Live_menu
+     1  App/*
+     1  Prog_+
+     1  Prog_-
+     1  Q_view
+     1  Eingangsquelle
+     1  Device
+     1  Primevideo
+     1  SAP_astrx
+     1  Energy
+     1  Chann_up
+     1  Chann_down
+     1  Green_stop
+     1  Yell_play
+     1  Blue_pause
+     1  Mark_fav
+     1  Gamemode
+     1  Pbp_pip
+     1  Fullscreen
+     1  Backwd
+     1  Chan Up
+     1  Chan Down
+     1  Live Menu
+     1  FAST FORWARD
+     1  TV/Rad
+     1  T.Opt
+     1  Red (1 dot)
+     1  Green (2 dots)
+     1  Yellow (3 dots)
+     1  Blue (4 dots)
+     1  3points
+     1  Ffd
+     1  Red_1
+     1  Green_2
+     1  Yellow_3
+     1  Blue_4
+     1  Resume
+     1  Guide/d_
+     1  LG_Channels
+     1  Lg_on/off
+     1  Lg_input
+     1  Dtt
+     1  P-only
+     1  P-check
+     1  Check-s
+     1  Cap
+     1  Mpx
+     1  Hdmi_hot
+     1  Usb_hot
+     1  Pip_pr-
+     1  Pip_pr+
+     1  Pip_input
+     1  Tilt
+     1  Eye
+     1  B-tooth
+     1  Xstudio
+     1  Rgb
+     1  Av1
+     1  Av2
+     1  Av3
+     1  In_stop
+     1  Lg_channels
+     1  Sap/*
+     1  <<_rwd
+     1  >>_ff
+     1  An_aus
+     1  Voll+
+     1  Voll-
+     1  Status_exit
+     1  Smart_picture
+     1  Smart_sound
+     1  A_ch
+     1  Picture_sleep
+     1  +10_+100
+     1  Set-up
+     1  TV_VCR_audio
+     1  Slow_pause
+     1  Service_mode
+     1  Status/Exit
+     1  Alt_ch
+     1  Something AFx
+     1  Sams_0a
+     1  Ch_call
+     1  Quick_view
+     1  Timer_set
+     1  Timer_select
+     1  Bar_select
+     1  Pag_Down
+     1  Pause_Play
+     1  Hdmi/pc
+     1  Nec_00
+     1  Nec_01
+     1  Nec_02
+     1  Nec_03
+     1  Nec_04
+     1  Nec_05
+     1  Nec_06
+     1  Nec_07
+     1  Nec_08
+     1  Nec_09
+     1  Audio_i_ii
+     1  Aspect_size
+     1  Reclist_index
+     1  Tv/av
+     1  Tv/fm
+     1  Ch+_uparrow
+     1  Ch-_downarrow
+     1  Vol-_leftarrow
+     1  Vol+_rightarrow
+     1  Channnel-
+     1  Input/tv
+     1  Input/av
+     1  Scenery
+     1  Seekback
+     1  Seekforward
+     1  Last_view
+     1  Player
+     1  Question
+     1  I/ii
+     1  Prev_Channel
+     1  Pup
+     1  Pdown
+     1  Pp
+     1  SX
+     1  DX
+     1  Ch_Next
+     1  Ch_Prev
+     1  Smarttv
+     1  Dvr
+     1  Split_screen
+     1  Red/demo
+     1  Left/back
+     1  Menu/exit
+     1  Mheg_cancel
+     1  P-p
+     1  ChDown
+     1  PicInPic_Back
+     1  AmbilOnOff
+     1  AmbilightMode
+     1  Instant replay
+     1  Apple
+     1  TV(Exit)
+     1  Smart_TV
+     1  TV_guide
+     1  Prevch
+     1  Netfix
+     1  Paramont
+     1  Spread
+     1  Rc5_01
+     1  Rc5_02
+     1  Rc5_03
+     1  Rc5_04
+     1  Rc5_05
+     1  Rc5_06
+     1  Rc5_07
+     1  Rc5_08
+     1  Rc5_09
+     1  Rc5_00
+     1  Philips_collection
+     1  Screen_settings
+     1  Screen_size
+     1  Iii
+     1  Bottom
+     1  Book
+     1  Rakuter_tv
+     1  Vid_back
+     1  Vid_forward
+     1  Top_picks
+     1  Tv_exit
+     1  Light_blue
+     1  Input 1
+     1  Input 2
+     1  Input 3
+     1  Input 4
+     1  Input 5
+     1  Input 6
+     1  HDMI Control
+     1  Hidden Characters
+     1  Teletext Info
+     1  Teletext Mode
+     1  Freeze Frame
+     1  Screen Size
+     1  AV Profile
+     1  Pic-In-Pic Mode
+     1  Pic-In-Pic Swap
+     1  Pic-In-Pic Move
+     1  Dtv_atv
+     1  Lang_audio
+     1  Fav_list
+     1  Appletv
+     1  Crave
+     1  Guide_home
+     1  Rewind 10s
+     1  Sleep Timer
+     1  TV Settings
+     1  Roku CH
+     1  Google Play
+     1  VOLu
+     1  VOLD
+     1  *
+     1  Smarthub
+     1  Entry
+     1  Futbol
+     1  Forw
+     1  Social
+     1  Content
+     1  TTX_Mix
+     1  P_Mode
+     1  DUAL_I-II
+     1  Ad_Subt
+     1  Hub
+     1  Family_story
+     1  Srs
+     1  Support
+     1  Sams_02
+     1  Channel up
+     1  Channel down
+     1  MagicInfo Player I
+     1  A/Red
+     1  B/Green
+     1  C/Yellow
+     1  D/Blue
+     1  Unset
+     1  Fast-Backwards
+     1  Fast-Forwards
+     1  numpad 1
+     1  numpad 2
+     1  numpad 3
+     1  numpad 4
+     1  numpad 5
+     1  numpad 6
+     1  numpad 7
+     1  numpad 8
+     1  numpad 9
+     1  numpad 0
+     1  Mediap
+     1  Psize
+     1  Smart_Hub
+     1  STB
+     1  P +
+     1  P -
+     1  Ch.List
+     1  A - RED
+     1  B - GREEN
+     1  C - YELLOW
+     1  D - BLUE
+     1  FFW
+     1  P.Mode
+     1  S.Mode
+     1  PRE.CH
+     1  Ad/subt
+     1  Fast_forwrd
+     1  Tt_mix
+     1  Tv_on/off
+     1  Stb_on/off
+     1  Minus(-)
+     1  Info_(i)
+     1  Enter/middle
+     1  A(red)
+     1  B(green)
+     1  C(yellow)
+     1  D(blue)
+     1  Smart_Menu
+     1  STB_Guide
+     1  STB_Menu
+     1  CH_UP
+     1  CH_DWN
+     1  Magicinfo
+     1  Ir_set
+     1  Ir_unset
+     1  Txx_mix
+     1  Chan_list
+     1  Prev_chan
+     1  Picsize
+     1  CC/VD
+     1  Ambient
+     1  Web
+     1  Rakuten
+     1  Tving
+     1  Red/Green/Yellow/Blue
+     1  Soccer_mode
+     1  Forwards
+     1  P_min
+     1  P_max
+     1  Num_input
+     1  Enter_ok
+     1  Anynet
+     1  Stb
+     1  Tv_dtv
+     1  D_menu
+     1  Color_red
+     1  Color_green
+     1  Color_yellow
+     1  Color_blue
+     1  Text_mix
+     1  Dual_i_ii
+     1  Tv/video
+     1  P.std
+     1  S.std
+     1  Up/ch+
+     1  Down/ch-
+     1  Left/vol-
+     1  Right/vol+
+     1  -/--
+     1  Dual_i/ii
+     1  List/flof
+     1  (blank)
+     1  3speed
+     1  Numpad
+     1  Menu_left
+     1  Menu_up
+     1  Menu_right
+     1  Menu_down
+     1  Menu_back
+     1  Menu_home
+     1  Menu_enter
+     1  Power_off_only
+     1  Ambient_mode
+     1  Pair_bluetooth
+     1  Colored_buttons
+     1  Fps_(rate/quality)
+     1  Internet_browser
+     1  Exit_application
+     1  Unknown_application
+     1  Subt
+     1  Media.p
+     1  A/red
+     1  B/green
+     1  C/yellow
+     1  D/blue
+     1  Vol-n
+     1  Ch List
+     1  Media P
+     1  Fav Ch
+     1  S Mode
+     1  P Mode
+     1  P Size
+     1  Channel List
+     1  Pic Size
+     1  Input - TV
+     1  Input - AV
+     1  Input - S-Video
+     1  Input - S-Video 2
+     1  Input - Component
+     1  Input - Component 2
+     1  Input - HDMI 1
+     1  Input - HDMI 2
+     1  Input - HDMI 3
+     1  On Screen Remote
+     1  Split Screen Browser
+     1  Energy Saving
+     1  Sub_tcc
+     1  Audio_mts
+     1  Mouse_lclick
+     1  Share
+     1  Screenshot
+     1  Text_pause_play
+     1  Pix Shape
+     1  Ch Up
+     1  Ch Down
+     1  Pix_Shape
+     1  Sub_ch
+     1  Global
+     1  Roku
+     1  V_guide
+     1  F_add/del
+     1  Source2
+     1  Mode2
+     1  Vol+2
+     1  Vol-2
+     1  Add_del_f
+     1  Power_alt
+     1  Vol_dwn_alt
+     1  Vol_up_alt
+     1  F_add_del
+     1  Aux_power
+     1  Aux_vol_up
+     1  Aux_vol_down
+     1  Aux_mode
+     1  Aux_source
+     1  Power_seiki
+     1  Vuduu
+     1  Toon_goggles
+     1  Accu_weather
+     1  Channel_list
+     1  Hud
+     1  Chsel
+     1  10/0
+     1  Digital_tuner
+     1  Bs_tuner
+     1  Cs_tuner
+     1  Analog_tuner
+     1  D-data
+     1  Pvr_familink
+     1  Programinfo
+     1  Schedule
+     1  Picturesize
+     1  Videotrack
+     1  Audiotrack
+     1  Tv/data
+     1  Pvr_power
+     1  Pvr_rewind
+     1  Pvr_play
+     1  Pvr_ffwd
+     1  Pvr_mode
+     1  Pvr_rec
+     1  Pvr_recstop
+     1  Pvr_stop
+     1  {}
+     1  Info+
+     1  Srewind
+     1  Sfast_forward
+     1  Atv
+     1  Game_on/off
+     1  Add
+     1  Erase
+     1  Sleepcall
+     1  Vol_donw
+     1  Ch_donw
+     1  Dvr_list
+     1  Closed_captioning
+     1  Eco_disp
+     1  Action_menu
+     1  Title_list
+     1  Screen___
+     1  Dig_analo
+     1  Ext_box_menu
+     1  I_plus
+     1  Analog/digi
+     1  Prev_chapter
+     1  Next_chapter
+     1  Heart
+     1  I+
+     1  Theatre
+     1  Syncmenu
+     1  Screensize
+     1  Digitalanalog
+     1  Internetvideo
+     1  Activepicture
+     1  Tv_vid
+     1  Fastfwd
+     1  Sync
+     1  Sync_/_menu
+     1  Football
+     1  Tele
+     1  Titlelist
+     1  Chn_down
+     1  Track_id
+     1  Screen_mode
+     1  Internet_video
+     1  Pic Reset
+     1  Demo Mode
+     1  Pic Off
+     1  Sync Menu
+     1  Sub+
+     1  Sub-
+     1  S.Field
+     1  Vert.S
+     1  S.Bar/TV
+     1  0Power
+     1  0Input
+     1  0Pic Reset
+     1  0Demo Mode
+     1  0Blue
+     1  0Options
+     1  0Back
+     1  0Home
+     1  0Select
+     1  0Up
+     1  0Down
+     1  0Left
+     1  0Right
+     1  0Mute
+     1  0Vol_up
+     1  0Vol_dn
+     1  Sirc_1d
+     1  Sirc_3b
+     1  Sirc_38
+     1  Period
+     1  CHN_List
+     1  Back_Return
+     1  Ch_previous
+     1  Sub.page
+     1  Tv/r
+     1  Fast_rev
+     1  Google_Assistant
+     1  Set +
+     1  Set -
+     1  Power_tcl
+     1  Back_tcl
+     1  Home_tcl
+     1  Left_tcl
+     1  Up_tcl
+     1  Right_tcl
+     1  Down_tcl
+     1  Select_tcl
+     1  Direct_TV
+     1  Screen
+     1  RC5_2E
+     1  RC5_3C
+     1  Rm
+     1  R+
+     1  R-
+     1  Sh+
+     1  Sh-
+     1  Sv+
+     1  Sv-
+     1  Co+
+     1  Co-
+     1  B+
+     1  B-
+     1  Ah+
+     1  Ah-
+     1  Cv+
+     1  Cv-
+     1  Av+
+     1  Av-
+     1  Lu+
+     1  Lu-
+     1  Files
+     1  Smart_tv
+     1  Eco_menu
+     1  Ok_enter
+     1  Mediabrowser
+     1  Enter/ok
+     1  Twitch
+     1  Backspace
+     1  Fast_fast_fwd
+     1  Amazon_music
+     1  16:9_|_wide
+     1  L/r
+     1  Previous_|_hold
+     1  Next_|_list
+     1  Revind_|_language
+     1  Forward_|_radio
+     1  Play_|_index
+     1  Pause_|_zoom
+     1  Stop_|_reveal
+     1  Update_|_ttx
+     1  Green_|_subtitle
+     1  Yellow_|_fav
+     1  Blue_|_epg
+     1  S.mode_(smart_sound)
+     1  P.mode_(smart_picture)
+     1  100
+     1  Pic_cntrl
+     1  Digit
+     1  Chnl_prev
+     1  Chnl_next
+     1  Tv_dvd
+     1  Input_zoom
+     1  Menu_setup
+     1  Exit_cancel
+     1  Slow_bk
+     1  Slow_fwd
+     1  Repeat_a_b
+     1  P.MODE
+     1  S.MODE
+     1  ALT+TAB
+     1  ALT+F4
+     1  ALT
+     1  TAB
+     1  DESKTOP
+     1  D.MENU
+     1  D.TITLE
+     1  UP_ARROW
+     1  LEFT_ARROW
+     1  RIGHT_ARROW
+     1  DOWN_ARROW
+     1  D.USB
+     1  D.SETUP
+     1  CH_NEXT
+     1  CH_PREV
+     1  Vol_mute
+     1  Dpad_down
+     1  Dpad_left
+     1  Dpad_right
+     1  Back_recall
+     1  Channellist
+     1  Input_next
+     1  Soundmode
+     1  Vizio
+     1  Menu_ok
+     1  Cast
+     1  Haystack
+     1  Pluto TV
+     1  HBO Max
+     1  Xumo Play
+     1  VUDU
+     1  iHeart
+     1  Watch Free+
+     1  Iheart_radio
+     1  V_button
+     1  Retrn
+     1  Enter_
+     1  Smartcast_home
+     1  Heart_radio
+     1  Captions_cc
+     1  Watch_free
+     1  iHeart_radio
+     1  WatchFree
+     1  Chn_dwn
+     1  Rt
+     1  Lft
+     1  Sleep_timer
+     1  More
+     1  back
+     1  Flshbk
+     1  Select+
+     1  Select-
+     1  Adj_left
+     1  Adj_right
+     1  Space_au
+     1  HDRi
+     1  Bi
+     1  Low Blue Light
+     1  Audio Scenario
+     1  Game_mode
+     1  PBP_pip
+     1  Full_screen
+     1  Audio Select
+     1  Brightness Up
+     1  Brightness Dwn
+     1  Reader Mode
+     1  DTS
+     1  Sound Out
+     1  OLED Care
+     1  User Specified 1
+     1  User Specified 2
+     1  USB/SD
+     1  Skip_backwards
+     1  Input_Select
+     1  Menu_OK
+     1  Exit_Menu
+     1  Cross_Hairs
+     1  Multi_Window
+     1  SmartImage
+     1  Unmute
+     1  SRC+
+     1  SRC-
+     1  SET
+     1  VF
+     1  Aux_in
+     1  OpenClose
+     1  Treb_min
+     1  Treb_plus
+     1  B_Ward
+     1  F_Ward
+     1  Bass_min
+     1  Bass_plus
+     1  SpeakerAB
+     1  Remain
+     1  MP3
+     1  TunerDAB
+     1  TapeMon
+     1  V_UP
+     1  V_up_alt
+     1  V_DOWN_alt
+     1  Denon_power
+     1  Preset_down
+     1  Video_in
+     1  CD_in
+     1  Phono_in
+     1  A B channels
+     1  RR
+     1  M1
+     1  M2
+     1  M3
+     1  Line_in
+     1  CLASSIC
+     1  DYNAMIC
+     1  LINE1
+     1  LINE2
+     1  OPTIC
+     1  Analog1
+     1  Analog2
+     1  Optical1
+     1  Optical2
+     1  StereoMono
+     1  Display_toggle
+     1  Lcd_Change
+     1  Change_Output
+     1  Change_Filter
+     1  Change_Auto
+     1  Rep
+     1  Moon ZZZ
+     1  BT Pair
+     1  Alarm 1
+     1  Alarm 2
+     1  Folder Down
+     1  Folder Up
+     1  Skip Backwards
+     1  Fast Backwards
+     1  Skip Forward
+     1  OK_Scan
+     1  Treble Up
+     1  Treble Down
+     1  2 ABC
+     1  3 DEF
+     1  4 GHI
+     1  5 JKL
+     1  6 MNO
+     1  7 PQRS
+     1  8 TUV
+     1  9 WXYZ
+     1  SurroundOff
+     1  inp_Hdmi1
+     1  inp_Hdmi2
+     1  inp_Hdmi3
+     1  Prev_chap
+     1  Next_chap
+     1  Inp_aux
+     1  Inp_bt
+     1  Inp_disc
+     1  Inp_radio
+     1  Inp_tv
+     1  Thumbnail
+     1  VIDEO 1
+     1  VIDEO 2
+     1  VIDEO 3
+     1  VIDEO 4
+     1  FM STEREO
+     1  TEST-TV/VCR
+     1  Prologic
+     1  3chologic
+     1  Center_mode
+     1  Center-
+     1  Center+
+     1  Rear-
+     1  Rear+
+     1  BALANCE_LEFT
+     1  BALANCE_RIGHT
+     1  Effect
+     1  Pause/Resume
+     1  CBL/SAT
+     1  Media player
+     1  TV audio
+     1  8K
+     1  Internet radio
+     1  Internet Radio
+     1  iPod/USB
+     1  Online Music
+     1  Cable/Sat
+     1  AUX 1
+     1  AUX 2
+     1  Smart Select 1
+     1  Smart Select 2
+     1  Smart Select 3
+     1  Smart Select 4
+     1  LD
+     1  TAPE-1
+     1  TAPE-2
+     1  Tuner_Dn
+     1  Tuner_Up
+     1  Disc
+     1  Prev_Track
+     1  Next_Track
+     1  OPT1
+     1  OPT2
+     1  COAX
+     1  AUX1
+     1  AUX2
+     1  Speakers_A
+     1  Speakers_B
+     1  Speakers_AB
+     1  Speakers_OFF
+     1  Tape_1
+     1  Tape_2
+     1  Tape_3_VCR
+     1  Preset_dn
+     1  Seek_dn
+     1  Seek_up
+     1  CD_rw
+     1  CD_ff
+     1  CD_bk
+     1  CD_fw
+     1  Disc_Scan
+     1  CD_Pause
+     1  CD_Play
+     1  CD_Random
+     1  CD_Disc
+     1  Tape_Azimuth_bk
+     1  Tape_Azimuth_fw
+     1  Tape_rw
+     1  Tape_ff
+     1  Tape_bk
+     1  Tape_fw
+     1  Tape_Rec
+     1  Tape_Cue
+     1  Tape_Pause
+     1  Bluray
+     1  Ble
+     1  InputUp
+     1  InputDown
+     1  Scroll
+     1  PlaylistUp
+     1  PlaylistDn
+     1  AlbumUp
+     1  AlbumDn
+     1  FMMode
+     1  PresetUp
+     1  PresetDn
+     1  TuningUp
+     1  TuningDn
+     1  PlayMode
+     1  GroupSearch
+     1  GT10
+     1  CLR
+     1  POWER_Receiver
+     1  POWER_Zone2
+     1  POWER_Source
+     1  Input BD-DVD
+     1  Input CBL-SAT
+     1  Input GAME
+     1  Input AUX
+     1  Input TUNER
+     1  Input TV-CD
+     1  Input PHONO
+     1  Input NET
+     1  Input USB
+     1  POWER_TV
+     1  TV Vol_max
+     1  TV Vol_min
+     1  TV Muting
+     1  + CH DISC
+     1  - ALBUM
+     1  Vol_max
+     1  Top menu_SP-Guide
+     1  Menu_Prev CH
+     1  Q_Setup
+     1  Home_Audio
+     1  Left_playlist
+     1  Right_playlist
+     1  Fast_reverse
+     1  A_Red_Mode-TV_Search
+     1  B_Green_Music_Repeat
+     1  C_Yellow-Game_Random
+     1  D_Blue_Stereo_Mode
+     1  Power_source
+     1  Power_tv
+     1  Ch_disc
+     1  Album
+     1  Main_Sub
+     1  Bluetooh_pairing
+     1  Tone_up
+     1  Tone_dn
+     1  Treble
+     1  Vocal
+     1  AUD
+     1  Highlight
+     1  CD_1/2/3
+     1  CD_Play/Pause
+     1  CD_Next
+     1  CD_Prev
+     1  CD_FF
+     1  CD_REW
+     1  Tape_Play
+     1  Tape_Forward
+     1  Tape_Backward
+     1  Tape_FF
+     1  Tape_REW
+     1  Tuner_Next_preset
+     1  Tuner_Prev_preset
+     1  Pause_Continue
+     1  Disp
+     1  Cdr
+     1  11_10
+     1  12_clr
+     1  Rand
+     1  Station -
+     1  Station +
+     1  Mono
+     1  FM-AM
+     1  HDMI_Main/Sub
+     1  BD/DVD
+     1  CBL/Sat
+     1  STRMBOX
+     1  Repeat/Shuffle
+     1  AV_Adjust
+     1  Tone
+     1  SW
+     1  Auto/Direct
+     1  Add_Fav
+     1  AmFm_Toggle
+     1  FL_Dimmer
+     1  Input_ATT
+     1  DVD_51ch
+     1  Adv_surround
+     1  Midnight_Loudness
+     1  DVD__Top_Menu
+     1  REC__System_Setup
+     1  REC__Return
+     1  DVD__Menu
+     1  Effect_CH_Select
+     1  Level_minus
+     1  Level_plus
+     1  Dialog_E
+     1  Acoustic_EQ
+     1  DVD_Power
+     1  DVD_Audio
+     1  DVD_Sub_title
+     1  DVD_Rewind
+     1  DVD_Play
+     1  DVD_FastFwd
+     1  DVD_Back
+     1  DVD_Pause
+     1  DVD_Stop
+     1  DVD_Next
+     1  Enter_1
+     1  TV VOL UP
+     1  Skip FWD
+     1  CH UP
+     1  Auto Surr
+     1  Dialog E
+     1  Signal SEL
+     1  Line_01
+     1  Line_02
+     1  DVD_CD
+     1  BT_USB
+     1  IPOD_MP3
+     1  BASS_
+     1  SPEAK_A
+     1  SPEAK_B
+     1  SPEAK_A+B
+     1  LOUD
+     1  DIP_1
+     1  DSP_2
+     1  DSP_3
+     1  DSP_4
+     1  DSP_5
+     1  DSP_6
+     1  DSP_7
+     1  AUTO_SCAN
+     1  VFD+
+     1  VFD-
+     1  ST_MONO
+     1  TUNING-
+     1  TUNING+
+     1  Select_up
+     1  Select_dn
+     1  Station
+     1  Chan_prev
+     1  Chan_next
+     1  Clock_select
+     1  Clock_set
+     1  Tuner_mem
+     1  Play/Tun_mode
+     1  Repeat/FM_mode
+     1  Next_Disc
+     1  BD
+     1  Sat_catv
+     1  Video_3
+     1  FM TUNER
+     1  AM TUNER
+     1  SA-CD/CD
+     1  PORTABLE
+     1  BD/DVD INPUT
+     1  SAT/CBL
+     1  TOGGLE AM/FM
+     1  PRESET+
+     1  PRESET-
+     1  BALANCE
+     1  DIRECT TUNE
+     1  TUNE-
+     1  TUNE+
+     1  Select (Clock/Timer)
+     1  Set (Clock/Timer)
+     1  TunerMemory
+     1  PlayMode/TuningMode
+     1  Repeat/FMMode
+     1  Folder+
+     1  Folder-
+     1  Center Select
+     1  SACD_CD
+     1  Watch
+     1  Listen
+     1  CustomPreset1
+     1  MusicService
+     1  BluetoothRXTX
+     1  FrontSurround
+     1  2CH_Multi
+     1  DSDNative
+     1  PLAY/PAUSE (FM MEMORY)
+     1  FAST REWIND (FM TUNING-)
+     1  FAST FORWARD (FM TUNING+)
+     1  PREVIOUS (FM PRESET-)
+     1  NEXT (FM PRESET+)
+     1  INPUT 1
+     1  INPUT 2
+     1  INPUT 3
+     1  INPUT 4
+     1  PORTABLE IN
+     1  FM TUNER 1
+     1  FM TUNER 2
+     1  FM TUNER 3
+     1  PAIRING BT
+     1  PURE DIRECT
+     1  A/B SPEAKERS
+     1  AMP MENU
+     1  Tuner_memory
+     1  Timer_menu
+     1  Tool_menu
+     1  Func_up
+     1  Func_down
+     1  iPhone_CTRL
+     1  AFD_2CH
+     1  MEDIA_BOX
+     1  PAIRING
+     1  2CH_MULTI
+     1  PURE_DIRECT
+     1  FRONT_SUR
+     1  NIGHT_MODE
+     1  AMP_MENU
+     1  FASTFORWARD
+     1  SKIP_BACK
+     1  SKIP_FORWARD
+     1  Tape1/DAT
+     1  Tape2/MD
+     1  INPUT_CD
+     1  INPUT_AUX
+     1  INPUT_TUNER
+     1  INPUT_PHONO
+     1  MONITOR_TAPE1
+     1  MONITOR_TAPE2
+     1  Balance_left
+     1  Balance_right
+     1  PureDirect
+     1  MD
+     1  TAPE - Record/Pause
+     1  TAPE DECK A/B
+     1  TAPE RWD
+     1  TAPE PLAY
+     1  TAPE FFWD
+     1  TAPE DIR A
+     1  TAPE STOP
+     1  TAPE DIR B
+     1  CD DISC SKIP
+     1  CD BACK
+     1  CD PLAY
+     1  CD FWD
+     1  CD REWIND
+     1  CD STOP/PAUSE
+     1  CD FFWD
+     1  TUNER PRESET-
+     1  TUNER PRESET+
+     1  TUNER A/B/C/D/E
+     1  NumEnter
+     1  Line3
+     1  Dock
+     1  1_CD
+     1  2_TUNER
+     1  3_TAPE/MD
+     1  4_DVD/LD
+     1  5_SAT/D-TV
+     1  6_VCR
+     1  7_PHONO
+     1  8_V-AUX
+     1  9_EXT_DEC
+     1  Enter_+10
+     1  Clear_+100
+     1  VCR_REC
+     1  FF_Left
+     1  FF_Right
+     1  Effect ON/OFF
+     1  Tape/MD
+     1  DVD/LD
+     1  TV/DBS
+     1  V-AUX
+     1  Channel+
+     1  Channel-
+     1  Ext. Decoder
+     1  Level
+     1  Set Menu
+     1  DTS/Surround
+     1  Movie Theatre 1
+     1  Movie Theater 2
+     1  Mono Movie
+     1  TV Sports
+     1  Disco
+     1  Rock
+     1  Jazz Club
+     1  Church
+     1  Hall
+     1  HDMI_5
+     1  HDMI_6
+     1  HDMI_7
+     1  V_AUX
+     1  AV_1
+     1  AV_2
+     1  Portable
+     1  IPod
+     1  PresetL
+     1  PresetR
+     1  TuningL
+     1  TuningR
+     1  FolderDn
+     1  FolderUp
+     1  NET
+     1  Straight
+     1  Direct
+     1  Enchancer
+     1  Prog L
+     1  Prog R
+     1  FM/AM
+     1  Input +
+     1  Input -
+     1  Pop-up Menu
+     1  Track Bck
+     1  Track Fwd
+     1  Preset L
+     1  Preset R
+     1  SS_On_Off
+     1  Coaxial
+     1  Flat
+     1  Speech
+     1  Play_Pause_Pair
+     1  PlayPause
+     1  Treb+
+     1  Treb-
+     1  Bass+
+     1  Bass-
+     1  Line
+     1  PLAY|PAUSE
+     1  BASS
+     1  Rca
+     1  Line in
+     1  PLAY_MODE
+     1  FAST_REWIND
+     1  DISTANCE
+     1  PPL
+     1  BASS_BOOST
+     1  PRESET
+     1  PRESET_1
+     1  PRESET_2
+     1  PRESET_3
+     1  InputBT
+     1  InputLine
+     1  Scan
+     1  NextTrack
+     1  MonoStereo
+     1  Concert
+     1  Gaming
+     1  Bt_stop
+     1  Bt_play_pause
+     1  Bt_next
+     1  Bt_back
+     1  Dialog_enh
+     1  Quick_1
+     1  Quick_2
+     1  Connect
+     1  VOICE
+     1  NEWS
+     1  Aux2
+     1  Analog
+     1  Digital
+     1  Foward
+     1  Woofer_Up
+     1  Woofer_Down
+     1  Night_mode_On
+     1  Night_mode_Off
+     1  Autopower_On
+     1  Autopower_Off
+     1  Cinema_Mode
+     1  Standard_Mode
+     1  ASC_Mode
+     1  Night_mode
+     1  Folder_+
+     1  Folder_-
+     1  AV_sync
+     1  Auto_vol
+     1  Cinema Sound
+     1  LG TV
+     1  V_dwn
+     1  AutoVol
+     1  Auto_Power
+     1  Mute Mic
+     1  Input source
+     1  Night ON
+     1  Night OFF
+     1  Woofer +
+     1  Woofer -
+     1  SOUND_EFECT
+     1  AUTO_VOLUME
+     1  WOOFER_LEVEL
+     1  OP
+     1  STANDARD
+     1  DIALOG
+     1  NIGHT
+     1  Hdmi_In
+     1  Treb_Up
+     1  Treb_Down
+     1  Coax IN
+     1  Opical IN
+     1  Audio IN
+     1  BT(Pair)
+     1  HDMI(ARC)
+     1  Night_Effect
+     1  SRC_TV_ARC
+     1  SRC_OPTICAL
+     1  SRC_AUX
+     1  Movie_mode
+     1  Sports_mode
+     1  Music_mode
+     1  Moon
+     1  Tv_ARC
+     1  Main_Up
+     1  Main_Down
+     1  Bas_Down
+     1  Profile_music
+     1  Profile_movie
+     1  Profile_voice
+     1  Auto Power
+     1  Anynet+
+     1  SoundShare
+     1  TV Vol+
+     1  TV Vol-
+     1  TV CH+
+     1  TV CH-
+     1  Audio Sync+
+     1  Audio Sync-
+     1  TV Mute
+     1  TV Info
+     1  TV PreCH
+     1  Smart Volume
+     1  3D Sound Plus
+     1  S/W Level Left
+     1  S/W Level Right
+     1  Play/Pause/Enter
+     1  Bluetooth_Power
+     1  Surround Level
+     1  Surround Mode
+     1  Sound Control
+     1  Bluetooth POWER
+     1  Auto POWER
+     1  Back_track
+     1  Bluetooth_power
+     1  Any_net
+     1  Soundshare
+     1  Tv_vol_up
+     1  Tv_vol_down
+     1  Tv_ch_up
+     1  Tv_ch_down
+     1  Audio_sync_up
+     1  Audio_sync_down
+     1  Tv_mute
+     1  Tv_info
+     1  Tv_pre_ch
+     1  Smart_volume
+     1  Sw_left
+     1  Sw_right
+     1  3d_sound_plus
+     1  Drc
+     1  Prev_trck
+     1  Next_trck
+     1  SFX
+     1  Sound_adj
+     1  Auto_Vol
+     1  Auto_pwr
+     1  Auto_POWER
+     1  D_in
+     1  Usb_random
+     1  silence
+     1  woof_up
+     1  woof_down
+     1  pause_play
+     1  Source_up
+     1  Source_down
+     1  Ambeo
+     1  Input_src
+     1  Auto_Sound
+     1  SW_Up
+     1  SW_Down
+     1  D_In
+     1  USB_Random
+     1  Clear_audio
+     1  Snd_field
+     1  Mirroring
+     1  BT_pairing
+     1  SW+
+     1  SW-
+     1  Frwd
+     1  BT_rx_tx
+     1  RMT_AH411U_pwr
+     1  Auto_sound
+     1  Indicator
+     1  VolMute
+     1  DPad_Up
+     1  DPad_Down
+     1  DPad_Left
+     1  DPad_Right
+     1  InputBluetooth
+     1  InputOptical
+     1  InputUSB
+     1  LED_Dim
+     1  HDMI_IN
+     1  HDMI_Thru
+     1  Mode_Movie
+     1  Mode_Music
+     1  Mode_TV
+     1  Sel_play_pause
+     1  Right_next
+     1  Left_previous
+     1  SONIC 1
+     1  SONIC 2
+     1  SONIC 3
+     1  SONIC OFF
+     1  BASSdwn
+     1  BASSup
+     1  BT pairing
+     1  HDMI TV
+     1  Optical_Audio
+     1  LED_Dimmer
+     1  BassMX
+     1  TV_Vol
+     1  VRTiX
+     1  Treb
+     1  Src_Dig_Audio
+     1  Src_Optical
+     1  Src_HDMI_In
+     1  Src_ARC
+     1  Src_BT
+     1  Src_USB
+     1  Src_Aux
+     1  Center_Up
+     1  Center_Down
+     1  Surr_On
+     1  Surr_Off
+     1  Surr_Vol_Up
+     1  Surr_Vol_Down
+     1  Surr_Bal_Up
+     1  Surr_Bal_Down
+     1  Subwf_Up
+     1  Subwf_Down
+     1  EQ_Direct
+     1  TrueVol_On
+     1  TrueVol_Off
+     1  Night_On
+     1  Night_Off
+     1  AVDelay_Up
+     1  AVDelay_Down
+     1  VZTVRem_On
+     1  VZTVRem_Off
+     1  Eco_On
+     1  Eco_Off
+     1  Spkr_Test
+     1  Link_Enable
+     1  Light UP
+     1  Light DOWN
+     1  Orange
+     1  Lime
+     1  Violet
+     1  Tangerine
+     1  Aquamarine
+     1  Purple
+     1  Apricot
+     1  Olympic
+     1  Lavender
+     1  Sea Green
+     1  Teal
+     1  Pink
+     1  Baby Blue
+     1  Red UP
+     1  Green UP
+     1  Blue UP
+     1  Quick
+     1  Red DOWN
+     1  Green DOWN
+     1  Blue DOWN
+     1  DIY 1
+     1  DIY 2
+     1  DIY 3
+     1  AUTO
+     1  DIY 4
+     1  DIY 5
+     1  DIY 6
+     1  FLASH
+     1  JUMP 3
+     1  JUMP 7
+     1  FADE 3
+     1  FADE 7
+     1  EQ_DIRECT
+     1  EQ_MOVIE
+     1  EQ_MUSIC
+     1  EQ_GAME
+     1  DIALOGUE+
+     1  DIALOGUE-
+     1  CENTER+
+     1  CENTER-
+     1  SUBWOOF+
+     1  SUBWOOF-
+     1  SURRLVL+
+     1  SURRLVL-
+     1  SURRBAL+
+     1  SURRBAL-
+     1  INPUT_SRCH
+     1  SPKR_TEST
+     1  SRND_ON
+     1  SRND_OFF
+     1  SRND_FRNT
+     1  SRND_DUAL
+     1  VRTX_ON
+     1  VRTX_OFF
+     1  TRUVOL_ON
+     1  TRUVOL_OFF
+     1  NIGHT_ON
+     1  NIGHT_OFF
+     1  ECOPWR_ON
+     1  ECOPWR_OFF
+     1  PWRLED_ON
+     1  PWRLED_OFF
+     1  AV_DELAY+
+     1  AV_DELAY-
+     1  VZTV_ON
+     1  VZTV_OFF
+     1  RST_AUDIO
+     1  RESET_ALL
+     1  Bluetooth_mode
+     1  Setup_Info
+     1  Height On
+     1  Height Off
+     1  Night On
+     1  Night Off
+     1  TruVol On
+     1  TruVol Off
+     1  VirtX On
+     1  VirtX Off
+     1  Dialogue +
+     1  Dialogue -
+     1  Subwoofer +
+     1  Subwoofer -
+     1  Surr lvl +
+     1  Surr lvl -
+     1  Surr bal +
+     1  Surr bal -
+     1  Height lvl +
+     1  Height lvl -
+     1  EcoPower On
+     1  EcoPower Off
+     1  PowerLED On
+     1  PowerLED Off
+     1  AV Delay +
+     1  AV Delay -
+     1  Speaker Test
+     1  EQ Music
+     1  EQ Movie
+     1  EQ Direct
+     1  EQ Game
+     1  Bluetooth_input
+     1  Last Input
+     1  HDMI in
+     1  HDMI-eARC
+     1  Surr Dual
+     1  Surr On
+     1  Surr Off
+     1  TVOL
+     1  TSHD
+     1  Trebel
+     1  BT_pair
+     1  Input_choice
+     1  EQ_News
+     1  AI_Sound
+     1  Night_Mode
+     1  Yamaha_POWER
+     1  Hdmi_5
+     1  On_screen
+     1  Pop_upmenu
+     1  Clear_voice
+     1  3d_surr
+     1  Sub_plus
+     1  Sub_minus
+     1  Bass_ext
+     1  3D_SURROUND
+     1  BLUETOOTH_STANDBY
+     1  BASE_EXTENSION
+     1  DB-DVD
+     1  YIT
+     1  Distance
+     1  Ppl
+     1  Bass_boost
+     1  Preset
+     1  IpadPwr
+     1  Bass_dwn
+     1  Trebble_dwn
+     1  Trebble_up
+     1  Album_up
+     1  Album_dwn
+     1  Chapter_up
+     1  Chapter_dwn
+     1  Memory_up
+     1  Memory_dwn
+     1  Playlist_up
+     1  Playlist_dwn
+     1  Mem
+     1  Ipod
+     1  CHANNEL_UP
+     1  CHANNEL_DOWN
+     1  RADIO
+     1  KEY_1
+     1  KEY_2
+     1  KEY_3
+     1  KEY_4
+     1  KEY_5
+     1  KEY_6
+     1  KEY_7
+     1  KEY_8
+     1  KEY_9
+     1  KEY_0
+     1  CAKE_MENU
+     1  SEARCH
+     1  VOD
+     1  >||
+     1  Vod
+     1  Ppv
+     1  Day_down
+     1  Pip_on_off
+     1  Pip_swap
+     1  Pip_move
+     1  Pip_ch_up
+     1  Pip_ch_down
+     1  Pause&Play
+     1  FFWD
+     1  Live
+     1  Day_dn
+     1  On_Demand
+     1  DVR_List
+     1  PIP_On_Off
+     1  PIP_Swap
+     1  PIP_Move
+     1  PIP_Ch_Up
+     1  PIP_Ch_Dn
+     1  Video_Src
+     1  TV screen
+     1  Fav. CH
+     1  Google Assistant
+     1  View_LiveTV
+     1  Pg_dn
+     1  PIP+
+     1  PIP-
+     1  Lang(AD)
+     1  Timers
+     1  TV/Radio
+     1  Lib
+     1  Mosaic
+     1  ChDn
+     1  Pwr_direct
+     1  Pwr_av1
+     1  Pwr_av2
+     1  Pwr_tv
+     1  Directandtv_on
+     1  DSTV menu
+     1  Tv_off
+     1  Power_dstv
+     1  Alt
+     1  Showmax
+     1  Playlist
+     1  Profile
+     1  Cu
+     1  PREW
+     1  AUDIO
+     1  ORANGE
+     1  Ch_dwn
+     1  Elisa_viihde
+     1  Programmable section
+     1  F3
+     1  F4
+     1  Change Audio Mode
+     1  Context Menu
+     1  Quick TV Access
+     1  Virt. Keyboard
+     1  Home (exit)
+     1  Change Aspect Ratio
+     1  Rcl
+     1  Foxtel
+     1  OnDemand
+     1  TVGuide
+     1  Planner
+     1  Ctr/Select
+     1  1/.,-
+     1  2/abc
+     1  3/def
+     1  4/ghi
+     1  5/jkl
+     1  6/mno
+     1  7/pqrs
+     1  8/tuv
+     1  9/wxyz
+     1  0/Space
+     1  UP_Volume
+     1  DOWN_Volume
+     1  UP_Channel
+     1  DOWN_Channel
+     1  UP_Arrow
+     1  BACK_Arrow
+     1  LEFT_Arrow
+     1  RIGHT_Arrow
+     1  HD_Channels
+     1  My_Channels
+     1  Get_TV
+     1  My_Archive
+     1  C_up
+     1  C_down
+     1  TV/R
+     1  Mail
+     1  POWER-blue
+     1  SCREEN_SIZE
+     1  REVERSE
+     1  APP
+     1  KEYBOARD
+     1  Find
+     1  Prog_dn
+     1  Pr_back
+     1  V_mode
+     1  Red_Shift
+     1  Blue_lr
+     1  Rev_fwd
+     1  Rev_back
+     1  Dkino
+     1  Up_CH+
+     1  Down_CH-
+     1  Left_Vol-
+     1  Right_Vol+
+     1  Red_DPA_LIST
+     1  Green_MEM
+     1  Yellow_Delete
+     1  Blue_RAD
+     1  Arrow_UP
+     1  Arrow_DOWN
+     1  Arrow_LEFT
+     1  Arrow_RIGHT
+     1  CH_Swap
+     1  Rewind_back
+     1  Rewind_forward
+     1  RAW_55
+     1  RAW_57
+     1  Power_BOX
+     1  Skyq_TV
+     1  Vvolup_TV
+     1  Mute_TV
+     1  Voldown_TV
+     1  Blue_timer
+     1  Res
+     1  TTX
+     1  S_T
+     1  PVR List
+     1  TV_Rad
+     1  SFI
+     1  0 / AV
+     1  SFI / EPG
+     1  REF / EXIT
+     1  STILL
+     1  Back_exit
+     1  Jump_back
+     1  Jump_fwd
+     1  Tv_R
+     1  PG-
+     1  PG+
+     1  Channel +
+     1  Channel -
+     1  Page_Down
+     1  Page Up
+     1  Page Down
+     1  Skip_Fwd
+     1  Scan_Back
+     1  Scan_Fwd
+     1  Disk_Menu
+     1  Title/Pop-Pup
+     1  Next_Ch
+     1  Prev_Ch
+     1  Disc_Menu
+     1  Speaker_Level
+     1  Sound_Effect
+     1  Chptr_next
+     1  Chpter_back
+     1  Title_popup
+     1  Info_menu
+     1  DiscMenu
+     1  TitlePopup
+     1  ScanBack
+     1  ScanForward
+     1  SpeakerLevel
+     1  Optical_TVSound
+     1  Asterisk1
+     1  Asterisk2
+     1  Audio Track
+     1  Layer
+     1  Picture Adjust
+     1  Prog/Direct
+     1  Call
+     1  Power_Amp
+     1  Input_up
+     1  Input_dn
+     1  PureAudio
+     1  PgDwn
+     1  PopUpMenu
+     1  ABReplay
+     1  Darbee
+     1  CC_VD
+     1  Popup/Title Menu
+     1  TV_Vol_Up
+     1  TV_Vol_Dn
+     1  Tv On
+     1  Close CD
+     1  Top menu
+     1  Net_service
+     1  Vol_up_tv
+     1  Vol_dn_tv
+     1  MC
+     1  PIPAudio
+     1  AB
+     1  OSC
+     1  TitleMenu
+     1  Video1
+     1  Video2
+     1  DVD_Menu
+     1  Track_up
+     1  Track_dn
+     1  0_10
+     1  10plus
+     1  L_R
+     1  N_P
+     1  F_bwd
+     1  F_fwd
+     1  TV_CH-
+     1  TV_CH+
+     1  TV_VOL-
+     1  TV_VOL+
+     1  PROGRAM
+     1  SHADOW
+     1  MALE/AUDIO
+     1  FEMALE/SOUND
+     1  CHORUS
+     1  SELECT/ENTER
+     1  PAUSE/STEP
+     1  ECHO_VOL-
+     1  ECHO_VOL+
+     1  MIC_VOL-
+     1  MIC_VOL+
+     1  SUB TITLE
+     1  SET UP
+     1  REPEAT A-B
+     1  SearchMode
+     1  0/10
+     1  10_plus
+     1  VCR_TV
+     1  Clear_reset
+     1  Subtitle_T-set
+     1  Dvd_card
+     1  Audio_only
+     1  Go_to
+     1  A_b
+     1  Osd
+     1  Keyboard
+     1  P_n
+     1  ___
+     1  Volume
+     1  Repeat_AB
+     1  EJECT
+     1  Center_Enter
+     1  Play3
+     1  Play4
+     1  Key_lock
+     1  DVD_menu
+     1  Audio_mode
+     1  Title_menu
+     1  Subtitle_menu
+     1  Audio_menu
+     1  Slow_Rwd
+     1  Slow_Fwd
+     1  Pause_Step
+     1  AV in out
+     1  Tv_Imput
+     1  Picture_Navi
+     1  Time/Text
+     1  FastSlow_play
+     1  Tv_video
+     1  Time_text
+     1  Sur
+     1  Picture_navi
+     1  Inst_rply_adv_back
+     1  Ins_rply_adv_fwd
+     1  Slow_play
+     1  Fast_play
+     1  P.run
+     1  3x FF
+     1  3x REW
+     1  A.Mon
+     1  SideA
+     1  SideB
+     1  CHAP/TIM
+     1  Chapter
+     1  CX
+     1  Dig/Ana
+     1  FRM/TIM
+     1  Repeat A
+     1  Repeat B
+     1  Speed down
+     1  Speed up
+     1  Step Rew
+     1  Step Fwd
+     1  TV/LDP
+     1  OPEN
+     1  SUBTITLE
+     1  ANGLE
+     1  LANGUAGE
+     1  RESUME
+     1  TIME
+     1  BACKWARD
+     1  SKIP<<
+     1  SKIP>>
+     1  STEP
+     1  VIEW
+     1  N/P
+     1  RAN
+     1  R/L
+     1  PROG
+     1  SUB_TITLE
+     1  Vcr_dvd
+     1  Progressive
+     1  Tv_vcr
+     1  A_b_rpt
+     1  Clock_counter
+     1  Rec_otr
+     1  Timer_rec
+     1  Pause_still
+     1  Up_vol
+     1  Down_vol
+     1  Open Close
+     1  P n
+     1  Channel
+     1  A b

@@ -1,0 +1,1 @@
+[{"name":"power_toggle","orig":"Power","brand":"SAKAWA","model":"SAKAWA_Projector","proto":"NEC","code":"0xFFFF17E8","bits":32},{"name":"vol_up","orig":"Vol_up","brand":"SAKAWA","model":"SAKAWA_Projector","proto":"NEC","code":"0xFFFFBD42","bits":32},{"name":"vol_dn","orig":"Vol_dn","brand":"SAKAWA","model":"SAKAWA_Projector","proto":"NEC","code":"0xFFFF4FB0","bits":32}]

@@ -84,6 +84,33 @@
   .actions { margin-top: 10px; display: flex; gap: 8px; }
   .actions button { flex: 1; }
 
+  .device {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    background: #171a1f;
+    border: 1px solid var(--edge);
+    border-radius: 9px;
+    padding: 9px 11px;
+    margin-bottom: 10px;
+    font-size: 13px;
+  }
+  .device .none { color: var(--dim); font-style: italic; }
+  .readout {
+    margin: 9px 0 0;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+    color: var(--dim);
+  }
+  .readout .empty { color: #d9884f; }
+  details { margin-top: 10px; }
+  summary {
+    cursor: pointer;
+    font-size: 12px;
+    color: var(--dim);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+  }
+  details .row { margin-top: 8px; }
+
   #status {
     position: fixed;
     left: 0; right: 0; bottom: 0;
@@ -106,6 +133,31 @@
   .slot.pressed { animation: slotFlash 900ms ease-out; }
   @media (prefers-reduced-motion: reduce) {
     .slot.pressed { animation: none; border-color: var(--accent); }
+  }
+  .library {
+    background: var(--card);
+    border: 1px solid var(--edge);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-bottom: 18px;
+  }
+  .library h2 {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--dim);
+    margin: 0 0 10px;
+  }
+  .library .row + .row { margin-top: 8px; }
+  .lib-apply { display: flex; gap: 8px; align-items: flex-end; margin-top: 10px; }
+  .lib-apply .field { flex: 0 0 110px; }
+  .lib-apply button { flex: 1; }
+  #libInfo {
+    margin-top: 10px;
+    font-size: 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    color: var(--dim);
+    word-break: break-all;
   }
   .warn {
     background: #2a2113;
@@ -132,6 +184,42 @@
   </div>
 
   <button id="connect">Connect</button>
+
+  <section class="library">
+    <h2>Code library</h2>
+    <div class="row">
+      <div class="field grow">
+        <label for="libCategory">Category</label>
+        <select id="libCategory"><option value="">Loading…</option></select>
+      </div>
+      <div class="field grow">
+        <label for="libBrand">Brand</label>
+        <select id="libBrand" disabled><option value="">—</option></select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="field grow">
+        <label for="libModel">Model / keymap</label>
+        <select id="libModel" disabled><option value="">—</option></select>
+      </div>
+      <div class="field grow">
+        <label for="libFunction">Function</label>
+        <select id="libFunction" disabled><option value="">—</option></select>
+      </div>
+    </div>
+    <div class="lib-apply">
+      <div class="field">
+        <label for="libSlot">Into slot</label>
+        <select id="libSlot">
+          <option>1</option><option>2</option><option>3</option>
+          <option>4</option><option>5</option>
+        </select>
+      </div>
+      <button class="ghost" id="libApply" disabled>Assign to slot</button>
+    </div>
+    <div id="libInfo">Pick a category to browse. Manual hex entry still works below.</div>
+  </section>
+
   <div id="slots"></div>
 </main>
 
@@ -146,7 +234,15 @@ const TRIGGER_UUID = '58397514-04a3-4265-9590-9d910c4e99d2';
 const STATUS_UUID  = 'b8ddfe01-519f-430d-bd4e-aba0dd852e2c';
 
 const DEVICE_NAME = 'IR-Remote';
+
+// Protocols the firmware can actually transmit today. The library holds RC5/RC6
+// entries too, but the slot dropdown has no option for them — setting .value to
+// an absent option fails silently and leaves the PREVIOUS protocol, which would
+// save a valid RC5 code tagged as NEC and send garbage with no error shown. So
+// library entries are filtered to this list. Phase 5 Sitting B adds RC5/RC6 to
+// the firmware; then they only need appending here.
 const PROTOCOLS = ['SAMSUNG', 'NEC', 'SONY'];
+const SENDABLE = new Set(PROTOCOLS);
 
 // Slot 1 is pre-filled with the Samsung power code proven in Phase 1.
 const DEFAULTS = {
@@ -195,27 +291,38 @@ function buildSlots() {
     el.id = `slot${slot}`;
     el.innerHTML = `
       <h2>Slot ${slot}</h2>
-      <div class="row">
-        <div class="field grow">
-          <label for="proto${slot}">Protocol</label>
-          <select id="proto${slot}">
-            ${PROTOCOLS.map(p => `<option ${p === d.proto ? 'selected' : ''}>${p}</option>`).join('')}
-          </select>
-        </div>
-        <div class="field grow">
-          <label for="code${slot}">Hex code</label>
-          <input id="code${slot}" value="${d.code}" placeholder="0xE0E040BF"
-                 autocapitalize="off" autocorrect="off" spellcheck="false">
-        </div>
-        <div class="field narrow">
-          <label for="bits${slot}">Bits</label>
-          <input id="bits${slot}" type="number" inputmode="numeric" value="${d.bits}" min="1" max="64">
-        </div>
+      <div class="device">
+        <span id="dev${slot}" class="none">No device assigned</span>
       </div>
+      <div class="field">
+        <label for="func${slot}">Function</label>
+        <select id="func${slot}" disabled><option value="">assign a device first</option></select>
+      </div>
+      <div class="readout" id="out${slot}"></div>
       <div class="actions">
         <button class="ghost" data-save="${slot}">Save</button>
         <button data-test="${slot}">Test</button>
-      </div>`;
+      </div>
+      <details>
+        <summary>Advanced — manual hex</summary>
+        <div class="row">
+          <div class="field grow">
+            <label for="proto${slot}">Protocol</label>
+            <select id="proto${slot}">
+              ${PROTOCOLS.map(p => `<option ${p === d.proto ? 'selected' : ''}>${p}</option>`).join('')}
+            </select>
+          </div>
+          <div class="field grow">
+            <label for="code${slot}">Hex code</label>
+            <input id="code${slot}" value="${d.code}" placeholder="0xE0E040BF"
+                   autocapitalize="off" autocorrect="off" spellcheck="false">
+          </div>
+          <div class="field narrow">
+            <label for="bits${slot}">Bits</label>
+            <input id="bits${slot}" type="number" inputmode="numeric" value="${d.bits}" min="1" max="64">
+          </div>
+        </div>
+      </details>`;
     host.appendChild(el);
   }
 
@@ -224,6 +331,63 @@ function buildSlots() {
     if (save) saveSlot(Number(save));
     if (test) testSlot(Number(test));
   });
+
+  // Function dropdown drives the slot; manual edits keep the readout honest.
+  host.addEventListener('change', (e) => {
+    const m = /^(func|proto|code|bits)(\d)$/.exec(e.target.id || '');
+    if (!m) return;
+    const slot = Number(m[2]);
+    if (m[1] === 'func') applyFunction(slot, Number(e.target.value));
+    else updateReadout(slot);
+  });
+  host.addEventListener('input', (e) => {
+    const m = /^(code|bits)(\d)$/.exec(e.target.id || '');
+    if (m) updateReadout(Number(m[2]));
+  });
+
+  for (let slot = 1; slot <= 5; slot++) updateReadout(slot);
+}
+
+// ── slot ↔ device binding ───────────────────────────────────────────────────
+// A slot is conceptually "this device, this button": the protocol and address
+// belong to the device, and only the command changes when you go power → input.
+// slotDevice[n] holds the assigned device plus its sendable entries.
+const slotDevice = {};
+
+function updateReadout(slot) {
+  const proto = $(`#proto${slot}`).value;
+  const code = $(`#code${slot}`).value.trim();
+  const bits = $(`#bits${slot}`).value;
+  const el = $(`#out${slot}`);
+  el.innerHTML = code
+    ? `${proto} · ${code} · ${bits} bits`
+    : `<span class="empty">empty — pick a function or enter a hex code</span>`;
+}
+
+function applyFunction(slot, idx) {
+  const dev = slotDevice[slot];
+  const e = dev && dev.entries[idx];
+  if (!e) return;
+  $(`#proto${slot}`).value = e.proto;
+  $(`#code${slot}`).value = e.code;
+  $(`#bits${slot}`).value = e.bits;
+  updateReadout(slot);
+  setStatus(`slot ${slot}: ${e.orig} (${e.proto} ${e.code}) — press Save to store it`, 'ok');
+}
+
+function assignDevice(slot, { brand, model, entries }, pickIdx = 0) {
+  slotDevice[slot] = { brand, model, entries };
+
+  $(`#dev${slot}`).className = '';
+  $(`#dev${slot}`).textContent = `${brand} / ${model}`;
+
+  const sel = $(`#func${slot}`);
+  sel.innerHTML = entries.map((e, i) =>
+    `<option value="${i}">${e.name.startsWith('other:') ? e.orig : `${e.orig} — ${e.name}`}</option>`
+  ).join('');
+  sel.disabled = false;
+  sel.value = String(pickIdx);
+  applyFunction(slot, pickIdx);
 }
 
 // ── BLE ─────────────────────────────────────────────────────────────────────
@@ -313,9 +477,157 @@ async function testSlot(slot) {
   }
 }
 
+// ── code library ────────────────────────────────────────────────────────────
+// index.json is small (~40K) and loads once; brand shards are fetched on demand
+// and cached. Served statically alongside the app, so this works on Pages and
+// on localhost identically.
+
+const DATA_BASE = '../data';
+let libIndex = null;
+const shardCache = new Map();
+let libEntries = [];          // entries for the currently selected model
+
+const libCategory = $('#libCategory'), libBrand = $('#libBrand');
+const libModel = $('#libModel'), libFunction = $('#libFunction');
+const libApply = $('#libApply'), libInfo = $('#libInfo');
+
+function fillSelect(sel, items, placeholder) {
+  sel.innerHTML = `<option value="">${placeholder}</option>` +
+    items.map(({ value, label }) =>
+      `<option value="${value.replace(/"/g, '&quot;')}">${label}</option>`).join('');
+  sel.disabled = items.length === 0;
+}
+
+// Canonical functions first and in a useful order — power and inputs are the
+// two things this whole library exists to make reachable.
+const FUNC_ORDER = [
+  'power_toggle', 'power_on', 'power_off', 'source_cycle',
+  'input_hdmi', 'input_hdmi1', 'input_hdmi2', 'input_hdmi3', 'input_hdmi4',
+  'input_vga', 'input_comp', 'vol_up', 'vol_dn', 'mute', 'menu',
+];
+const funcRank = (n) => {
+  const i = FUNC_ORDER.indexOf(n);
+  return i === -1 ? FUNC_ORDER.length : i;
+};
+
+async function loadLibIndex() {
+  try {
+    const res = await fetch(`${DATA_BASE}/db/index.json`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    libIndex = await res.json();
+    fillSelect(libCategory, Object.entries(libIndex).map(([slug, c]) => ({
+      value: slug,
+      label: `${c.label} (${Object.keys(c.brands).length} brands)`,
+    })), 'Select category…');
+    libInfo.textContent = 'Pick a category to browse. Manual hex entry still works below.';
+  } catch (err) {
+    libCategory.innerHTML = '<option value="">unavailable</option>';
+    libInfo.textContent = `Code library unavailable: ${err.message}`;
+  }
+}
+
+libCategory.addEventListener('change', () => {
+  const cat = libIndex?.[libCategory.value];
+  resetFrom('brand');
+  if (!cat) return;
+  const brands = Object.entries(cat.brands)
+    .sort((a, b) => a[0].localeCompare(b[0]))
+    .map(([name, b]) => ({ value: name, label: `${name} (${b.total})` }));
+  fillSelect(libBrand, brands, 'Select brand…');
+});
+
+libBrand.addEventListener('change', async () => {
+  resetFrom('model');
+  const cat = libIndex?.[libCategory.value];
+  const brand = cat?.brands[libBrand.value];
+  if (!brand) return;
+
+  libInfo.textContent = `Loading ${libBrand.value}…`;
+  let entries = shardCache.get(brand.file);
+  if (!entries) {
+    try {
+      const res = await fetch(`${DATA_BASE}/db/${brand.file}`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      entries = await res.json();
+      shardCache.set(brand.file, entries);
+    } catch (err) {
+      libInfo.textContent = `Could not load ${libBrand.value}: ${err.message}`;
+      return;
+    }
+  }
+  // RAW timing arrays need chunked BLE writes, and RC5/RC6 need firmware support
+  // that lands in Sitting B. Both stay in the data (no re-scrape needed later)
+  // but are hidden here so nothing unsendable can be picked.
+  const sendable = entries.filter(e => SENDABLE.has(e.proto));
+  const models = [...new Set(sendable.map(e => e.model))].sort();
+  fillSelect(libModel, models.map(m => ({ value: m, label: m })), 'Select model…');
+  const hidden = entries.length - sendable.length;
+  libInfo.textContent = `${libBrand.value}: ${models.length} keymaps, ` +
+    `${sendable.length} sendable codes` +
+    (hidden ? ` (${hidden} hidden — RAW or RC5/RC6, not sendable yet)` : '');
+  shardCache.set(brand.file, entries);
+  libModel.dataset.file = brand.file;
+});
+
+libModel.addEventListener('change', () => {
+  resetFrom('function');
+  const entries = shardCache.get(libModel.dataset.file) || [];
+  libEntries = entries
+    .filter(e => e.model === libModel.value && SENDABLE.has(e.proto))
+    .sort((a, b) => funcRank(a.name) - funcRank(b.name) ||
+                    a.orig.localeCompare(b.orig));
+
+  fillSelect(libFunction, libEntries.map((e, i) => ({
+    value: String(i),
+    label: e.name.startsWith('other:') ? e.orig : `${e.orig} — ${e.name}`,
+  })), 'Select function…');
+});
+
+libFunction.addEventListener('change', () => {
+  const e = libEntries[Number(libFunction.value)];
+  libApply.disabled = !e;
+  if (!e) return;
+  libInfo.textContent =
+    `${e.proto} ${e.code} (${e.bits} bits) · ${e.brand} ${e.model} · "${e.orig}"`;
+});
+
+libApply.addEventListener('click', () => {
+  const e = libEntries[Number(libFunction.value)];
+  if (!e) return;
+  const slot = Number($('#libSlot').value);
+
+  // Belt and braces: never write a protocol the slot dropdown cannot represent,
+  // because that would silently leave the old protocol next to the new code.
+  if (!SENDABLE.has(e.proto)) {
+    setStatus(`${e.proto} is not sendable yet — pick another code`, 'err');
+    return;
+  }
+
+  // Assign the whole device to the slot, not just this one code — that is what
+  // lets the slot's Function dropdown swap power → input without coming back here.
+  assignDevice(slot, { brand: e.brand, model: e.model, entries: libEntries },
+               Number(libFunction.value));
+
+  flashSlot(slot);
+  document.getElementById(`slot${slot}`)
+    ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setStatus(`slot ${slot} ← ${e.brand} ${e.model}: ${e.orig} ` +
+            `(${libEntries.length} functions available)`, 'ok');
+});
+
+function resetFrom(level) {
+  const clear = (sel) => { sel.innerHTML = '<option value="">—</option>'; sel.disabled = true; };
+  if (level === 'brand') clear(libBrand);
+  if (level === 'brand' || level === 'model') clear(libModel);
+  clear(libFunction);
+  libApply.disabled = true;
+  libEntries = [];
+}
+
 // ── init ────────────────────────────────────────────────────────────────────
 buildSlots();
 refreshButtons();
+loadLibIndex();
 $('#connect').addEventListener('click', connect);
 
 if (!navigator.bluetooth) {
