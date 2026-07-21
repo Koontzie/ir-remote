@@ -393,15 +393,46 @@ stitching vias.
 | Critical nets routed with fat traces | VBAT + IR1/IR2 at 0.6mm, 3V3/VBUS 0.5mm, USB pair 0.25mm |
 | **Unconnected items** | **32 — NOT finished** |
 
-Unconnected breakdown: GND 44 endpoints, +3V3 8, VBUS 6, IR2_CTRL 2,
-IR1_GATE 2, BTN1 2. Freerouting completed 25 of 27 nets in one pass; a second
-pass is needed and was blocked when the MCP's SWIG proxy corrupted
-(`open_project` → "dehydrated proxy, restart the server"). **DSN export exists
-only in the MCP, not `kicad-cli`, so routing cannot resume until the MCP server
-is restarted.**
+Unconnected breakdown: **GND 32 endpoints, +3V3 8, VBUS 6, IR2_CTRL 2,
+IR1_GATE 2, BTN1 2** — 26 unconnected items.
+
+Three autorouter passes were run:
+
+| Pass | Setup | Result |
+|---|---|---|
+| 1 | 50 passes, pours present | 25 of 27 nets, 114 wires |
+| 2 | 100 passes, existing routing preserved | **regression** — 101 wires, net gain of 1 connection |
+| 3 | 120 passes, **pours stripped so GND must route** | **did not converge; killed at ~35 min, no output** |
+
+Pass 3 is the right approach and should be resumed with a longer budget, but it
+is expensive: 59 GND pins on a dense 2-layer board is a much harder problem than
+the signal nets. **The pours were restored afterwards so the board is not left
+in a degraded state.**
 
 **This board is not ready for fab.** Steps 6–7 (gerbers, BOM, CPL) remain on
 hold.
+
+#### The ground pour cannot carry GND on this board
+
+Worth recording, because it is counter-intuitive and cost several iterations.
+
+A ground pour on both layers plus 90 stitching vias still left ~32 GND endpoints
+unconnected, and adding vias barely moved the number (44 → 42 → 38 → 34 → 32).
+The cause: **the back side is too dense for the pour to weave through.** KiCad's
+fill fragments into 14 pieces on F.Cu and 15 on B.Cu, and several GND pads sit in
+regions the pour cannot reach at all — so no number of stitching vias helps,
+because there is no pour fragment adjacent to those pads to stitch *to*.
+
+Compounding it: **Freerouting exported the pours as planes and therefore assumed
+GND was already connected**, emitting a single GND wire across two full routing
+passes. The board had *zero* routed GND segments while looking plausible.
+
+Fix: strip the zones, export DSN without them so GND becomes an ordinary
+routable net (own class, 0.4mm), route, then restore the pours on top. The pours
+then serve as shielding and extra copper rather than as the GND network itself.
+
+**Lesson: on a dense 2-layer board, do not assume a pour equals connectivity.**
+Check the routed-GND-segment count, not just the DRC unconnected number.
 
 Two self-inflicted problems worth recording, both caught by verification rather
 than by luck:
