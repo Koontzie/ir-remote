@@ -380,7 +380,44 @@ outline, and wanted to drop vias at (4.5, 28.5), (8.5, 33) and friends — **str
 through the antenna keepout.** Not used. Stitching vias are still outstanding and
 must be placed zone-aware.
 
-### ⚠️ The honest headline: 30 × 50mm is too small
+### Current state after routing (2026-07-21)
+
+Board **30 × 58mm**, 2-layer. **DRC: 0 violations at JLCPCB rules.**
+294 track segments, 78 vias, GND pours on both layers, 27 hand-placed
+stitching vias.
+
+| Check | Result |
+|---|---|
+| DRC (JLCPCB rules, zones filled) | **0 violations** |
+| Antenna keepout — copper audit, independent of DRC | **0 intrusions** |
+| Critical nets routed with fat traces | VBAT + IR1/IR2 at 0.6mm, 3V3/VBUS 0.5mm, USB pair 0.25mm |
+| **Unconnected items** | **32 — NOT finished** |
+
+Unconnected breakdown: GND 44 endpoints, +3V3 8, VBUS 6, IR2_CTRL 2,
+IR1_GATE 2, BTN1 2. Freerouting completed 25 of 27 nets in one pass; a second
+pass is needed and was blocked when the MCP's SWIG proxy corrupted
+(`open_project` → "dehydrated proxy, restart the server"). **DSN export exists
+only in the MCP, not `kicad-cli`, so routing cannot resume until the MCP server
+is restarted.**
+
+**This board is not ready for fab.** Steps 6–7 (gerbers, BOM, CPL) remain on
+hold.
+
+Two self-inflicted problems worth recording, both caught by verification rather
+than by luck:
+
+- **A wrong rotation transform.** I computed footprint pad positions with
+  `gy = fy + px·sinθ + py·cosθ`; KiCad uses `gy = fy − px·sinθ + py·cosθ`. Every
+  pad of the 90°-rotated ESP32 module was therefore checked at a mirrored
+  position, so the first batch of stitching vias landed on top of U1's pads.
+  Caught by DRC, fixed by deriving the transform from a pad whose true position
+  KiCad had already reported.
+- **An invalid token silently bricked the board file.** Adding
+  `(min_resolved_spokes 1)` to the `.kicad_pcb` `(setup)` block made KiCad
+  fail with a bare "Failed to load board" — no line number, no token name. That
+  rule belongs in `.kicad_pro`, where setting it did work.
+
+### ⚠️ Sizing history: 30 × 50mm was too small
 
 The 36 remaining violations are not scattered — they are all one story:
 
