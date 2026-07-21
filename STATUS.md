@@ -155,36 +155,39 @@ After live-soldering, every sketch went silent. Diagnosis (2026-07-18):
 
 ## Notes
 
-### ⛔ KiCad MCP gotcha — every save silently destroys board connectivity
+### KiCad 10 changed the board net format — don't "fix" it
 
-Applies to the PCB work in `hardware/` (kicad-mcp `kicad-mixelpixx`, swig backend).
+Applies to the PCB work in `hardware/`. **This entry exists to stop someone
+(including me, again) from repairing a non-bug.**
 
-The MCP's board writer emits pad nets as `(net "GND")` — **no net index** — and
-omits the top-level net declaration table entirely. KiCad **opens the file
-without complaining**, which is exactly what makes this dangerous: every pad is
-netless, so DRC reports a suspiciously clean board while being unable to detect
-a single short, the ratsnest is empty, and gerbers would be meaningless.
-`kicad-cli sch upgrade` does not fix it.
-
-**The rule — no exceptions:**
+KiCad 10 (board format `20260206`) references nets **by name**:
 ```
-<any kicad-mcp edit> → save_project → python3 hardware/fix-nets.py → kicad-cli pcb drc
+(net "GND")        <- pads, tracks and vias, KiCad 10
 ```
-`hardware/fix-nets.py` repairs it and is idempotent.
+The numeric index and the top-level `(net N "name")` declaration table that
+KiCad ≤ 9 used are **gone**. `kicad-cli --save-board` — KiCad's own serialiser —
+writes exactly this, and DRC resolves it correctly (`Pad 5 [BTN1]`,
+`Track [BTN1]`).
 
-Two-line check when unsure:
+I originally mistook this for a kicad-mcp bug, on the strength of
+`grep '(net [0-9]'` returning zero, and wrote a script to "repair" it. The
+script converted the board to the legacy format. KiCad still accepts that for
+backward compatibility, so nothing visibly broke — which is what made the wrong
+diagnosis look confirmed. It was deleted.
+
+**If a net grep looks wrong, check what format this KiCad version writes before
+concluding a tool is broken.** Verify with:
 ```
-grep -cE '^\t\(net [0-9]+ ' hardware/ir-remote.kicad_pcb   # must be > 0
-grep -cE '^\t\t\t\(net "'   hardware/ir-remote.kicad_pcb   # must be 0
+kicad-cli pcb drc --output /tmp/drc.rpt hardware/ir-remote.kicad_pcb
+grep -A3 unconnected /tmp/drc.rpt      # nets appear as [GND], [BTN1] etc. when healthy
 ```
 
-**Second-order trap:** because the script edits the file on disk, the MCP's next
-auto-save is *refused* (mtime guard, warns `diskChangedExternally`) and your
-edits then exist only in server memory until they're lost. Call `open_project`
-after running the script and before further MCP edits.
+**Real MCP trap that does apply:** editing the board file outside the MCP makes
+its next auto-save *refuse* (mtime guard, `diskChangedExternally`), so your edits
+live only in server memory until they're lost. Call `open_project` to re-sync
+before further MCP edits.
 
-Full detail, plus the freerouting and antenna-keepout traps, in
-`hardware/README.md`.
+Freerouting and antenna-keepout traps are in `hardware/README.md`.
 
 - **RESOLVED 2026-07-19 — `arduino.cc` network block.** On 2026-07-18 the whole of
   `arduino.cc` was unreachable (DNS resolved, TLS reset — SNI/IP filtering, not a

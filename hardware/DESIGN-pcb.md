@@ -417,22 +417,28 @@ this deviates from the ≤30 × 50mm target in the brief.**
 
 **Nothing here is proven. No board has been fabricated.**
 
-### 🔧 Tooling defect: `fix-nets.py` is mandatory
+### ❌ Retracted: the "MCP destroys connectivity" finding was wrong
 
-The kicad-mcp board writer serialises pad nets as `(net "GND")` — no index — and
-omits the top-level net declaration table entirely. KiCad loads such a file with
-**zero connectivity**: every pad netless, DRC unable to check shorts, routing
-impossible. `kicad-cli sch upgrade` does not fix it.
+An earlier revision of this document claimed the kicad-mcp writer corrupted the
+board's net table, and shipped a `fix-nets.py` to repair it. **That was a
+misdiagnosis and both are withdrawn.**
 
-`hardware/fix-nets.py` repairs this and is idempotent. **Every MCP save
-re-breaks it**, so the working order is always:
+KiCad 10 (board format `20260206`) references nets **by name** — `(net "GND")` —
+having dropped the numeric index and the top-level `(net N "name")` table that
+KiCad ≤ 9 used. `kicad-cli --save-board`, KiCad's own serialiser, writes exactly
+that form, and DRC resolves it correctly. The MCP was right; the board was never
+broken.
 
-```
-  <MCP edits> → save_project → python3 fix-nets.py → kicad-cli drc
-```
+The false positive came from `grep '(net [0-9]'` returning zero, which looks
+alarming but simply means this KiCad version no longer writes that form. The
+"repair" converted the file to the legacy format, which KiCad still parses for
+backward compatibility — so nothing visibly broke and the wrong diagnosis
+appeared confirmed. It later introduced a real inconsistency (147 of 150 pad
+refs disagreeing with its own rebuilt table), which is how it was caught.
 
-Editing the file externally also makes the MCP refuse its next auto-save
-(mtime guard) — call `open_project` to re-sync before further MCP edits.
+Kept as a note because the failure mode is instructive: **a grep returning zero
+is evidence about the grep, not proof about the tool.** See `README.md` for the
+MCP traps that are real.
 
 ## 12. Firmware deltas this board forces
 

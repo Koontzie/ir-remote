@@ -10,68 +10,63 @@ KiCad 10 project for the custom board. Design decisions and rationale live in
 | `ir-remote.kicad_sch` | Schematic — flat sheet, zoned power / MCU / USB / IR / inputs |
 | `ir-remote.kicad_pcb` | Board — 2-layer, 30 × 58mm |
 | `ir-remote.kicad_pro` | Project + net classes (POWER_IR, POWER_3V3, USB_DIFF) |
-| `fix-nets.py` | **Required repair script — read the warning below** |
 | `DESIGN-pcb.md` | Pin map, power tree, BOM, sleep budget, decisions |
 
 ---
 
-## ⛔ Tooling gotcha: every MCP save silently destroys connectivity
+## ⚠️ KiCad 10 net format — do not "repair" it
 
-**If you edit this board through the kicad-mcp server, you MUST run
-`fix-nets.py` afterwards or the board has no nets at all.**
-
-The kicad-mcp board writer (`kicad-mixelpixx`, swig backend) serialises pad nets
-as:
+KiCad 10 (board format `20260206`) references nets **by name**:
 
 ```
-(net "GND")          <- what the MCP writes
-(net 2 "GND")        <- what KiCad requires
+(net "GND")        <- pads, tracks and vias, KiCad 10
+(net 2 "GND")      <- KiCad <= 9 pads; the numeric index and the top-level
+                      (net N "name") table no longer exist
 ```
 
-It writes no net *index*, and omits the top-level net declaration table
-entirely. KiCad still **opens the file without complaint** — that is what makes
-this dangerous. But every pad is netless, so:
+`kicad-cli --save-board` — KiCad's own serialiser — writes the name-only form,
+and DRC resolves it correctly (`Pad 5 [BTN1]`, `Track [BTN1]`). The kicad-mcp
+writer produces the same thing, correctly.
 
-- DRC cannot detect shorts or clearance violations (it reports a suspiciously
-  clean board),
-- the ratsnest is empty,
-- routing and gerber export are meaningless.
+**This tripped me once.** `grep '(net [0-9]'` returns zero on a perfectly healthy
+KiCad 10 board, which looks alarming. I concluded the MCP was corrupting the
+file and wrote a script to add the old index table back. It "worked" only
+because KiCad still parses the legacy form — the board was never broken, and the
+script eventually introduced a genuine inconsistency of its own. Deleted.
 
-`kicad-cli sch upgrade` does **not** fix it.
-
-### The rule
-
-```
-  <any kicad-mcp edit>  →  save_project  →  python3 fix-nets.py  →  kicad-cli pcb drc
-```
-
-`fix-nets.py` is idempotent — running it twice is harmless, and it prints
-`net table already valid` when there is nothing to do.
-
-Verify by hand any time you are unsure:
+**Check what this KiCad version actually writes before concluding a tool is
+broken:**
 
 ```sh
-grep -cE '^\t\(net [0-9]+ ' ir-remote.kicad_pcb   # net table entries — must be > 0
-grep -cE '^\t\t\t\(net "'   ir-remote.kicad_pcb   # unindexed pad refs — must be 0
+kicad-cli pcb drc --output /tmp/drc.rpt ir-remote.kicad_pcb
+grep -A3 unconnected /tmp/drc.rpt     # healthy: nets show as [GND], [BTN1], ...
 ```
 
-### Second-order trap
+## Real MCP traps that do apply
 
-Because `fix-nets.py` edits the file on disk, the MCP's next auto-save is
-**refused** (it guards on mtime and warns `diskChangedExternally`). Your edits
-then live only in the server's memory and are lost on reload. After running the
-script, call `open_project` before making further MCP edits.
+- **External edits block the next auto-save.** Touch the `.kicad_pcb` outside the
+  MCP and its next save is *refused* (mtime guard, `diskChangedExternally`);
+  your changes then exist only in server memory until they're lost. Call
+  `open_project` to re-sync first.
+- **`assign_net_to_class` and `add_net_class` are advertised but not
+  implemented** — they return `Unknown command`. Net-class assignment has to be
+  written into `ir-remote.kicad_pro` (`net_settings.netclass_patterns`) directly.
+- **`refill_zones` has a documented segfault risk** on the swig backend. Use
+  `kicad-cli pcb drc --refill-zones --save-board` instead — it fills zones
+  natively and safely.
+- **ERC violation coordinates from the MCP are in unusable normalised units.**
+  Use `kicad-cli sch erc` for a readable report.
 
 ---
 
 ## Verification commands
 
 ```sh
-# ERC (readable output — the MCP reports violation coordinates in unusable units)
+# ERC
 kicad-cli sch erc --output erc.rpt --severity-all ir-remote.kicad_sch
 
-# DRC — always run fix-nets.py first, or this lies to you
-python3 fix-nets.py && kicad-cli pcb drc --output drc.rpt --severity-error ir-remote.kicad_pcb
+# DRC, refilling zones first (DRC on unfilled pours is meaningless)
+kicad-cli pcb drc --refill-zones --save-board --output drc.rpt --severity-error ir-remote.kicad_pcb
 
 # 3D renders
 kicad-cli pcb render --output layout-top.png    --side top    ir-remote.kicad_pcb
@@ -92,7 +87,7 @@ java -Djava.awt.headless=true -jar ~/.kicad-mcp/freerouting.jar \
      -de ir-remote.dsn -do ir-remote.ses -mp 50 -dct 0
 ```
 
-**The MCP's DSN export drops net classes** — everything comes out at 0.2mm,
+**The MCP DSN export drops net classes** — everything comes out at 0.2mm,
 including the 220mA IR paths. The DSN must be patched to add `POWER_IR` (600µm),
 `POWER_3V3` (500µm) and `USB_DIFF` (250µm) classes before routing.
 
