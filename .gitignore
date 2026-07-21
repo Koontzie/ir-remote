@@ -20,3 +20,12 @@ __pycache__/
 .idea/
 *.swp
 *~
+
+# KiCad generated / intermediate
+hardware/*.kicad_prl
+hardware/*-backups/
+hardware/*.bak
+hardware/*.dsn
+hardware/*.dsn.orig
+hardware/*.ses
+hardware/*.rpt

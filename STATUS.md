@@ -154,6 +154,38 @@ After live-soldering, every sketch went silent. Diagnosis (2026-07-18):
   check the strapping pins.
 
 ## Notes
+
+### ⛔ KiCad MCP gotcha — every save silently destroys board connectivity
+
+Applies to the PCB work in `hardware/` (kicad-mcp `kicad-mixelpixx`, swig backend).
+
+The MCP's board writer emits pad nets as `(net "GND")` — **no net index** — and
+omits the top-level net declaration table entirely. KiCad **opens the file
+without complaining**, which is exactly what makes this dangerous: every pad is
+netless, so DRC reports a suspiciously clean board while being unable to detect
+a single short, the ratsnest is empty, and gerbers would be meaningless.
+`kicad-cli sch upgrade` does not fix it.
+
+**The rule — no exceptions:**
+```
+<any kicad-mcp edit> → save_project → python3 hardware/fix-nets.py → kicad-cli pcb drc
+```
+`hardware/fix-nets.py` repairs it and is idempotent.
+
+Two-line check when unsure:
+```
+grep -cE '^\t\(net [0-9]+ ' hardware/ir-remote.kicad_pcb   # must be > 0
+grep -cE '^\t\t\t\(net "'   hardware/ir-remote.kicad_pcb   # must be 0
+```
+
+**Second-order trap:** because the script edits the file on disk, the MCP's next
+auto-save is *refused* (mtime guard, warns `diskChangedExternally`) and your
+edits then exist only in server memory until they're lost. Call `open_project`
+after running the script and before further MCP edits.
+
+Full detail, plus the freerouting and antenna-keepout traps, in
+`hardware/README.md`.
+
 - **RESOLVED 2026-07-19 — `arduino.cc` network block.** On 2026-07-18 the whole of
   `arduino.cc` was unreachable (DNS resolved, TLS reset — SNI/IP filtering, not a
   sandbox artifact), which broke `core update-index` and `lib install`. Worked
