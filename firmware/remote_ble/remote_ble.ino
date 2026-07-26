@@ -48,13 +48,17 @@ struct ButtonState {
   uint32_t lastChangeMs;
 };
 
-// Button 2 is on GPIO2, not the GPIO6 originally planned — GPIO6 is not broken
-// out on this devkit. GPIO2 is safe on the S3: its strapping pins are only
-// 0/3/45/46 (GPIO2 is a strapping pin on the *classic* ESP32, not this one), and
-// it is RTC-capable, so Phase 4's EXT1 deep-sleep wake still works.
+// Perf-board build: button 1 is physically wired to GPIO5 (verified on the
+// bench 2026-07-26 — a GPIO6 map printed clean at boot but no press ever
+// registered, because nothing is connected to pin 6; the wire is on pin 5,
+// button 1's original Phase 3 pin). GPIO5 is RTC-capable (S3 RTC pins are 0-21)
+// so Phase 4's EXT1 deep-sleep wake still works. The custom PCB uses its own
+// pin map (see hardware/DESIGN-pcb.md).
+// Button 3 on GPIO7 (RTC-capable, not a strapping pin, adjacent on the header).
 static ButtonState buttons[] = {
   { 5, 1, HIGH, HIGH, 0 },
   { 2, 2, HIGH, HIGH, 0 },
+  { 7, 3, HIGH, HIGH, 0 },
 };
 static const size_t kNumButtons = sizeof(buttons) / sizeof(buttons[0]);
 

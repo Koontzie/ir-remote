@@ -13,9 +13,10 @@ wires soldered/clipped on for breadboarding; ideal for the final enclosure)
 | Signal | GPIO | Why |
 |---|---|---|
 | IR LED (via NPN) | 4 | Plain GPIO, RMT-capable |
-| Button 1 | 5 | RTC-capable → deep-sleep EXT1 wake later |
-| Button 2 | **2** (was 6) | GPIO6 is not broken out on this devkit. GPIO2 is RTC-capable, so EXT1 wake still works |
-| (Buttons 3–5 later) | 7, 15, 16 | Same |
+| Button 1 | 5 | Physically wired to GPIO5 (bench-verified 2026-07-26). A GPIO6 firmware remap was tried but pin 6 was never actually wired, so button 1 went dead — reverted to GPIO5. RTC-capable, so EXT1 wake works |
+| Button 2 | 2 | RTC-capable; GPIO5/6 also valid |
+| Button 3 | 7 | RTC-capable, not a strapping pin (built on perf board 2026-07-26) |
+| (Buttons 4–5 later) | 15, 16 | Same |
 
 Avoid: 0/3/45/46 (strapping), 19/20 (USB), 26–37 (flash/PSRAM on many S3 modules).
 Buttons wire GPIO→button→GND, `INPUT_PULLUP`, pressed = LOW.

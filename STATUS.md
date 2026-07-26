@@ -1,10 +1,68 @@
 # IR-REMOTE — STATUS
 
 **Status:** Active
-**Updated:** 2026-07-19
+**Updated:** 2026-07-26
 
 ## Where it's at
 Phase 0 (salvage) done. **Phases 1, 2, 2.5 and 3 all COMPLETE** (2026-07-19).
+
+### Perf-board rebuild — ✅ COMPLETE (2026-07-26)
+Circuit rebuilt from breadboard onto a perf board. Still USB power (boost/battery
+not installed). **Three physical buttons now built: GPIO5 → slot 1, GPIO2 → slot 2,
+GPIO7 → slot 3.** Bench session 2026-07-26 closed out every open fault from the
+2026-07-21 stop; the board is a working across-the-room remote again.
+
+- ✅ **IR range restored to across-the-room** — the pass gate is met. The
+  2026-07-21 root cause (transistor E/C reversed, C→E measuring 3.4 V and only
+  ~12 mA through the 33 Ω) is **fixed**: the 2N2222 was pulled, diode-tested good
+  out of circuit (0.65 V leg = Emitter, 0.64 V leg = Collector), and reinstalled in
+  the correct orientation. Verified 2026-07-26 with the `gpio4_on` steady-drive
+  diagnostic: **both IR LEDs glow bright on a phone camera** (full ~100 mA), and a
+  live walk-back range test toggled the TV at good distance. Both IR LEDs remain in
+  the series loop.
+- ✅ **Button 1 pin corrected: it's GPIO5, not GPIO6.** The uncommitted firmware
+  had remapped button 1 to GPIO6 (on a since-disproven belief that pin 6 was wired).
+  Boot printed `[btn] GPIO6 -> slot 1` cleanly, but **no press ever registered** —
+  nothing is physically connected to pin 6; the wire is on GPIO5, button 1's
+  original Phase 3 pin. Firmware reverted to GPIO5. All three buttons then verified
+  on serial: `GPIO5 pressed -> slot 1 -> [ir] SAMSUNG 0xE0E040BF -> sent:1`, and
+  buttons 2/3 correctly log `err:empty:N` for their unprogrammed slots. Clean single
+  events, no chatter, no stuck-pressed signature.
+  **Lesson:** a firmware pin map that prints clean at boot proves nothing about the
+  wiring — a `pinMode`/label on an unconnected pin is silent, not an error. Confirm
+  a button by a *press* event, not by the boot banner.
+- ✅ **The "did I short something during rework" scare was transient.** A button's
+  metal prong had briefly touched the board while powered. Power-off safety sweep
+  (2026-07-26) came back clean: 5V↔GND and 3V3↔GND both open (the wandering
+  MΩ/negative reading on the ohmmeter is the bulk cap charging, **not** a short — a
+  real short sits pinned at single-digit Ω); no button line shorted to GND or 5V;
+  LED path continuous with the 33 Ω correctly placed. No lasting damage. Across the
+  whole session the serial showed **zero resets/brownouts/guru-meditations**.
+- ✅ **33 Ω confirmed in the LED path, not the cap's branch.** The prior fault
+  (33 Ω once wired in series with the bulk cap instead of the LED string) is **not**
+  present — metered 5V→33Ω→LED1(+), and the cap connects rail-to-rail with plain
+  wire. **Lesson:** a resistor can be physically present on the board and still not
+  be in the current path; continuity to the right *node* is what matters, not that
+  the part exists. (See `hardware/WIRING.md`, which encodes this.)
+- ⚠️ **Intermittent BLE app disconnect — not a hardware fault, not chased down.**
+  Bluefy dropped the link a couple of times mid-session but would not reproduce on
+  demand; when connected, the full chain works (`config write -> nvs saved:1`,
+  `trigger`/button -> `sent:1`). No board reset accompanies the drops, so it's a
+  flaky BLE *link* (Web Bluetooth / Bluefy connection stability), not power or the
+  IR path. Left as a known minor annoyance.
+- ✅ **The "goes to protect" red light is solved and benign — it's capacitor
+  inrush.** Tyler added a bulk/decoupling cap **across the 5V–GND rail, before the
+  LED** (2026-07-21). On hot-plug the cap draws an inrush gulp that lights a
+  charge/current LED, which fades as the cap charges — hence "on at plug-in, goes
+  away on its own." The cap is **correctly placed and worth keeping** — it steadies
+  the rail during the 64mA LED pulses. It is NOT in the 38kHz modulation path
+  (GPIO4→base→transistor→LED), so it does **not** affect IR range. Chip probed
+  healthy throughout (ESP32-S3 rev v0.2, 8MB PSRAM, MAC OK).
+- Diagnostic sketches are regenerated per-session in the scratchpad (not the repo);
+  `gpio4_on` (GPIO4 held HIGH for steady-drive metering / LED camera check) is the
+  one used this session. ⚠️ It runs ~100 mA through the 33 Ω continuously — if that
+  resistor is a 1/8 W part, don't leave the steady-drive sketch running long.
+
 
 ### Phase 3 — NPN driver stage + physical buttons ✅
 
@@ -21,6 +79,7 @@ GPIO4 ──1kΩ──► BASE                                 EMITTER ──►
   a selfie cam, not a red indicator). ~64mA pulses, vs ~13mA on the old direct
   GPIO drive.
 - Buttons: **GPIO5 → slot 1**, **GPIO2 → slot 2**, `INPUT_PULLUP`, pin→button→GND.
+  (Perf-board rebuild moved button 1 to **GPIO6** — see the perf-board section below.)
 
 **Pass-gate results:**
 - ✅ **Range: ~5ft → 20–30ft.** The single biggest win of the phase.
@@ -30,9 +89,10 @@ GPIO4 ──1kΩ──► BASE                                 EMITTER ──►
 - ✅ Debounce verified clean at millisecond resolution: one press → exactly one
   event, no chatter. (A Samsung frame takes **109ms** to transmit — measured.)
 - ✅ `pressed:1` notifies the app and flashes the matching slot row.
-- ⏭️ **Button 2 not built** — no second button on hand, and GPIO6 (the originally
-  planned pin) is not broken out on this devkit, hence the move to GPIO2. Firmware
-  path is in place and untested on hardware.
+- ⏭️ **Button 2 not built** — no second button on hand. (Earlier note claimed GPIO6
+  wasn't broken out on this devkit and moved button 2 to GPIO2; that claim was
+  **wrong** — GPIO6 is broken out and works, see perf-board section. GPIO2 remains a
+  fine alternate for button 2.)
 
 **Phase 2 pass gate met: the TV toggled from a button in the browser.** Full chain
 verified end to end — Chrome (Web Bluetooth) → BLE GATT write → JSON parse → NVS →
@@ -92,9 +152,17 @@ sleep 20 | arduino-cli monitor -p <PORT> -c baudrate=115200
 ```
 
 ## Next step
-**Phase 4 — battery + deep sleep.** EXT1 wake on the button pins (**GPIO5 and
-GPIO2** — note GPIO2, not the GPIO6 in the original plan; both are RTC-capable on
-the S3, which EXT1 requires). Wake → send → sleep.
+**Perf-board rebuild is done** (2026-07-26 — range restored, all three buttons
+verified; see the perf-board section above). Two threads remain open:
+- The IR **code library / search-first app** work — that's the phase-5 brief
+  (`docs/CC-BRIEF-phase5.md`); `docs/DESIGN-code-library.md` carries the new
+  requirements (search-first UI, discrete power-on, generic per-brand blanket
+  codes, show-the-code-sent). Not started here.
+- The intermittent Bluefy disconnect (minor, flaky BLE link — see perf-board note).
+
+Then **Phase 4 — battery + deep sleep.** EXT1 wake on the button pins, now
+**GPIO5 + GPIO2 + GPIO7** on the perf board (all RTC-capable on the S3, which EXT1
+requires). Wake → send → sleep.
 
 Open questions carried in from PLAN.md's tripwires: the devkit's AMS1117 LDO wants
 ~4.4V+ in, and the onboard USB-UART chip leaks mA even in deep sleep — so this
@@ -103,7 +171,8 @@ circuit currently runs off **5V/VBUS, which only exists while USB is plugged in*
 battery power changes that rail and the 33Ω value should be rechecked against
 whatever new supply voltage is chosen.
 
-Also outstanding, small: build button 2 on GPIO2 when a second switch is on hand.
+Buttons 1–3 are now built (GPIO5/GPIO2/GPIO7); slots 2 and 3 are unprogrammed
+(they log `err:empty:N` until a code is written to them).
 
 ## Blocked on
 Nothing. Phases 1 and 2 both fully verified, including their physical pass gates.
