@@ -14,6 +14,7 @@
     --accent: #4f9cf9;
     --ok: #3ecf8e;
     --err: #ff6b6b;
+    --gold: #f0c86a;
     --radius: 12px;
   }
   * { box-sizing: border-box; }
@@ -48,6 +49,7 @@
     border: 1px solid var(--edge);
     color: var(--ink);
   }
+  button.small { min-height: 36px; padding: 7px 12px; font-size: 13px; }
   #connect { width: 100%; margin-bottom: 18px; }
 
   .slot {
@@ -134,6 +136,7 @@
   @media (prefers-reduced-motion: reduce) {
     .slot.pressed { animation: none; border-color: var(--accent); }
   }
+
   .library {
     background: var(--card);
     border: 1px solid var(--edge);
@@ -148,10 +151,48 @@
     color: var(--dim);
     margin: 0 0 10px;
   }
-  .library .row + .row { margin-top: 8px; }
-  .lib-apply { display: flex; gap: 8px; align-items: flex-end; margin-top: 10px; }
-  .lib-apply .field { flex: 0 0 110px; }
-  .lib-apply button { flex: 1; }
+  #libSearch { font-size: 16px; }
+  .lib-slot { display: flex; align-items: center; gap: 8px; margin: 10px 0 4px; font-size: 12px; color: var(--dim); }
+  .lib-slot select { width: auto; min-width: 64px; }
+
+  /* search results: one tappable card per brand */
+  .hit {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    background: #171a1f;
+    border: 1px solid var(--edge);
+    border-radius: 9px;
+    padding: 10px 12px;
+    margin-top: 8px;
+    cursor: pointer;
+  }
+  .hit:hover { border-color: var(--accent); }
+  .hit .name { font-weight: 600; }
+  .hit .meta { font-size: 12px; color: var(--dim); }
+  .hit .badge {
+    font-size: 11px; font-weight: 700; color: #10141a; background: var(--gold);
+    border-radius: 6px; padding: 2px 6px; white-space: nowrap;
+  }
+
+  /* a single code row (brand view) */
+  .grp { margin-top: 14px; }
+  .grp .glabel { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--dim); margin-bottom: 6px; }
+  .grp.generic .glabel { color: var(--gold); }
+  .code {
+    display: flex; align-items: center; gap: 8px;
+    background: #171a1f;
+    border: 1px solid var(--edge);
+    border-radius: 9px;
+    padding: 8px 10px;
+    margin-top: 6px;
+  }
+  .code.gen { border-color: #5c4718; }
+  .code .cinfo { flex: 1 1 auto; min-width: 0; }
+  .code .cname { font-size: 14px; }
+  .code .ctag { font-size: 11px; color: var(--dim); }
+  .code .chex { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; color: var(--dim); }
+  .code button { flex: 0 0 auto; }
+  .muted { color: var(--dim); }
+
   #libInfo {
     margin-top: 10px;
     font-size: 12px;
@@ -159,6 +200,7 @@
     color: var(--dim);
     word-break: break-all;
   }
+  .backlink { display: inline-block; margin-top: 10px; font-size: 13px; color: var(--accent); cursor: pointer; }
   .warn {
     background: #2a2113;
     border: 1px solid #5c4718;
@@ -187,37 +229,45 @@
 
   <section class="library">
     <h2>Code library</h2>
-    <div class="row">
-      <div class="field grow">
-        <label for="libCategory">Category</label>
-        <select id="libCategory"><option value="">Loading…</option></select>
-      </div>
-      <div class="field grow">
-        <label for="libBrand">Brand</label>
-        <select id="libBrand" disabled><option value="">—</option></select>
-      </div>
+
+    <input id="libSearch" placeholder="Search brand, model, or function — e.g. epson, hdmi, samsung"
+           autocapitalize="off" autocorrect="off" spellcheck="false" disabled>
+
+    <div class="lib-slot">
+      Assign picked codes into
+      <select id="libSlot">
+        <option>1</option><option>2</option><option>3</option>
+        <option>4</option><option>5</option>
+      </select>
     </div>
-    <div class="row">
-      <div class="field grow">
-        <label for="libModel">Model / keymap</label>
-        <select id="libModel" disabled><option value="">—</option></select>
+
+    <!-- search results (brand hits) -->
+    <div id="libResults"></div>
+
+    <!-- a loaded brand's codes (generic first, then by function) -->
+    <div id="libBrandView" hidden></div>
+
+    <div id="libInfo">Loading library…</div>
+
+    <details>
+      <summary>Browse by category (dropdowns)</summary>
+      <div class="row">
+        <div class="field grow">
+          <label for="libCategory">Category</label>
+          <select id="libCategory"><option value="">Loading…</option></select>
+        </div>
+        <div class="field grow">
+          <label for="libBrand">Brand</label>
+          <select id="libBrand" disabled><option value="">—</option></select>
+        </div>
       </div>
-      <div class="field grow">
-        <label for="libFunction">Function</label>
-        <select id="libFunction" disabled><option value="">—</option></select>
+      <div class="row" style="margin-top:8px">
+        <div class="field grow">
+          <label for="libModel">Model / keymap</label>
+          <select id="libModel" disabled><option value="">—</option></select>
+        </div>
       </div>
-    </div>
-    <div class="lib-apply">
-      <div class="field">
-        <label for="libSlot">Into slot</label>
-        <select id="libSlot">
-          <option>1</option><option>2</option><option>3</option>
-          <option>4</option><option>5</option>
-        </select>
-      </div>
-      <button class="ghost" id="libApply" disabled>Assign to slot</button>
-    </div>
-    <div id="libInfo">Pick a category to browse. Manual hex entry still works below.</div>
+    </details>
   </section>
 
   <div id="slots"></div>
@@ -257,6 +307,8 @@ let device = null, configChar = null, triggerChar = null, statusChar = null;
 
 const $ = (sel) => document.querySelector(sel);
 const statusEl = $('#status');
+const esc = (s) => String(s).replace(/[&<>"]/g, c =>
+  ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
 function setStatus(msg, kind) {
   statusEl.textContent = msg;
@@ -279,6 +331,12 @@ function refreshButtons() {
   const on = connected();
   document.querySelectorAll('.slot button').forEach(b => { b.disabled = !on; });
   $('#connect').textContent = on ? 'Disconnect' : 'Connect';
+}
+
+// Friendly label for a library entry: prefer the canonical function name, but
+// always keep the human original ("Power on — power_on").
+function entryLabel(e) {
+  return e.name.startsWith('other:') ? e.orig : `${e.orig} — ${e.name}`;
 }
 
 // ── build the slot editors ──────────────────────────────────────────────────
@@ -338,11 +396,11 @@ function buildSlots() {
     if (!m) return;
     const slot = Number(m[2]);
     if (m[1] === 'func') applyFunction(slot, Number(e.target.value));
-    else updateReadout(slot);
+    else { slotApplied[slot] = null; updateReadout(slot); }   // manual edit unnames the slot
   });
   host.addEventListener('input', (e) => {
     const m = /^(code|bits)(\d)$/.exec(e.target.id || '');
-    if (m) updateReadout(Number(m[2]));
+    if (m) { slotApplied[Number(m[2])] = null; updateReadout(Number(m[2])); }
   });
 
   for (let slot = 1; slot <= 5; slot++) updateReadout(slot);
@@ -351,17 +409,24 @@ function buildSlots() {
 // ── slot ↔ device binding ───────────────────────────────────────────────────
 // A slot is conceptually "this device, this button": the protocol and address
 // belong to the device, and only the command changes when you go power → input.
-// slotDevice[n] holds the assigned device plus its sendable entries.
+// slotDevice[n] holds the assigned device + entries; slotApplied[n] the entry
+// currently in the slot (used to name what a physical press sent).
 const slotDevice = {};
+const slotApplied = {};
 
 function updateReadout(slot) {
   const proto = $(`#proto${slot}`).value;
   const code = $(`#code${slot}`).value.trim();
   const bits = $(`#bits${slot}`).value;
   const el = $(`#out${slot}`);
-  el.innerHTML = code
-    ? `${proto} · ${code} · ${bits} bits`
-    : `<span class="empty">empty — pick a function or enter a hex code</span>`;
+  if (!code) {
+    el.innerHTML = `<span class="empty">empty — pick a function or enter a hex code</span>`;
+    return;
+  }
+  const named = slotApplied[slot];
+  el.textContent = named
+    ? `${entryLabel(named)} · ${proto} ${code} · ${bits} bits`
+    : `${proto} · ${code} · ${bits} bits`;
 }
 
 function applyFunction(slot, idx) {
@@ -371,6 +436,7 @@ function applyFunction(slot, idx) {
   $(`#proto${slot}`).value = e.proto;
   $(`#code${slot}`).value = e.code;
   $(`#bits${slot}`).value = e.bits;
+  slotApplied[slot] = e;
   updateReadout(slot);
   setStatus(`slot ${slot}: ${e.orig} (${e.proto} ${e.code}) — press Save to store it`, 'ok');
 }
@@ -383,8 +449,7 @@ function assignDevice(slot, { brand, model, entries }, pickIdx = 0) {
 
   const sel = $(`#func${slot}`);
   sel.innerHTML = entries.map((e, i) =>
-    `<option value="${i}">${e.name.startsWith('other:') ? e.orig : `${e.orig} — ${e.name}`}</option>`
-  ).join('');
+    `<option value="${i}">${esc(entryLabel(e))}</option>`).join('');
   sel.disabled = false;
   sel.value = String(pickIdx);
   applyFunction(slot, pickIdx);
@@ -418,16 +483,23 @@ async function connect() {
     await statusChar.startNotifications();
     statusChar.addEventListener('characteristicvaluechanged', (ev) => {
       const text = new TextDecoder().decode(ev.target.value);
-      setStatus(`device: ${text}`, text.startsWith('err') ? 'err' : 'ok');
 
-      // A physical button on the device reports "pressed:N" — flash that slot so
-      // it is obvious which button was hit, and distinct from an app-driven send.
+      // A physical button on the device reports "pressed:N" — flash that slot and
+      // show WHAT went out (slot, name, proto, code), so you learn a button
+      // without opening its config (field feedback: show the code that was sent).
       const pressed = /^pressed:(\d+)$/.exec(text);
-      if (pressed) flashSlot(Number(pressed[1]));
+      if (pressed) {
+        const n = Number(pressed[1]);
+        flashSlot(n);
+        setStatus(`button ${n} sent → ${slotSummary(n)}`, 'ok');
+        return;
+      }
 
       // "err:empty:N" means that button has no code stored yet.
       const empty = /^err:empty:(\d+)$/.exec(text);
-      if (empty) setStatus(`slot ${empty[1]} is empty — save a code to it first`, 'err');
+      if (empty) { setStatus(`slot ${empty[1]} is empty — save a code to it first`, 'err'); return; }
+
+      setStatus(`device: ${text}`, text.startsWith('err') ? 'err' : 'ok');
     });
 
     setStatus('connected', 'ok');
@@ -436,6 +508,15 @@ async function connect() {
     setStatus(`connect failed: ${err.message}`, 'err');
     refreshButtons();
   }
+}
+
+// What a slot will transmit, named if it came from the library.
+function slotSummary(slot) {
+  const code = ($(`#code${slot}`)?.value || '').trim();
+  if (!code) return 'empty';
+  const proto = $(`#proto${slot}`).value;
+  const named = slotApplied[slot];
+  return named ? `${entryLabel(named)} (${proto} ${code})` : `${proto} ${code}`;
 }
 
 async function write(characteristic, payload) {
@@ -470,7 +551,7 @@ async function saveSlot(slot) {
 async function testSlot(slot) {
   if (!connected()) return setStatus('not connected', 'err');
   try {
-    setStatus(`triggering slot ${slot}…`);
+    setStatus(`triggering slot ${slot} → ${slotSummary(slot)}…`);
     await write(triggerChar, { slot });
   } catch (err) {
     setStatus(`test failed: ${err.message}`, 'err');
@@ -478,30 +559,21 @@ async function testSlot(slot) {
 }
 
 // ── code library ────────────────────────────────────────────────────────────
-// index.json is small (~40K) and loads once; brand shards are fetched on demand
-// and cached. Served statically alongside the app, so this works on Pages and
-// on localhost identically.
+// search.json (one small record per brand) is the front door: type a brand,
+// model, or function and jump to matching brands. index.json + brand shards
+// drive the dropdown fallback and lazy-load a brand's actual codes. All served
+// statically alongside the app, so this works on Pages and localhost alike.
 
 const DATA_BASE = '../data';
-let libIndex = null;
-const shardCache = new Map();
-let libEntries = [];          // entries for the currently selected model
+let libIndex = null;            // index.json (dropdown fallback)
+let searchRecs = [];           // search.json (brand records)
+const shardCache = new Map();  // file -> entries[]
 
-const libCategory = $('#libCategory'), libBrand = $('#libBrand');
-const libModel = $('#libModel'), libFunction = $('#libFunction');
-const libApply = $('#libApply'), libInfo = $('#libInfo');
-
-function fillSelect(sel, items, placeholder) {
-  sel.innerHTML = `<option value="">${placeholder}</option>` +
-    items.map(({ value, label }) =>
-      `<option value="${value.replace(/"/g, '&quot;')}">${label}</option>`).join('');
-  sel.disabled = items.length === 0;
-}
-
-// Canonical functions first and in a useful order — power and inputs are the
-// two things this whole library exists to make reachable.
+// Canonical functions in a useful order. Discrete power_on/power_off come first:
+// in AV work toggle is dangerous (it turns already-on gear off), so discrete
+// beats toggle wherever a brand has it (field feedback).
 const FUNC_ORDER = [
-  'power_toggle', 'power_on', 'power_off', 'source_cycle',
+  'power_on', 'power_off', 'power_toggle', 'source_cycle',
   'input_hdmi', 'input_hdmi1', 'input_hdmi2', 'input_hdmi3', 'input_hdmi4',
   'input_vga', 'input_comp', 'vol_up', 'vol_dn', 'mute', 'menu',
 ];
@@ -510,25 +582,192 @@ const funcRank = (n) => {
   return i === -1 ? FUNC_ORDER.length : i;
 };
 
-async function loadLibIndex() {
+const libSearch = $('#libSearch'), libResults = $('#libResults');
+const libBrandView = $('#libBrandView'), libInfo = $('#libInfo');
+
+async function loadLibrary() {
   try {
-    const res = await fetch(`${DATA_BASE}/db/index.json`);
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    libIndex = await res.json();
+    const [idxRes, srchRes] = await Promise.all([
+      fetch(`${DATA_BASE}/db/index.json`),
+      fetch(`${DATA_BASE}/db/search.json`),
+    ]);
+    if (!idxRes.ok) throw new Error(`index HTTP ${idxRes.status}`);
+    if (!srchRes.ok) throw new Error(`search HTTP ${srchRes.status}`);
+    libIndex = await idxRes.json();
+    searchRecs = await srchRes.json();
+
+    // dropdown fallback
     fillSelect(libCategory, Object.entries(libIndex).map(([slug, c]) => ({
       value: slug,
       label: `${c.label} (${Object.keys(c.brands).length} brands)`,
     })), 'Select category…');
-    libInfo.textContent = 'Pick a category to browse. Manual hex entry still works below.';
+
+    libSearch.disabled = false;
+    const brands = searchRecs.length;
+    const codes = searchRecs.reduce((n, r) => n + r.n, 0);
+    libInfo.textContent =
+      `${brands} brands · ${codes} codes. Type to search, or browse by category below.`;
   } catch (err) {
-    libCategory.innerHTML = '<option value="">unavailable</option>';
     libInfo.textContent = `Code library unavailable: ${err.message}`;
+    libCategory.innerHTML = '<option value="">unavailable</option>';
   }
+}
+
+// ── search ────────────────────────────────────────────────────────────────
+let searchTimer = null;
+libSearch.addEventListener('input', () => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(runSearch, 120);
+});
+
+function runSearch() {
+  const q = libSearch.value.trim().toLowerCase();
+  libBrandView.hidden = true;
+  libBrandView.innerHTML = '';
+  if (!q) { libResults.innerHTML = ''; return; }
+
+  const terms = q.split(/\s+/);
+  const scored = [];
+  for (const r of searchRecs) {
+    // Build the haystack once per record: brand, category, functions, models.
+    const hay = (r._hay ||= [
+      r.b, r.cl, r.c, r.fn.join(' '), r.m.join(' '),
+    ].join(' ').toLowerCase());
+    if (!terms.every(t => hay.includes(t))) continue;
+
+    // Rank: brand-name hits beat model/function hits; more codes breaks ties.
+    const brandHit = terms.some(t => r.b.toLowerCase().includes(t));
+    scored.push({ r, score: (brandHit ? 0 : 1), n: r.n });
+  }
+  scored.sort((a, b) => a.score - b.score || b.n - a.n || a.r.b.localeCompare(b.r.b));
+
+  if (!scored.length) { libResults.innerHTML = `<div class="muted" style="margin-top:8px">No matches.</div>`; return; }
+
+  const shown = scored.slice(0, 40);
+  libResults.innerHTML = shown.map(({ r }, i) => {
+    const gen = r.g ? `<span class="badge">${r.g} generic</span>` : '';
+    return `<div class="hit" data-i="${i}">
+      <div>
+        <div class="name">${esc(r.b)}</div>
+        <div class="meta">${esc(r.cl)} · ${r.n} codes${r.m.length > 1 ? ` · ${r.m.length} models` : ''}</div>
+      </div>${gen}
+    </div>`;
+  }).join('') + (scored.length > 40
+      ? `<div class="muted" style="margin-top:8px">+${scored.length - 40} more — refine the search.</div>` : '');
+
+  libResults._hits = shown.map(s => s.r);
+}
+
+libResults.addEventListener('click', (e) => {
+  const card = e.target.closest('.hit');
+  if (!card) return;
+  const rec = libResults._hits?.[Number(card.dataset.i)];
+  if (rec) openBrand(rec);
+});
+
+// ── brand view: a brand's codes, generic (blanket) first ────────────────────
+async function fetchShard(file) {
+  let entries = shardCache.get(file);
+  if (entries) return entries;
+  const res = await fetch(`${DATA_BASE}/db/${file}`);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  entries = await res.json();
+  shardCache.set(file, entries);
+  return entries;
+}
+
+async function openBrand(rec) {
+  libResults.innerHTML = '';
+  libBrandView.hidden = false;
+  libBrandView.innerHTML = `<div class="muted">Loading ${esc(rec.b)}…</div>`;
+  let entries;
+  try {
+    entries = await fetchShard(rec.f);
+  } catch (err) {
+    libBrandView.innerHTML = `<div class="muted">Could not load ${esc(rec.b)}: ${esc(err.message)}</div>`;
+    return;
+  }
+
+  // Only sendable protocols; RAW and RC5/RC6 stay in the data but are hidden
+  // until Sitting B adds firmware support (no re-scrape needed then).
+  const sendable = entries.filter(e => SENDABLE.has(e.proto));
+  const hidden = entries.length - sendable.length;
+
+  // Assigning a code binds the WHOLE brand keymap to the slot, so the slot's
+  // Function dropdown can later swap power → input without returning here. Use a
+  // stable ordering so an entry's index is the same in the row and the slot.
+  const ordered = sendable.slice().sort((a, b) =>
+    funcRank(a.name) - funcRank(b.name) || a.orig.localeCompare(b.orig));
+  libBrandView._entries = ordered;
+  libBrandView._brand = rec.b;
+
+  const generic = ordered.filter(e => e.generic);
+  const rest = ordered.filter(e => !e.generic);
+
+  const row = (e) => {
+    const idx = ordered.indexOf(e);
+    const isToggle = e.name === 'power_toggle';
+    const tag = e.name.startsWith('other:') ? '' :
+      `<span class="ctag">${esc(e.name)}${e.nmodels ? ` · ${e.nmodels} models` : ''}` +
+      `${isToggle ? ' · toggle (fallback)' : ''}</span>`;
+    return `<div class="code${e.generic ? ' gen' : ''}">
+      <div class="cinfo">
+        <div class="cname">${esc(e.orig)}</div>
+        ${tag}
+        <div class="chex">${e.proto} ${e.code} · ${e.bits} bits</div>
+      </div>
+      <button class="small" data-assign="${idx}">Assign</button>
+    </div>`;
+  };
+
+  let html = `<span class="backlink" id="libBack">← back to search</span>
+    <div style="margin-top:8px"><strong>${esc(rec.b)}</strong>
+      <span class="muted">· ${esc(rec.cl)} · ${sendable.length} sendable codes` +
+      `${hidden ? ` · ${hidden} hidden (RAW/RC5/RC6)` : ''}</span></div>`;
+
+  if (generic.length) {
+    html += `<div class="grp generic"><div class="glabel">★ Generic — blanket codes (work across many models; try these first)</div>` +
+      generic.map(row).join('') + `</div>`;
+  }
+  html += `<div class="grp"><div class="glabel">All codes</div>` +
+    rest.map(row).join('') + `</div>`;
+
+  libBrandView.innerHTML = html;
+}
+
+libBrandView.addEventListener('click', (e) => {
+  if (e.target.id === 'libBack') {
+    libBrandView.hidden = true;
+    runSearch();
+    return;
+  }
+  const a = e.target.dataset.assign;
+  if (a === undefined) return;
+  const entries = libBrandView._entries || [];
+  const idx = Number(a);
+  const chosen = entries[idx];
+  if (!chosen) return;
+  const slot = Number($('#libSlot').value);
+  assignDevice(slot, { brand: chosen.brand, model: chosen.model, entries }, idx);
+  flashSlot(slot);
+  document.getElementById(`slot${slot}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setStatus(`slot ${slot} ← ${chosen.brand}: ${entryLabel(chosen)} ` +
+            `(${entries.length} functions available)`, 'ok');
+});
+
+// ── dropdown fallback (browse by category) ──────────────────────────────────
+const libCategory = $('#libCategory'), libBrand = $('#libBrand'), libModel = $('#libModel');
+
+function fillSelect(sel, items, placeholder) {
+  sel.innerHTML = `<option value="">${placeholder}</option>` +
+    items.map(({ value, label }) =>
+      `<option value="${esc(value)}">${esc(label)}</option>`).join('');
+  sel.disabled = items.length === 0;
 }
 
 libCategory.addEventListener('change', () => {
   const cat = libIndex?.[libCategory.value];
-  resetFrom('brand');
+  clearSel(libBrand); clearSel(libModel);
   if (!cat) return;
   const brands = Object.entries(cat.brands)
     .sort((a, b) => a[0].localeCompare(b[0]))
@@ -536,98 +775,22 @@ libCategory.addEventListener('change', () => {
   fillSelect(libBrand, brands, 'Select brand…');
 });
 
-libBrand.addEventListener('change', async () => {
-  resetFrom('model');
+libBrand.addEventListener('change', () => {
+  clearSel(libModel);
   const cat = libIndex?.[libCategory.value];
   const brand = cat?.brands[libBrand.value];
   if (!brand) return;
-
-  libInfo.textContent = `Loading ${libBrand.value}…`;
-  let entries = shardCache.get(brand.file);
-  if (!entries) {
-    try {
-      const res = await fetch(`${DATA_BASE}/db/${brand.file}`);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      entries = await res.json();
-      shardCache.set(brand.file, entries);
-    } catch (err) {
-      libInfo.textContent = `Could not load ${libBrand.value}: ${err.message}`;
-      return;
-    }
-  }
-  // RAW timing arrays need chunked BLE writes, and RC5/RC6 need firmware support
-  // that lands in Sitting B. Both stay in the data (no re-scrape needed later)
-  // but are hidden here so nothing unsendable can be picked.
-  const sendable = entries.filter(e => SENDABLE.has(e.proto));
-  const models = [...new Set(sendable.map(e => e.model))].sort();
-  fillSelect(libModel, models.map(m => ({ value: m, label: m })), 'Select model…');
-  const hidden = entries.length - sendable.length;
-  libInfo.textContent = `${libBrand.value}: ${models.length} keymaps, ` +
-    `${sendable.length} sendable codes` +
-    (hidden ? ` (${hidden} hidden — RAW or RC5/RC6, not sendable yet)` : '');
-  shardCache.set(brand.file, entries);
-  libModel.dataset.file = brand.file;
+  // Reuse the brand view — same lazy fetch, generic-first rendering.
+  openBrand({ b: libBrand.value, cl: cat.label, c: libCategory.value, f: brand.file,
+              n: brand.total, g: brand.generic || 0, m: [] });
 });
 
-libModel.addEventListener('change', () => {
-  resetFrom('function');
-  const entries = shardCache.get(libModel.dataset.file) || [];
-  libEntries = entries
-    .filter(e => e.model === libModel.value && SENDABLE.has(e.proto))
-    .sort((a, b) => funcRank(a.name) - funcRank(b.name) ||
-                    a.orig.localeCompare(b.orig));
-
-  fillSelect(libFunction, libEntries.map((e, i) => ({
-    value: String(i),
-    label: e.name.startsWith('other:') ? e.orig : `${e.orig} — ${e.name}`,
-  })), 'Select function…');
-});
-
-libFunction.addEventListener('change', () => {
-  const e = libEntries[Number(libFunction.value)];
-  libApply.disabled = !e;
-  if (!e) return;
-  libInfo.textContent =
-    `${e.proto} ${e.code} (${e.bits} bits) · ${e.brand} ${e.model} · "${e.orig}"`;
-});
-
-libApply.addEventListener('click', () => {
-  const e = libEntries[Number(libFunction.value)];
-  if (!e) return;
-  const slot = Number($('#libSlot').value);
-
-  // Belt and braces: never write a protocol the slot dropdown cannot represent,
-  // because that would silently leave the old protocol next to the new code.
-  if (!SENDABLE.has(e.proto)) {
-    setStatus(`${e.proto} is not sendable yet — pick another code`, 'err');
-    return;
-  }
-
-  // Assign the whole device to the slot, not just this one code — that is what
-  // lets the slot's Function dropdown swap power → input without coming back here.
-  assignDevice(slot, { brand: e.brand, model: e.model, entries: libEntries },
-               Number(libFunction.value));
-
-  flashSlot(slot);
-  document.getElementById(`slot${slot}`)
-    ?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  setStatus(`slot ${slot} ← ${e.brand} ${e.model}: ${e.orig} ` +
-            `(${libEntries.length} functions available)`, 'ok');
-});
-
-function resetFrom(level) {
-  const clear = (sel) => { sel.innerHTML = '<option value="">—</option>'; sel.disabled = true; };
-  if (level === 'brand') clear(libBrand);
-  if (level === 'brand' || level === 'model') clear(libModel);
-  clear(libFunction);
-  libApply.disabled = true;
-  libEntries = [];
-}
+function clearSel(sel) { sel.innerHTML = '<option value="">—</option>'; sel.disabled = true; }
 
 // ── init ────────────────────────────────────────────────────────────────────
 buildSlots();
 refreshButtons();
-loadLibIndex();
+loadLibrary();
 $('#connect').addEventListener('click', connect);
 
 if (!navigator.bluetooth) {

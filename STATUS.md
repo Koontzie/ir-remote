@@ -5,6 +5,7 @@
 
 ## Where it's at
 Phase 0 (salvage) done. **Phases 1, 2, 2.5 and 3 all COMPLETE** (2026-07-19).
+Perf-board rebuild COMPLETE (2026-07-26). **Phase 5 Sitting A COMPLETE** (2026-07-26).
 
 ### Perf-board rebuild — ✅ COMPLETE (2026-07-26)
 Circuit rebuilt from breadboard onto a perf board. Still USB power (boost/battery
@@ -63,6 +64,50 @@ GPIO7 → slot 3.** Bench session 2026-07-26 closed out every open fault from th
   one used this session. ⚠️ It runs ~100 mA through the 33 Ω continuously — if that
   resistor is a 1/8 W part, don't leave the steady-drive sketch running long.
 
+
+### Phase 5 — Code Library — Sitting A ✅ COMPLETE (2026-07-26)
+Steps 1–4 of `docs/CC-BRIEF-phase5.md` (spec: `docs/DESIGN-code-library.md`).
+Sitting B (steps 5–8: firmware direct-send + RC5/RC6/SONY, Identify mode,
+Favorites) is a **separate session — not started**.
+
+- **Scrape + convert (steps 1–2).** Re-scraped `Lucaslhm/Flipper-IRDB` fresh
+  (shallow clone to a temp dir, not the repo) and hardened
+  `tools/flipper_ir_convert.py`. New this sitting, per the design doc's
+  field-feedback section:
+    - **Search index** (`data/db/search.json`, 61 KB, 317 brand records): one
+      compact record per brand (brand + category + canonical functions + model
+      strings) so the app can search-first. Shards still lazy-load on selection.
+    - **Generic / blanket codes.** Model-spread is measured before dedupe; a
+      canonical code shared across ≥3 models in a brand is flagged `generic`
+      (with `nmodels`). These are the universal-remote sweet spot. E.g. Samsung
+      TV `0xE0E040BF` = power_toggle across 36 models.
+    - **Sweep ordering** now prefers `power_on` before toggle before `power_off`
+      (an already-on device shouldn't flicker off mid-sweep).
+  DB totals: 8 categories, 317 brands, ~13.8K codes. All sanity gates pass
+  (Samsung `0xE0E040BF` present; NEC projector discrete on/off; generics
+  promoted; search index indexes Samsung TVs).
+- **App (step 3), `app/index.html`, still one file / vanilla JS.**
+    - **Search-first** is the front door (live, debounced, ranked brand hits);
+      the Category→Brand→Model dropdowns are kept as a collapsible fallback.
+    - Brand view shows **generic/blanket codes at the top**, then all codes
+      ordered with **discrete power_on/power_off before power_toggle** (toggle is
+      tagged "fallback"). Assigning a code binds the **whole brand keymap** to a
+      slot; manual hex entry retained.
+    - **Show-the-code-that-was-sent:** a physical press now reports
+      `button N sent → <friendly name> (PROTO CODE)` in the status bar, and slot
+      readouts are named when the code came from the library.
+  Verified end-to-end in desktop Chrome (search → open Samsung TVs → assign
+  `0xE0E040BF` → slot 1 named readout); no app JS errors.
+- **Bench pass gate (step 4) MET:** a library-picked Samsung power code, saved
+  from the app, toggles the bench TV at full distance.
+- ⚠️ **Known follow-up — intermittent BLE disconnect.** Bluefy/Web-Bluetooth
+  link drops with `reason 520` (supervision timeout); when congested, an app
+  Save drags and times out mid-write, which *looks* like "save broke it." Serial
+  proved the stored code + IR transmit are always correct (`SAMSUNG 0xE0E040BF`
+  before and after Save) — this is a link-stability issue, **not** data or IR.
+  Good candidate to investigate in Sitting B alongside the firmware work.
+- Note: during enclosure fitting a button prong shorted the board twice (transient
+  each time); reflash + clean boot every time. Heat-shrink insulation added.
 
 ### Phase 3 — NPN driver stage + physical buttons ✅
 
@@ -152,13 +197,15 @@ sleep 20 | arduino-cli monitor -p <PORT> -c baudrate=115200
 ```
 
 ## Next step
-**Perf-board rebuild is done** (2026-07-26 — range restored, all three buttons
-verified; see the perf-board section above). Two threads remain open:
-- The IR **code library / search-first app** work — that's the phase-5 brief
-  (`docs/CC-BRIEF-phase5.md`); `docs/DESIGN-code-library.md` carries the new
-  requirements (search-first UI, discrete power-on, generic per-brand blanket
-  codes, show-the-code-sent). Not started here.
-- The intermittent Bluefy disconnect (minor, flaky BLE link — see perf-board note).
+**Phase 5 Sitting B** (`docs/CC-BRIEF-phase5.md` steps 5–8) — a separate session:
+firmware direct-send `{"proto","code","bits"}` + RC5/RC6/SONY in the send switch;
+Identify mode (sweep power codes ~400ms apart → last-5 re-send → keymap unlock);
+Favorites (☆ rows, localStorage + JSON export/import, push-to-slot). The sweep
+lists (`data/sweep-*.json`) and generic/search data from Sitting A already feed it.
+- While in there, investigate the **intermittent BLE disconnect** (`reason 520`
+  supervision timeout — see the Phase 5 Sitting A note). Link stability, not data.
+
+Perf-board rebuild and Phase 5 Sitting A are both done (2026-07-26).
 
 Then **Phase 4 — battery + deep sleep.** EXT1 wake on the button pins, now
 **GPIO5 + GPIO2 + GPIO7** on the perf board (all RTC-capable on the S3, which EXT1

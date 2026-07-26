@@ -178,11 +178,26 @@ CATEGORIES = [
     "SoundBars", "Cable_Boxes", "Blu-Ray", "DVD_Players",
 ]
 
+# A canonical code that shows up under this many distinct models within a brand
+# is treated as a brand-generic ("blanket") code — the universal-remote sweet
+# spot the app surfaces at the top of a brand's list.
+GENERIC_MIN_MODELS = 3
+
+
+def _dedupe_key(conv, canon):
+    """Within-brand identity: same protocol + code + canonical function is the
+    same code no matter which model file it came from. RAW has no code, so key it
+    on the head of its timing array instead."""
+    if conv["proto"] == "RAW":
+        return (conv["proto"], str(conv["data"][:8]), canon)
+    return (conv["proto"], conv.get("code") or "raw", canon)
+
 
 def scrape(root, outdir):
     index = {}
     unmapped = Counter()
     totals = Counter()
+    shards = {}           # (cat_slug, brand) -> entries, kept for the search index
 
     for category in CATEGORIES:
         cat_path = os.path.join(root, category)
@@ -198,7 +213,9 @@ def scrape(root, outdir):
             if not os.path.isdir(brand_path) or "_Converted_" in brand:
                 continue
 
-            entries, seen = [], set()
+            # First pass: collect every convertible entry WITH its model, so the
+            # model-spread of each code can be measured before deduping.
+            collected = []          # (canon, conv, orig_name, model)
             for dirpath, dirnames, filenames in os.walk(brand_path):
                 dirnames[:] = [d for d in dirnames if "_Converted_" not in d]
                 for fn in sorted(filenames):
@@ -212,32 +229,48 @@ def scrape(root, outdir):
                         if conv["proto"].startswith("TODO:"):
                             totals["todo"] += 1
                             continue
-
                         canon = canonical(raw["name"])
                         if canon.startswith("other:"):
                             unmapped[raw["name"]] += 1
+                        collected.append((canon, conv, raw["name"], model))
 
-                        # Dedupe within the brand by (proto, code, canonical name).
-                        key = (conv["proto"], conv.get("code") or "raw", canon)
-                        if conv["proto"] == "RAW":
-                            key = (conv["proto"], str(conv["data"][:8]), canon)
-                        if key in seen:
-                            totals["dupes"] += 1
-                            continue
-                        seen.add(key)
-
-                        entry = {
-                            "name": canon,
-                            "orig": raw["name"],
-                            "brand": brand,
-                            "model": model,
-                            **conv,
-                        }
-                        entries.append(entry)
-                        totals["raw" if conv["proto"] == "RAW" else "parsed"] += 1
-
-            if not entries:
+            if not collected:
                 continue
+
+            # How many distinct models share each code → blanket-code detection.
+            spread = defaultdict(set)
+            for canon, conv, orig, model in collected:
+                spread[_dedupe_key(conv, canon)].add(model)
+
+            # Second pass: dedupe within the brand by (proto, code, canonical name),
+            # annotating each survivor with its model-spread.
+            entries, seen = [], set()
+            for canon, conv, orig, model in collected:
+                key = _dedupe_key(conv, canon)
+                if key in seen:
+                    totals["dupes"] += 1
+                    continue
+                seen.add(key)
+
+                nmodels = len(spread[key])
+                entry = {
+                    "name": canon,
+                    "orig": orig,
+                    "brand": brand,
+                    "model": model,
+                    **conv,
+                }
+                if nmodels > 1:
+                    entry["nmodels"] = nmodels
+                # Promote canonical (not other:, not RAW) codes shared across many
+                # models to brand-generic. Toggle beside discrete on/off is fine —
+                # they are distinct canonical names and each promotes on its own.
+                if (nmodels >= GENERIC_MIN_MODELS
+                        and conv["proto"] != "RAW"
+                        and not canon.startswith("other:")):
+                    entry["generic"] = True
+                entries.append(entry)
+                totals["raw" if conv["proto"] == "RAW" else "parsed"] += 1
 
             brand_slug = _slug(brand)
             rel = f"{cat_slug}/{brand_slug}.json"
@@ -246,10 +279,12 @@ def scrape(root, outdir):
             with open(dest, "w", encoding="utf-8") as fh:
                 json.dump(entries, fh, separators=(",", ":"))
 
+            shards[(cat_slug, brand)] = entries
             counts = Counter(e["name"] for e in entries)
             brands[brand] = {
                 "file": rel,
                 "total": len(entries),
+                "generic": sum(1 for e in entries if e.get("generic")),
                 "counts": {k: v for k, v in sorted(counts.items())
                            if not k.startswith("other:")},
             }
@@ -257,19 +292,54 @@ def scrape(root, outdir):
         if brands:
             index[cat_slug] = {"label": category.replace("_", " "), "brands": brands}
             print(f"  {category}: {len(brands)} brands, "
-                  f"{sum(b['total'] for b in brands.values())} entries")
+                  f"{sum(b['total'] for b in brands.values())} entries, "
+                  f"{sum(b['generic'] for b in brands.values())} generic")
 
     os.makedirs(outdir, exist_ok=True)
     with open(os.path.join(outdir, "index.json"), "w", encoding="utf-8") as fh:
         json.dump(index, fh, separators=(",", ":"))
 
-    return index, unmapped, totals
+    return index, shards, unmapped, totals
+
+
+# ── search index ─────────────────────────────────────────────────────────────
+# Field feedback: on a ladder, browsing four dropdowns is too slow — the front
+# door should be a search box. This emits one compact record per brand (brand +
+# category + canonical functions + model strings) so the app can match "epson",
+# "hdmi", or a model number live. Shards themselves still lazy-load on selection.
+
+def build_search(index, shards, out_path):
+    records = []
+    for (cat_slug, brand), entries in sorted(shards.items()):
+        cat = index[cat_slug]
+        meta = cat["brands"][brand]
+        fns = sorted({e["name"] for e in entries
+                      if not e["name"].startswith("other:")})
+        models = sorted({e["model"] for e in entries})
+        records.append({
+            "c": cat_slug,          # category slug
+            "cl": cat["label"],     # category label
+            "b": brand,             # brand (display + shard match)
+            "f": meta["file"],      # shard path for lazy fetch
+            "n": meta["total"],     # sendable+raw entry count
+            "g": meta["generic"],   # generic-code count
+            "fn": fns,              # canonical functions present
+            "m": models,            # model strings (searchable)
+        })
+    with open(out_path, "w", encoding="utf-8") as fh:
+        json.dump(records, fh, separators=(",", ":"))
+    print(f"  {out_path}: {len(records)} brand records, "
+          f"{os.path.getsize(out_path)//1024} KB")
+    return records
 
 
 # ── sweep lists ─────────────────────────────────────────────────────────────
 
 # NEC-family first: highest hit rate, so a sweep finds the device soonest.
 _PROTO_ORDER = {"NEC": 0, "SAMSUNG": 1, "SONY": 2, "RC5": 3, "RC6": 4}
+# Within a protocol, try discrete power_on before toggle before power_off: an
+# already-on device stays on rather than flickering off mid-sweep (field feedback).
+_POWER_ORDER = {"power_on": 0, "power_toggle": 1, "power_off": 2}
 
 
 def build_sweep(src_json, out_path):
@@ -294,7 +364,8 @@ def build_sweep(src_json, out_path):
         sweep.append({"proto": e["proto"], "code": e["code"],
                       "bits": e["bits"], "name": canon, "orig": e.get("name")})
 
-    sweep.sort(key=lambda x: (_PROTO_ORDER.get(x["proto"], 9), x["code"]))
+    sweep.sort(key=lambda x: (_PROTO_ORDER.get(x["proto"], 9),
+                              _POWER_ORDER.get(x["name"], 3), x["code"]))
     with open(out_path, "w", encoding="utf-8") as fh:
         json.dump(sweep, fh, separators=(",", ":"))
 
@@ -333,6 +404,21 @@ def sanity(outdir, index):
           f"power_on={on} power_off={off}")
     ok &= good
 
+    # 3. Blanket-code promotion actually fired for a big brand.
+    gen = sum(1 for e in samsung or [] if e.get("generic"))
+    good3 = gen > 0
+    print(f"  [{'PASS' if good3 else 'FAIL'}] Samsung TV shard has generic "
+          f"(blanket) codes: {gen}")
+    ok &= good3
+
+    # 4. Search index exists, is non-empty, and can find Samsung TVs.
+    sp = os.path.join(outdir, "search.json")
+    recs = json.load(open(sp, encoding="utf-8")) if os.path.exists(sp) else []
+    good4 = any(r["b"] == "Samsung" and r["c"] == "tvs" for r in recs)
+    print(f"  [{'PASS' if good4 else 'FAIL'}] search.json present "
+          f"({len(recs)} brand records) and indexes Samsung TVs")
+    ok &= good4
+
     return ok
 
 
@@ -348,7 +434,10 @@ def main():
 
     if args.scrape:
         print("Scraping Flipper-IRDB ...")
-        index, unmapped, totals = scrape(args.scrape, args.out)
+        index, shards, unmapped, totals = scrape(args.scrape, args.out)
+
+        print("\nSearch index:")
+        build_search(index, shards, os.path.join(args.out, "search.json"))
 
         print("\nSweep lists:")
         for pair in args.sweep_from:

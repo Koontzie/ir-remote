@@ -117,6 +117,39 @@ PROGMEM, no phone needed); short-press again = stop. Requires the sweep list
 baked into firmware at build time. Deferred until battery/deep-sleep phase
 settles the power/wake architecture.
 
+## Field-use feedback (Tyler, 2026-07)
+
+Three changes that came out of actually holding the thing:
+
+1. **Search, not browse.** Full brand/model dropdowns are too much to wade
+   through on a ladder. Primary UI should be a single search box —
+   type "epson", "ne", "hdmi" and get matching entries live, fuzzy across
+   brand + model + function name. Dropdowns become the fallback, not the front
+   door. Search index built at scrape time (small JSON, brand+model+function
+   strings only; shards still lazy-load on selection).
+
+2. **Discrete power-on beats toggle — surface it first.** In AV work, toggle
+   is actively dangerous: hit a room of projectors with toggle and you turn
+   half of them off. Where a brand DB entry has discrete `power_on` /
+   `power_off`, present those as the default action and mark toggle as the
+   fallback ("toggle only — no discrete code known"). Sweep/Identify should
+   also prefer power_on codes where they exist, since a device that's already
+   on stays on rather than flickering off.
+
+3. **Generic/blanket codes.** Many brands share a protocol+address family
+   (a "Samsung TV" code often works across dozens of models). At scrape time,
+   detect codes that repeat across many models within a brand and promote them
+   to a per-brand "generic" entry (e.g. "Samsung TV — generic power_on"), shown
+   at the top of that brand's list. That collapses hundreds of near-duplicate
+   model entries into a handful of high-hit-rate picks — closer to how a
+   universal remote actually gets used.
+
+4. **Show the code that was sent.** When a physical button fires, the app's
+   status area should display what went out — slot, protocol, code, and the
+   friendly name if the code came from the library ("Samsung TV — power_on
+   0xE0E040BF"). Confirmed useful in the field: you learn what a button is
+   without opening its config.
+
 ## Open items
 
 - [ ] Tyler: brand/device list from work → scopes the Flipper-IRDB scrape.
