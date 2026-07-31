@@ -1,7 +1,8 @@
 # DESIGN — Custom PCB (BLE IR remote)
 
 **Status:** GATE 2 PASSED 2026-07-21 — decisions below are final. Schematic in progress.
-**Created:** 2026-07-21 · Traceable to `docs/CC-BRIEF-pcb.md`
+**Created:** 2026-07-21 · Originating brief `docs/CC-BRIEF-pcb.md`, removed
+2026-07-31; it survives in git history at commit `377163c`.
 **Target:** 2-layer, **30 × 58mm**, hand-solderable (0603 min), ESP32-S3-WROOM-1-N8.
 
 > ### ⚠️ Approved deviation from the brief: 30 × 58mm, not ≤ 30 × 50mm

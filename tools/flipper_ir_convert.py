@@ -3,15 +3,20 @@
 
 Two modes:
 
-  Single-file (the original prototype behaviour, kept for the universal lists):
-      python3 tools/flipper_ir_convert.py data/source/tv.ir ...
+  Library scrape (the one you want):
+      python3 tools/flipper_ir_convert.py --scrape <irdb-root> --out data/db
+    -> writes data/db/<category>/<brand>.json, data/db/index.json,
+       data/db/search.json, data/sweep-<type>.json, and an unmapped-name report.
+
+  Single-file (convert an arbitrary Flipper .ir you supply yourself):
+      python3 tools/flipper_ir_convert.py mystuff/somedevice.ir
     -> writes <path>.json next to each input.
 
-  Library scrape (Phase 5):
-      python3 tools/flipper_ir_convert.py --scrape <irdb-root> --out data/db \
-             --sweep-from data/projectors.json:projector data/tv.json:tv
-    -> writes data/db/<category>/<brand>.json, data/db/index.json,
-       data/sweep-<type>.json, and an unmapped-name report.
+Everything the repo ships is derived from Lucaslhm/Flipper-IRDB (CC0-1.0), which
+is what <irdb-root> should point at. The sweep lists used to be built from the
+Flipper Unleashed universal lists (GPL-3.0); those source files were removed when
+the project went MIT, and the sweeps are now derived from the CC0 database — see
+build_sweep_from_db below and data/README.md.
 
 Flipper stores LSB-first byte values; IRremoteESP8266 wants MSB-first codes, so
 each byte is bit-reversed and the frame assembled per protocol. That math is
@@ -335,43 +340,79 @@ def build_search(index, shards, out_path):
 
 # ── sweep lists ─────────────────────────────────────────────────────────────
 
-# NEC-family first: highest hit rate, so a sweep finds the device soonest.
-_PROTO_ORDER = {"NEC": 0, "SAMSUNG": 1, "SONY": 2, "RC5": 3, "RC6": 4}
-# Within a protocol, try discrete power_on before toggle before power_off: an
-# already-on device stays on rather than flickering off mid-sweep (field feedback).
+# Try discrete power_on before toggle before power_off: an already-on device
+# stays on rather than flickering off mid-sweep (field feedback).
 _POWER_ORDER = {"power_on": 0, "power_toggle": 1, "power_off": 2}
 
+# Which database categories feed each sweep type. `monitor` shares the TV list
+# in the app (SWEEP_FILES in app/index.html), so monitors feed it too.
+SWEEP_SETS = {
+    "tv": ["tvs", "monitors"],
+    "projector": ["projectors"],
+}
 
-def build_sweep(src_json, out_path):
-    """Deduped, parsed power codes from a universal list -> sweep file."""
-    with open(src_json, encoding="utf-8") as fh:
-        data = json.load(fh)
 
-    seen, sweep, raw_skipped = set(), [], 0
-    for e in data:
-        canon = canonical(e.get("name", ""))
-        if not canon.startswith("power_"):
-            continue
-        if e.get("proto") == "RAW":
-            raw_skipped += 1        # cannot send RAW until chunked writes exist
-            continue
-        if e.get("proto", "").startswith("TODO:"):
-            continue
-        key = (e["proto"], e["code"])
-        if key in seen:
-            continue
-        seen.add(key)
-        sweep.append({"proto": e["proto"], "code": e["code"],
-                      "bits": e["bits"], "name": canon, "orig": e.get("name")})
+def build_sweep_from_db(shards, cats, out_path):
+    """Power codes from the CC0 database -> one sweep file.
 
-    sweep.sort(key=lambda x: (_PROTO_ORDER.get(x["proto"], 9),
-                              _POWER_ORDER.get(x["name"], 3), x["code"]))
+    This is the same blanket-code idea the brand view uses, widened to the whole
+    category: a power code that many distinct models share is, by definition, a
+    code a universal sweep should fire early. So model-spread (summed across
+    every brand in the category) is the ranking signal.
+
+    Ordering is spread-descending *within* the power_on / power_toggle /
+    power_off groups, not globally — the "don't flick an already-on device off"
+    rule outranks hit rate. RAW is skipped (the BLE write can't carry a timing
+    array yet), as are unsupported protocols.
+    """
+    spread = Counter()      # (proto, code, canonical name) -> distinct models
+    rep = {}                # same key -> representative entry (for bits/orig)
+
+    for (cat_slug, _brand), entries in shards.items():
+        if cat_slug not in cats:
+            continue
+        for e in entries:
+            if not e["name"].startswith("power_"):
+                continue
+            if e["proto"] == "RAW" or e["proto"].startswith("TODO:"):
+                continue
+            key = (e["proto"], e["code"], e["name"])
+            # `nmodels` is the within-brand spread the scrape already measured;
+            # absent means it came from exactly one model file.
+            spread[key] += e.get("nmodels", 1)
+            rep.setdefault(key, e)
+
+    # Collapse to one record per (proto, code). A code can carry more than one
+    # canonical name across brands (power_on here, power_toggle there); keep the
+    # reading with the most models behind it, and sum the spread over all of them.
+    best, total = {}, Counter()
+    for key, n in spread.items():
+        proto, code, name = key
+        total[(proto, code)] += n
+        cur = best.get((proto, code))
+        if cur is None or (n, -_POWER_ORDER.get(name, 3)) > (
+                spread[cur], -_POWER_ORDER.get(cur[2], 3)):
+            best[(proto, code)] = key
+
+    sweep = []
+    for (proto, code), key in best.items():
+        e = rep[key]
+        sweep.append({"proto": proto, "code": code, "bits": e["bits"],
+                      "name": key[2], "orig": e.get("orig")})
+
+    sweep.sort(key=lambda x: (_POWER_ORDER.get(x["name"], 3),
+                              -total[(x["proto"], x["code"])], x["code"]))
     with open(out_path, "w", encoding="utf-8") as fh:
         json.dump(sweep, fh, separators=(",", ":"))
 
     by_proto = Counter(x["proto"] for x in sweep)
-    print(f"  {out_path}: {len(sweep)} codes {dict(by_proto)} "
-          f"({raw_skipped} RAW skipped)")
+    by_name = Counter(x["name"] for x in sweep)
+    widest = sorted(sweep, key=lambda x: -total[(x["proto"], x["code"])])[:3]
+    top = ", ".join(f"{x['proto']} {x['code']} ({total[(x['proto'], x['code'])]} models)"
+                    for x in widest)
+    print(f"  {out_path}: {len(sweep)} codes from {'+'.join(cats)} "
+          f"{dict(by_proto)} {dict(by_name)}")
+    print(f"      widest-spread codes: {top}")
     return sweep
 
 
@@ -427,8 +468,8 @@ def main():
     ap.add_argument("paths", nargs="*", help="single-file mode: .ir files")
     ap.add_argument("--scrape", metavar="IRDB_ROOT")
     ap.add_argument("--out", default="data/db")
-    ap.add_argument("--sweep-from", nargs="*", default=[],
-                    help="src.json:type pairs, e.g. data/tv.json:tv")
+    ap.add_argument("--sweep-dir", default="data",
+                    help="where sweep-<type>.json are written (default: data)")
     ap.add_argument("--report", default="data/db/unmapped-names.txt")
     args = ap.parse_args()
 
@@ -439,10 +480,10 @@ def main():
         print("\nSearch index:")
         build_search(index, shards, os.path.join(args.out, "search.json"))
 
-        print("\nSweep lists:")
-        for pair in args.sweep_from:
-            src, kind = pair.rsplit(":", 1)
-            build_sweep(src, f"data/sweep-{kind}.json")
+        print("\nSweep lists (from the CC0 database, not from any external list):")
+        for kind, cats in SWEEP_SETS.items():
+            build_sweep_from_db(shards, cats,
+                                os.path.join(args.sweep_dir, f"sweep-{kind}.json"))
 
         os.makedirs(os.path.dirname(args.report), exist_ok=True)
         with open(args.report, "w", encoding="utf-8") as fh:

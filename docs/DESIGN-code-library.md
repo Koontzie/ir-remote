@@ -9,11 +9,19 @@ universal-remote trick, on our hardware.
 
 ## Data sources (fetched 2026-07-19, in repo)
 
+> ⛔ **Superseded 2026-07-31 — the files in this table are gone.** They came from
+> `DarkFlippers/unleashed-firmware`, which is **GPL-3.0**; the project is now
+> licensed MIT, so they and everything derived from them were removed. The sweep
+> lists are rebuilt from the CC0 `data/db/` instead (see
+> `build_sweep_from_db` in `tools/flipper_ir_convert.py` and `data/README.md`).
+> The table is kept for the record; do not try to restore these files.
+
 | File | Entries | What |
 |---|---|---|
-| `data/source/tv.ir` | 613 (295 power) | Flipper Unleashed universal TV list |
-| `data/source/projectors.ir` | 302 (138 power) | Flipper Unleashed universal projector list |
-| `data/tv.json`, `data/projectors.json` | converted | IRremoteESP8266-ready |
+| ~~`data/source/tv.ir`~~ | 613 (295 power) | Flipper Unleashed universal TV list — **removed, GPL-3.0** |
+| ~~`data/source/projectors.ir`~~ | 302 (138 power) | Flipper Unleashed universal projector list — **removed, GPL-3.0** |
+| ~~`data/tv.json`, `data/projectors.json`~~ | converted | derived from the above — **removed** |
+| `data/db/**` | ~13.8K codes | `Lucaslhm/Flipper-IRDB` (**CC0-1.0**) — the only source now |
 
 - Converter: `tools/flipper_ir_convert.py`. Flipper stores LSB-first bytes;
   IRremoteESP8266 wants MSB-first codes — each byte is bit-reversed, then
@@ -56,9 +64,19 @@ hex entry stays for codes not in the DB.
    that brand's codes first.
 2. Aim remote. Hit **START**. App streams power codes over BLE one at a time,
    ~400ms apart (~100ms IR transmit + gap), progress bar + current index shown.
-3. Device reacts → user hits **STOP**. Reaction lags human perception, so the
-   app shows the **last 5 codes sent** as individual re-send buttons —
-   single-step them to pinpoint the exact one.
+3. Device reacts → user hits **STOP**. **Keep the FULL sent history for the
+   run, not a last-5 window.** Tyler's real workflow: the win condition is
+   usually "it powered on and showed a splash screen," and projector warmup
+   means visible feedback can lag the winning code by **5–30 seconds** —
+   15+ codes at sweep speed. A short window would routinely miss it.
+   After STOP the app shows the ordered history (newest first) with each entry
+   re-sendable, plus a **bisect helper**: because the device is now ON and
+   *stays* on, the user can power it off and replay a *subset* of the history
+   to halve the candidate range each round. ~5 rounds pinpoints one code out
+   of 50. Persistent state is what makes bisecting possible — lean on it.
+   Also expose an adjustable sweep interval (default ~400ms; slower for
+   sluggish gear) and a **manual step mode** (tap to send the next code) for
+   when the user would rather go one at a time than sweep and backtrack.
 4. "It's this one" → name it, save to a slot, and (later) log it to a site
    inventory list.
 5. **Keymap unlock:** all functions on one remote share the protocol + address;

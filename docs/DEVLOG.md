@@ -7,6 +7,123 @@
 Phase 0 (salvage) done. **Phases 1, 2, 2.5 and 3 all COMPLETE** (2026-07-19).
 Perf-board rebuild COMPLETE (2026-07-26). **Phase 5 Sitting A COMPLETE** (2026-07-26).
 
+### Public release prep — ✅ COMPLETE (2026-07-31)
+
+The repo was public but unusable by a stranger: no LICENSE (so nobody could
+legally reuse it) and no README (so nobody could understand or build it). Both
+fixed.
+
+- **Licensed MIT** (`LICENSE`, © 2026 Tyler Koontz).
+- **The GPL-3.0 problem, and why files were deleted.** Licenses verified from
+  source, not assumed: `Lucaslhm/Flipper-IRDB` is **CC0-1.0** (public domain
+  dedication — the whole of `data/db/`, 317 brands, imposes no obligations), but
+  `data/source/tv.ir` and `projectors.ir` came from
+  `DarkFlippers/unleashed-firmware`, which is **GPL-3.0**. GPL-3.0 is copyleft:
+  shipping those files, or anything derived from them, forces the whole project
+  to GPL-3.0. MIT and GPL-3.0 cannot coexist in one distribution. So the two
+  `.ir` files, their converted `data/tv.json` / `data/projectors.json`, and the
+  converter's `--sweep-from` code path were all removed.
+  ⚠️ **They remain in earlier commits — history was NOT rewritten.** That is
+  deliberate and proportionate: the files are gone going forward, and the
+  situation is disclosed in `README.md` and `data/README.md`. Do not force-push
+  to "clean" this later; it would break every existing clone to no real benefit.
+- **Sweep lists rebuilt from CC0 data only.** `build_sweep_from_db()` replaces
+  `build_sweep()`: it sums each power code's model-spread across every brand in
+  a category — the same blanket-code signal the brand view already uses, widened
+  from one brand to a category — dedupes by `(proto, code)`, and sorts
+  `power_on → power_toggle → power_off`, spread-descending within each group.
+  Same five-key output schema; **the app's data contract did not change.**
+  - **TV: 130 → 70 codes. Projector: 51 → 57.** The TV list genuinely shrank.
+    Checked before accepting it: of the 69 dropped TV codes, **53 do not exist
+    anywhere in Flipper-IRDB** (Unleashed-only data, unrecoverable), and the
+    high-spread head of the list is fully intact — LG `NEC 0x20DF10EF` (57
+    models), Samsung `0xE0E040BF` (39), Sony `0x95` (27). What was lost is the
+    one-model tail. Widening the sweep to every category was measured and
+    rejected: 241 codes and a 96-second sweep to recover 4 more of the old list.
+    Decision: ship the 70. Shorter sweep, same practical hit rate.
+  - `tv` draws from `tvs` + `monitors` because the app already maps monitors
+    onto the TV sweep file.
+- **All four sanity gates pass** on a fresh end-to-end scrape (317 brands,
+  11,148 parsed codes, byte-identical `data/db/` — the scrape is deterministic).
+- **`README.md`** — what-it-is, perf board photos (`docs/images/`), the live
+  Pages link with the Bluefy/Web Bluetooth explanation, BOM, wiring, build+flash
+  with pinned tool versions, and an honest status table.
+- **Reconciled with the GitHub-side restructuring** done in parallel (13
+  commits): `STATUS.md` → `docs/DEVLOG.md`, all seven `CC-BRIEF-*.md` files
+  deleted, and a first README written in the GitHub UI. That README's
+  unauthenticated-GATT security note and the Ko-fi link were kept and grafted
+  into this one; its licensing section was superseded, since it described the
+  repo as GPL-encumbered and recommended GPL-3.0. `data/source/ATTRIBUTION.md`
+  went with the rest of `data/source/`, its substance folded into
+  `data/README.md`. The 13 commits were rebased under, not merged over — nothing
+  was force-pushed or discarded.
+- **`data/README.md` added** — DB layout, entry schema, provenance, and the
+  regenerate command with its sanity gates.
+- **The dev board in the photos is a Seeed Studio XIAO ESP32-S3** (readable on
+  the silkscreen). PLAN.md and this file had only ever said "ESP32-S3 devkit";
+  the README now names the actual part.
+
+**Not tagged.** A release waits for the PCB or Phase 5 completion — unchanged.
+
+**Left uncommitted on purpose:** the Phase 5 **Sitting B** work in progress
+(`app/index.html` Identify mode + Favorites, `firmware/remote_ble` direct-send +
+RC5/RC6/SONY). It is written but has **never been run against hardware**, since
+the board died before it could be tested. It is not part of the release commit.
+
+### ☠️ DEVKIT KILLED during first battery attempt (2026-07-27) — replace and resume
+
+**The board is dead.** 3V3↔GND measures **3 Ω with a continuous beep** — a hard
+short inside the devkit (onboard regulator or the S3 itself). Nothing on the perf
+board touches 3V3, so the fault is entirely in the devkit. The blinking red power
+LED is the signature: the 5 V rail collapses into the shorted 3.3 V rail, browns
+out, retries, forever. There was visible smoke. Not repairable — swap the devkit.
+
+**ROOT CAUSE (confirmed 2026-07-27): the boost converter was outputting 9 V, not
+5 V.** It's a cheap module whose output voltage is selected by a **solder blob
+across selector pads**. Tyler set it to 5 V and verified it the day before; when
+re-measured after the failure it read **9 V**. The blob had let go (cold joint —
+these modules typically default to their highest setting when the selection
+opens). 9 V into the devkit's 5 V pin puts the whole overage across the onboard
+3.3 V regulator, which cooks and fails **short** — which is precisely the 3 Ω
+3V3↔GND reading and the smoke. The earlier "loose battery leads shorted" theory
+was wrong; the leads were a hazard but not the killer.
+
+**Contributing sequence:**
+1. Battery + boost wired to the 5 V rail; cell was flat, so nothing came up.
+2. USB plugged in while the battery leads were still connected — two sources on
+   one rail (bad practice, not the fatal blow).
+3. Battery removed but bare lead ends left attached; USB re-plugged; the boost,
+   now silently at 9 V, put 9 V on the rail → smoke.
+
+**Action taken:** the cheap solder-blob-selectable boosters are retired from this
+project. Better modules only from here.
+
+**Rules for the replacement board — do not skip:**
+- ⚠️ **One power source at a time.** Never USB and battery/boost simultaneously
+  unless the devkit is known to have a VBUS protection diode. Put a **slide
+  switch in the battery line** so switching sources is a flick, not a rewire.
+- ⚠️ **Never leave bare supply leads attached to a powered board.** Terminate
+  them (connector), insulate them, or remove them entirely. A dangling live
+  lead is a short waiting for gravity.
+- ⚠️ **Re-verify boost output voltage EVERY session, not once.** This is the
+  lesson that actually cost the board: a solder-blob voltage selector can open
+  between sessions and silently jump to 9 V. Meter OUT+/OUT− before every
+  connection, and prefer modules with a fixed 5 V output or a trimmer you can
+  lock down — not blob-selectable ones. Verify under load; open-circuit lies.
+- **Charge the cell first.** A flat LiPo makes the boost strain and invites
+  exactly the "is it even working?" fiddling that caused this.
+- Socket the devkit (it was) so a swap is a pull, not a desolder.
+
+**What survived:** firmware + app committed and pushed; code library live on
+GitHub Pages; slot config is a 2-minute reprogram from the app; the driver
+circuit (2N2222, 33 Ω, both IR LEDs, bulk cap) all metered clean — the 448 Ω
+reading across 5V↔GND was just the bulk cap charging, not a fault.
+
+**Resume:** drop in a fresh ESP32-S3 devkit, reflash `firmware/remote_ble`,
+reprogram slot 1 from the app, confirm the across-the-room range test. Then
+Phase 5 Sitting B (software, no bench risk) and Phase 4 battery — this time with
+the switch and the rules above.
+
 ### Perf-board rebuild — ✅ COMPLETE (2026-07-26)
 Circuit rebuilt from breadboard onto a perf board. Still USB power (boost/battery
 not installed). **Three physical buttons now built: GPIO5 → slot 1, GPIO2 → slot 2,
@@ -197,7 +314,9 @@ sleep 20 | arduino-cli monitor -p <PORT> -c baudrate=115200
 ```
 
 ## Next step
-**Phase 5 Sitting B** (`docs/CC-BRIEF-phase5.md` steps 5–8) — a separate session:
+**Phase 5 Sitting B** — spec is `docs/DESIGN-code-library.md` (the per-session
+`CC-BRIEF-*.md` files were removed from the repo on 2026-07-31; the Sitting B
+brief survives only in git history, at commit `377163c`). A separate session:
 firmware direct-send `{"proto","code","bits"}` + RC5/RC6/SONY in the send switch;
 Identify mode (sweep power codes ~400ms apart → last-5 re-send → keymap unlock);
 Favorites (☆ rows, localStorage + JSON export/import, push-to-slot). The sweep
