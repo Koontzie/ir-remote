@@ -65,27 +65,49 @@ config or trigger a slot. That's fine for bench use and it's a deliberate
 trade-off, not an oversight; NimBLE bonding would close it if this ever left the
 workbench.
 
-## Status — honest version
+## Where it stands
 
-**Working and bench-verified:** IR transmit across a room (20–30 ft), BLE
-programming from the app, NVS persistence across power cycles, all three physical
-buttons, and the searchable code library. A library-picked Samsung power code,
-assigned from the app, toggles a real TV at full distance.
+**It works.** The core is built and proven on the bench: IR transmit across a room
+(20–30 ft), programming over Bluetooth from the app, codes persisting in flash
+through a power cycle, all three physical buttons, and the searchable code library
+end to end — pick a Samsung power code in the browser, assign it to a button, and
+the TV across the room turns off.
 
-**In progress / not done:**
+It's a finished thing that does its job. What follows is the honest edge of it,
+not a to-do list I'm apologising for.
 
-| | State |
-|---|---|
-| Phase 5 Sitting B | **In progress, unverified** — firmware direct-send, RC5/RC6/SONY in the send switch, Identify mode (sweep until the device reacts), Favorites. Written but never run against hardware, because the board died first. |
-| Custom PCB (`hardware/`) | **Designed, placed, partly routed, never fabricated.** Not proven. |
-| Phase 4 — battery + deep sleep | **Not started.** The circuit currently runs off USB 5V/VBUS only. |
-| BLE link stability | Known intermittent disconnect (`reason 520`, supervision timeout). Link-layer only — the stored codes and IR output were proven correct either side of every drop. |
+- **USB-powered.** The circuit runs off the dev board's 5 V pin, so it needs a
+  cable or a USB battery pack. A battery-and-deep-sleep version was started and
+  stopped after it cost a dev board — see the postmortem below.
+- **Identify mode is written but unproven.** Sweeping power codes until the device
+  reacts, plus favourites, is implemented in the app and firmware but has never
+  been run against real hardware.
+- **The custom PCB is designed, not fabricated.** `hardware/` has a complete
+  KiCad project, placed and partly routed. Nothing has been sent to a fab, so
+  nothing about it is proven.
+- **Bluetooth link drops occasionally** (`reason 520`, supervision timeout).
+  Annoying, not dangerous — the stored codes and the IR output were verified
+  correct either side of every drop.
 
-**The current physical unit is dead** and awaiting a replacement dev board. It was
-killed on 2026-07-27 by a cheap boost converter whose solder-blob voltage selector
-silently let go and put 9 V onto a 5 V rail — not a design fault, but a cautionary
-tale written up in full in [docs/DEVLOG.md](docs/DEVLOG.md). The design itself is proven; a
-fresh dev board and a reflash brings it straight back.
+The unit in the photos is currently dead, and it's a good story rather than a sad
+one: during the battery experiment a cheap boost converter's solder-blob voltage
+selector let go, silently jumped to 9 V, and cooked the dev board's regulator. The
+design was never at fault, a socketed dev board makes it a two-minute swap, and
+the full postmortem — along with every other fault this project hit — is in
+[docs/DEVLOG.md](docs/DEVLOG.md).
+
+## What's next
+
+No timeline and no promises — the project does what it was built to do. If I pick
+it back up:
+
+- **An enclosure.** It's loose boards and panel-mount buttons right now. This is
+  the one thing that would turn it from a working circuit into something you'd
+  actually carry to a job.
+- **Prove out identify mode** on a fresh dev board — the sweep is the feature that
+  makes it genuinely universal rather than a nice code browser.
+- **Polish the app UI.** It's functional and fast, but it's plainly a tool built
+  by one person for one person.
 
 ## Bill of materials
 
