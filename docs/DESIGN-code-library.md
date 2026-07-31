@@ -1,6 +1,6 @@
 # Design — Code Library + Identify Mode (Phase 5)
 
-**Why:** Tyler's AV work involves projectors and monitors from many brands
+**Why:** This project targets projectors and monitors from many brands
 (Samsung, LG, NEC, +more), often unlabeled or unreachable. Today that means
 digging through menus and trying every brand. This phase gives the remote a
 built-in code library with dropdowns, and an **Identify mode** that sweeps
