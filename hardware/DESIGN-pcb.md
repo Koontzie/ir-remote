@@ -113,7 +113,7 @@ deep-sleep wake. Strapping pins 0/3/45/46 and USB 19/20 respected.
 | **BTN4** | **16** | in, pull-up | RTC ✓, exposed, free |
 | **BTN5** | **17** | in, pull-up | RTC ✓, exposed, free |
 | **VBAT_SENSE** | **1** | ADC | **ADC1_CH0 — must be ADC1.** ADC2 is unusable while the radio is on. |
-| **BOOT** | **0** | strap | Tactile to GND + 10k pull-up. **Nothing else on this net** (see STATUS.md — a stray connection here cost a debugging session). |
+| **BOOT** | **0** | strap | Tactile to GND + 10k pull-up. **Nothing else on this net** (see docs/DEVLOG.md — a stray connection here cost a debugging session). |
 | **RESET** | **EN** | — | Tactile to GND + 10k pull-up + 1µF |
 | **USB D−** | **19** | — | Native USB only |
 | **USB D+** | **20** | — | Native USB only |
