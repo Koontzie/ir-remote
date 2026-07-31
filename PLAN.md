@@ -67,7 +67,7 @@ strapping pins are only 0/3/45/46.
 direct GPIO drive (no NPN, ~13mA, inches of range) — transistor stage moved to Phase 3.
 **Phase 2 — BLE + web app.** ✅ Done 2026-07-19 — TV toggled from a browser button.
 Chrome → GATT → NVS → IR chain verified; artifacts `firmware/remote_ble/` +
-`app/index.html`. GATT UUIDs and payload shapes recorded in STATUS.md.
+`app/index.html`. GATT UUIDs and payload shapes recorded in docs/DEVLOG.md.
 **Phase 2.5 — Bluefy on iPhone.** ✅ Done — iPhone → Bluefy → BLE → IR → TV verified.
 **Phase 3 — NPN driver stage + physical buttons.** ✅ Done 2026-07-19. 2N2222 off
 the 5V rail (33Ω, two IR LEDs in series, 1kΩ base) took range from ~5ft to
