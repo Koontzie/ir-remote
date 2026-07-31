@@ -174,7 +174,7 @@ every 3s. Kept in the repo as the minimal known-good IR proof.
 
 **Run the web app locally:**
 ```
-cd ~/dev/ir-remote/app && python3 -m http.server 8000
+cd app && python3 -m http.server 8000
 ```
 Open `http://localhost:8000` in **desktop Chrome** — `localhost` counts as a secure
 context, so Web Bluetooth works without HTTPS. Safari has no Web Bluetooth, ever.
