@@ -1,11 +1,69 @@
 # IR-REMOTE — STATUS
 
 **Status:** Active
-**Updated:** 2026-07-26
+**Updated:** 2026-08-10
 
 ## Where it's at
 Phase 0 (salvage) done. **Phases 1, 2, 2.5 and 3 all COMPLETE** (2026-07-19).
 Perf-board rebuild COMPLETE (2026-07-26). **Phase 5 Sitting A COMPLETE** (2026-07-26).
+**XIAO C3 rev-2 board bring-up + button-LED signal module — firmware done,
+hardware bring-up partly confirmed (2026-08-10).**
+
+### XIAO C3 bring-up + button-LED signal module (2026-08-10)
+
+Brief `docs/CC-BRIEF-led-signal.md`. Board is the rev-2 XIAO ESP32-C3 perf build
+(battery → charger → boost → switch → C3, 3 illuminated buttons, 2 IR LEDs).
+
+**Step 1–2 — bring-up of the unmodified firmware.**
+- `remote_ble.ino` compiled **as-is** for `esp32:esp32:XIAO_ESP32C3` (44 % flash,
+  6 % RAM) — no source change needed for the C3 target. Flashed over native USB.
+- Boot serial verified verbatim @115200: banner, `[btn] GPIO3 -> slot 1`,
+  `GPIO5 -> slot 2`, `GPIO6 -> slot 3`, `[ble] advertising as "IR-Remote"`,
+  `[nvs] slot 1 = SAMSUNG 0xE0E040BF (32 bits)`. The three `[btn]` lines carry a
+  trailing `(INPUT_PULLUP, pressed = LOW)` — informational, mapping matches.
+- **Bring-up gotcha:** the C3 native-USB CDC buffer (~256 B) overflows while no
+  host is attached, so a monitor opened after boot shows only the first ~6 lines
+  and silently drops the tail. Fix: hard-reset the chip (`esptool --after
+  hard-reset flash-id`) and attach the monitor inside the firmware's 2 s startup
+  delay, so the log streams live. Recorded for next time.
+- ⏭️ **Still Tyler's to confirm (physical):** the three button presses register
+  on GPIO3/5/6, and slot 1 toggles the bench TV. Slots 2/3 empty → `err:empty:N`
+  is expected, not a fault.
+
+**Step 3–5 — LED signal module.**
+- Added `ledInit()` / `ledTick()` / `ledSignal(LedEvent, buttonIndex)` to the one
+  `.ino`. LEDC PWM on GPIO7/21/20, 5 kHz / 8-bit. **Non-blocking millis() state
+  machine**, no `delay()`; phases are computed from elapsed time, so the ~70 ms
+  IR send just resumes the animation cleanly. Idle brightness = single constant
+  `kRingIdleDuty` (64/255 ≈ 25 %). Full pattern table implemented (boot cascade,
+  idle, press flash, sent double-pulse, empty triple-blink, connect breathe,
+  sweep chase). Events wired at the existing call sites only — end of `setup()`,
+  `pollButtons()` press + empty branches, `fireSlot()` success, `onConnect`,
+  and the `pendingDirect` path in `loop()`.
+- **Sweep = self-terminating chase.** No explicit stop signal exists, so each
+  direct send refreshes a 500 ms keep-alive; the chase runs while the sweep
+  sends and returns to idle ~500 ms after the last. Documented in
+  `DESIGN-c3-board.md`.
+- Compiles clean (+10 KB flash). Boots clean: `[led] ring PWM ready` with **no
+  `WARN`** — LEDC attached on all three pins, no channel-exhaustion, and BLE
+  still advertises after the change.
+- **IR/PWM coexistence checked at the source, not just assumed:**
+  IRremoteESP8266 bit-bangs the 38 kHz carrier with `digitalWrite` +
+  `delayMicroseconds` on GPIO4 — it uses **neither LEDC nor RMT**. So there is
+  no peripheral contention with the ring PWM, and during the blocking IR send
+  the LEDC hardware holds the rings autonomously. The `reason 520` risk is also
+  untouched: `ledSignal()` from `onConnect` only sets a few variables (no block),
+  and `ledTick()` runs from `loop()`, never inside a BLE callback.
+- **Idle current — estimate, not measured** (this board has no VBAT-sense pin;
+  Seeed confirms none, so no software read). By construction the idle draw
+  equals the design budget: 3 rings at 25 % ≈ 11 mA + C3 BLE-idle ~15 mA ≈
+  **~26 mA at the 5 V rail → ~41–45 mA at the cell** through the boost, matching
+  the ~45 mA / 8–9 h figure in `DESIGN-c3-board.md`. Real number needs a meter
+  inline on the 5 V rail or the battery.
+- ⏭️ **Still Tyler's to confirm (visual/RF):** that each of the seven patterns
+  actually fires as intended, and that **IR range and BLE stability are
+  unchanged** now that PWM runs. If either regressed, the LED state machine is
+  stealing time — that's the bug to chase.
 
 ### Public release prep — ✅ COMPLETE (2026-07-31)
 

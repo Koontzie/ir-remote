@@ -29,3 +29,8 @@ hardware/*.dsn
 hardware/*.dsn.orig
 hardware/*.ses
 hardware/*.rpt
+
+# Working briefs / AI-session scratch docs — internal, never for public git
+CC-BRIEF*
+BRIEF-*
+_scratch/

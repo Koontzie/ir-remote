@@ -50,16 +50,17 @@
     color: var(--ink);
   }
   button.small { min-height: 36px; padding: 7px 12px; font-size: 13px; }
+  button.danger { background: transparent; border: 1px solid #5c2b2b; color: var(--err); }
   #connect { width: 100%; margin-bottom: 18px; }
 
-  .slot {
+  section.card, .slot, .library {
     background: var(--card);
     border: 1px solid var(--edge);
     border-radius: var(--radius);
     padding: 14px;
     margin-bottom: 12px;
   }
-  .slot h2 {
+  .slot h2, .library h2, section.card h2 {
     font-size: 13px;
     text-transform: uppercase;
     letter-spacing: .08em;
@@ -127,7 +128,6 @@
   }
   #status.ok  { color: var(--ok); }
   #status.err { color: var(--err); }
-  /* physical button press on the device flashes the matching slot */
   @keyframes slotFlash {
     0%   { border-color: var(--accent); background: #23303f; }
     100% { border-color: var(--edge);   background: var(--card); }
@@ -137,25 +137,10 @@
     .slot.pressed { animation: none; border-color: var(--accent); }
   }
 
-  .library {
-    background: var(--card);
-    border: 1px solid var(--edge);
-    border-radius: var(--radius);
-    padding: 14px;
-    margin-bottom: 18px;
-  }
-  .library h2 {
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: .08em;
-    color: var(--dim);
-    margin: 0 0 10px;
-  }
   #libSearch { font-size: 16px; }
   .lib-slot { display: flex; align-items: center; gap: 8px; margin: 10px 0 4px; font-size: 12px; color: var(--dim); }
   .lib-slot select { width: auto; min-width: 64px; }
 
-  /* search results: one tappable card per brand */
   .hit {
     display: flex; align-items: center; justify-content: space-between; gap: 8px;
     background: #171a1f;
@@ -173,7 +158,6 @@
     border-radius: 6px; padding: 2px 6px; white-space: nowrap;
   }
 
-  /* a single code row (brand view) */
   .grp { margin-top: 14px; }
   .grp .glabel { font-size: 11px; text-transform: uppercase; letter-spacing: .06em; color: var(--dim); margin-bottom: 6px; }
   .grp.generic .glabel { color: var(--gold); }
@@ -192,24 +176,47 @@
   .code .chex { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; color: var(--dim); }
   .code button { flex: 0 0 auto; }
   .muted { color: var(--dim); }
-
-  #libInfo {
-    margin-top: 10px;
-    font-size: 12px;
-    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-    color: var(--dim);
-    word-break: break-all;
-  }
   .backlink { display: inline-block; margin-top: 10px; font-size: 13px; color: var(--accent); cursor: pointer; }
-  .warn {
-    background: #2a2113;
-    border: 1px solid #5c4718;
-    color: #f0c86a;
-    border-radius: var(--radius);
-    padding: 12px;
-    margin-bottom: 16px;
-    font-size: 13px;
+
+  /* star button */
+  .star { background: transparent; border: 1px solid var(--edge); color: var(--dim);
+          min-height: 36px; padding: 7px 10px; font-size: 15px; }
+  .star.on { color: var(--gold); border-color: #5c4718; }
+
+  /* favorites tap-pads */
+  #favWrap[hidden] { display: none; }
+  .fav-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+  .fav {
+    display: flex; flex-direction: column; gap: 6px;
+    background: #171a1f; border: 1px solid var(--edge); border-radius: 10px; padding: 10px;
   }
+  .fav .send {
+    width: 100%; text-align: left; background: #23303f; border: 1px solid #2f4257;
+    color: var(--ink); font-size: 15px; min-height: 48px; padding: 10px 12px;
+  }
+  .fav .send .fcode { display: block; font-size: 11px; color: var(--dim);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; margin-top: 2px; }
+  .fav .fctrl { display: flex; gap: 6px; align-items: center; }
+  .fav .fctrl select { min-height: 34px; padding: 5px 6px; font-size: 13px; width: auto; flex: 1; }
+  .fav .fctrl button { min-height: 34px; padding: 5px 9px; font-size: 13px; }
+  .fav input.rename { min-height: 38px; }
+
+  /* identify mode */
+  .idbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: flex-end; }
+  .idbar .field { flex: 1 1 110px; }
+  .progress { height: 8px; background: #171a1f; border: 1px solid var(--edge); border-radius: 6px; overflow: hidden; margin: 10px 0 6px; }
+  .progress > div { height: 100%; width: 0; background: var(--accent); transition: width .12s linear; }
+  .idnow { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: var(--dim); }
+  .hist { max-height: 320px; overflow-y: auto; margin-top: 8px; }
+  .hbar { background:#171a1f; border:1px solid var(--edge); border-radius:9px; padding:10px; margin-top:10px; }
+  .hbar .glabel { font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--dim); }
+
+  .warn {
+    background: #2a2113; border: 1px solid #5c4718; color: #f0c86a;
+    border-radius: var(--radius); padding: 12px; margin-bottom: 16px; font-size: 13px;
+  }
+  #libInfo, .note { margin-top: 10px; font-size: 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace; color: var(--dim); word-break: break-all; }
 </style>
 </head>
 <body>
@@ -227,6 +234,64 @@
 
   <button id="connect">Connect</button>
 
+  <!-- ── Favorites: the daily-driver toolbox, front and center ── -->
+  <section class="card" id="favWrap" hidden>
+    <h2>Favorites</h2>
+    <div class="fav-grid" id="favGrid"></div>
+    <details>
+      <summary>Backup / share favorites</summary>
+      <div class="note">Export copies your favorites as JSON (download or copy the text). Import merges pasted JSON or a file.</div>
+      <div class="row" style="margin-top:8px">
+        <button class="ghost small" id="favExport">Export ⭳</button>
+        <button class="ghost small" id="favImport">Import from text</button>
+        <label class="ghost small" style="display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:7px 12px;border:1px solid var(--edge);border-radius:9px;cursor:pointer;color:var(--ink);font-weight:600">
+          Import file…<input type="file" id="favFile" accept="application/json,.json" hidden>
+        </label>
+      </div>
+      <textarea id="favJson" rows="4" style="width:100%;margin-top:8px;font-family:ui-monospace,Menlo,monospace;font-size:12px" placeholder="favorites JSON appears here on export; paste here then Import"></textarea>
+    </details>
+  </section>
+
+  <!-- ── Identify mode: sweep power codes until the device reacts ── -->
+  <section class="card">
+    <h2>Identify mode</h2>
+    <div class="idbar">
+      <div class="field">
+        <label for="idType">Device type</label>
+        <select id="idType">
+          <option value="tv">TV</option>
+          <option value="projector">Projector</option>
+          <option value="monitor">Monitor (TV list)</option>
+        </select>
+      </div>
+      <div class="field grow">
+        <label for="idBrand">Brand guess (optional — tried first)</label>
+        <input id="idBrand" placeholder="e.g. samsung" autocapitalize="off" autocorrect="off" spellcheck="false">
+      </div>
+      <div class="field narrow">
+        <label for="idInterval">ms/code</label>
+        <input id="idInterval" type="number" inputmode="numeric" value="400" min="150" max="3000" step="50">
+      </div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <button id="idStart" style="flex:2">▶ Start sweep</button>
+      <button id="idStep" class="ghost" style="flex:1">Step ▷</button>
+      <button id="idStop" class="ghost" style="flex:1" disabled>■ Stop</button>
+    </div>
+    <div class="progress"><div id="idProg"></div></div>
+    <div class="idnow" id="idNow">Pick a type and aim the remote. Start sweeps automatically; Step sends one at a time.</div>
+
+    <!-- bisect + selected-hit actions -->
+    <div id="idBisect" class="hbar" hidden></div>
+    <div id="idActions" class="hbar" hidden></div>
+
+    <!-- full ordered send history, newest first, each re-sendable -->
+    <div id="idHist" class="hist"></div>
+
+    <!-- keymap unlock -->
+    <div id="idKeymap"></div>
+  </section>
+
   <section class="library">
     <h2>Code library</h2>
 
@@ -241,12 +306,8 @@
       </select>
     </div>
 
-    <!-- search results (brand hits) -->
     <div id="libResults"></div>
-
-    <!-- a loaded brand's codes (generic first, then by function) -->
     <div id="libBrandView" hidden></div>
-
     <div id="libInfo">Loading library…</div>
 
     <details>
@@ -282,25 +343,22 @@ const SERVICE_UUID = 'b457c32b-22b1-425f-8a88-4d6dc37ba4eb';
 const CONFIG_UUID  = 'd997012d-7d2b-47de-ae87-bae14df446ef';
 const TRIGGER_UUID = '58397514-04a3-4265-9590-9d910c4e99d2';
 const STATUS_UUID  = 'b8ddfe01-519f-430d-bd4e-aba0dd852e2c';
+const DEVICE_NAME  = 'IR-Remote';
 
-const DEVICE_NAME = 'IR-Remote';
-
-// Protocols the firmware can actually transmit today. The library holds RC5/RC6
-// entries too, but the slot dropdown has no option for them — setting .value to
-// an absent option fails silently and leaves the PREVIOUS protocol, which would
-// save a valid RC5 code tagged as NEC and send garbage with no error shown. So
-// library entries are filtered to this list. Phase 5 Sitting B adds RC5/RC6 to
-// the firmware; then they only need appending here.
+// Protocols the firmware can transmit. Sitting B added RC5/RC6 to the firmware,
+// but the slot Protocol dropdown only lists SAMSUNG/NEC/SONY (setting a slot to
+// an unlisted proto would fail silently), so slot-bound picks are filtered to
+// SENDABLE. Direct sends (Identify, Favorites, keymap unlock) can use all five.
 const PROTOCOLS = ['SAMSUNG', 'NEC', 'SONY'];
 const SENDABLE = new Set(PROTOCOLS);
+const DIRECT_OK = new Set(['SAMSUNG', 'NEC', 'SONY', 'RC5', 'RC6']);
 
-// Slot 1 is pre-filled with the Samsung power code proven in Phase 1.
 const DEFAULTS = {
   1: { proto: 'SAMSUNG', code: '0xE0E040BF', bits: 32 },
-  2: { proto: 'NEC',     code: '',           bits: 32 },
-  3: { proto: 'NEC',     code: '',           bits: 32 },
-  4: { proto: 'NEC',     code: '',           bits: 32 },
-  5: { proto: 'NEC',     code: '',           bits: 32 },
+  2: { proto: 'NEC', code: '', bits: 32 },
+  3: { proto: 'NEC', code: '', bits: 32 },
+  4: { proto: 'NEC', code: '', bits: 32 },
+  5: { proto: 'NEC', code: '', bits: 32 },
 };
 
 let device = null, configChar = null, triggerChar = null, statusChar = null;
@@ -310,22 +368,17 @@ const statusEl = $('#status');
 const esc = (s) => String(s).replace(/[&<>"]/g, c =>
   ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-function setStatus(msg, kind) {
-  statusEl.textContent = msg;
-  statusEl.className = kind || '';
-}
+function setStatus(msg, kind) { statusEl.textContent = msg; statusEl.className = kind || ''; }
 
 function flashSlot(slot) {
   const el = document.getElementById(`slot${slot}`);
   if (!el) return;
   el.classList.remove('pressed');
-  void el.offsetWidth;          // reflow so the animation restarts on rapid presses
+  void el.offsetWidth;
   el.classList.add('pressed');
 }
 
-function connected() {
-  return device && device.gatt && device.gatt.connected;
-}
+function connected() { return device && device.gatt && device.gatt.connected; }
 
 function refreshButtons() {
   const on = connected();
@@ -333,13 +386,18 @@ function refreshButtons() {
   $('#connect').textContent = on ? 'Disconnect' : 'Connect';
 }
 
-// Friendly label for a library entry: prefer the canonical function name, but
-// always keep the human original ("Power on — power_on").
+// Friendly label for an entry. Favorites carry a user label; library entries
+// derive one from canonical + original names.
 function entryLabel(e) {
-  return e.name.startsWith('other:') ? e.orig : `${e.orig} — ${e.name}`;
+  if (e.label) return e.label;
+  return e.name && e.name.startsWith('other:') ? e.orig
+       : (e.name ? `${e.orig} — ${e.name}` : e.orig || e.code);
 }
 
-// ── build the slot editors ──────────────────────────────────────────────────
+// ── slots ─────────────────────────────────────────────────────────────────
+const slotDevice = {};
+const slotApplied = {};
+
 function buildSlots() {
   const host = $('#slots');
   for (let slot = 1; slot <= 5; slot++) {
@@ -349,9 +407,7 @@ function buildSlots() {
     el.id = `slot${slot}`;
     el.innerHTML = `
       <h2>Slot ${slot}</h2>
-      <div class="device">
-        <span id="dev${slot}" class="none">No device assigned</span>
-      </div>
+      <div class="device"><span id="dev${slot}" class="none">No device assigned</span></div>
       <div class="field">
         <label for="func${slot}">Function</label>
         <select id="func${slot}" disabled><option value="">assign a device first</option></select>
@@ -389,14 +445,12 @@ function buildSlots() {
     if (save) saveSlot(Number(save));
     if (test) testSlot(Number(test));
   });
-
-  // Function dropdown drives the slot; manual edits keep the readout honest.
   host.addEventListener('change', (e) => {
     const m = /^(func|proto|code|bits)(\d)$/.exec(e.target.id || '');
     if (!m) return;
     const slot = Number(m[2]);
     if (m[1] === 'func') applyFunction(slot, Number(e.target.value));
-    else { slotApplied[slot] = null; updateReadout(slot); }   // manual edit unnames the slot
+    else { slotApplied[slot] = null; updateReadout(slot); }
   });
   host.addEventListener('input', (e) => {
     const m = /^(code|bits)(\d)$/.exec(e.target.id || '');
@@ -406,27 +460,15 @@ function buildSlots() {
   for (let slot = 1; slot <= 5; slot++) updateReadout(slot);
 }
 
-// ── slot ↔ device binding ───────────────────────────────────────────────────
-// A slot is conceptually "this device, this button": the protocol and address
-// belong to the device, and only the command changes when you go power → input.
-// slotDevice[n] holds the assigned device + entries; slotApplied[n] the entry
-// currently in the slot (used to name what a physical press sent).
-const slotDevice = {};
-const slotApplied = {};
-
 function updateReadout(slot) {
   const proto = $(`#proto${slot}`).value;
   const code = $(`#code${slot}`).value.trim();
   const bits = $(`#bits${slot}`).value;
   const el = $(`#out${slot}`);
-  if (!code) {
-    el.innerHTML = `<span class="empty">empty — pick a function or enter a hex code</span>`;
-    return;
-  }
+  if (!code) { el.innerHTML = `<span class="empty">empty — pick a function or enter a hex code</span>`; return; }
   const named = slotApplied[slot];
-  el.textContent = named
-    ? `${entryLabel(named)} · ${proto} ${code} · ${bits} bits`
-    : `${proto} · ${code} · ${bits} bits`;
+  el.textContent = named ? `${entryLabel(named)} · ${proto} ${code} · ${bits} bits`
+                         : `${proto} · ${code} · ${bits} bits`;
 }
 
 function applyFunction(slot, idx) {
@@ -443,16 +485,33 @@ function applyFunction(slot, idx) {
 
 function assignDevice(slot, { brand, model, entries }, pickIdx = 0) {
   slotDevice[slot] = { brand, model, entries };
-
   $(`#dev${slot}`).className = '';
   $(`#dev${slot}`).textContent = `${brand} / ${model}`;
-
   const sel = $(`#func${slot}`);
-  sel.innerHTML = entries.map((e, i) =>
-    `<option value="${i}">${esc(entryLabel(e))}</option>`).join('');
+  sel.innerHTML = entries.map((e, i) => `<option value="${i}">${esc(entryLabel(e))}</option>`).join('');
   sel.disabled = false;
   sel.value = String(pickIdx);
   applyFunction(slot, pickIdx);
+}
+
+// Push a single code (favorite / identify hit / keymap row) straight to a slot:
+// set the fields, name the slot, and persist to the device if connected.
+function pushToSlot(slot, e) {
+  if (SENDABLE.has(e.proto)) $(`#proto${slot}`).value = e.proto;
+  $(`#code${slot}`).value = e.code;
+  $(`#bits${slot}`).value = e.bits;
+  slotApplied[slot] = { label: entryLabel(e), name: e.name, orig: e.orig };
+  slotDevice[slot] = null;
+  $(`#dev${slot}`).className = '';
+  $(`#dev${slot}`).textContent = e.brand ? `${e.brand} (single code)` : 'single code';
+  $(`#func${slot}`).innerHTML = `<option>${esc(entryLabel(e))}</option>`;
+  $(`#func${slot}`).disabled = true;
+  updateReadout(slot);
+  if (!SENDABLE.has(e.proto)) { setStatus(`${e.proto} can't be slot-bound yet (RC5/RC6) — kept as favorite`, 'err'); return; }
+  if (connected()) saveSlot(slot);
+  flashSlot(slot);
+  document.getElementById(`slot${slot}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setStatus(`slot ${slot} ← ${entryLabel(e)}`, 'ok');
 }
 
 // ── BLE ─────────────────────────────────────────────────────────────────────
@@ -460,45 +519,30 @@ async function connect() {
   if (connected()) { device.gatt.disconnect(); return; }
   try {
     setStatus('requesting device…');
-    // Filter on the service UUID, not the name. The name lives in the scan
-    // response (it does not fit in the advertisement alongside a 128-bit UUID),
-    // and matching the service is more robust than matching a string.
     device = await navigator.bluetooth.requestDevice({
       filters: [{ services: [SERVICE_UUID] }],
       optionalServices: [SERVICE_UUID],
     });
     device.addEventListener('gattserverdisconnected', () => {
       setStatus('disconnected', 'err');
+      if (idRunning) stopSweep('link dropped');
       refreshButtons();
     });
-
     setStatus('connecting…');
-    const server  = await device.gatt.connect();
+    const server = await device.gatt.connect();
     const service = await server.getPrimaryService(SERVICE_UUID);
-
-    configChar  = await service.getCharacteristic(CONFIG_UUID);
+    configChar = await service.getCharacteristic(CONFIG_UUID);
     triggerChar = await service.getCharacteristic(TRIGGER_UUID);
-    statusChar  = await service.getCharacteristic(STATUS_UUID);
+    statusChar = await service.getCharacteristic(STATUS_UUID);
 
     await statusChar.startNotifications();
     statusChar.addEventListener('characteristicvaluechanged', (ev) => {
       const text = new TextDecoder().decode(ev.target.value);
-
-      // A physical button on the device reports "pressed:N" — flash that slot and
-      // show WHAT went out (slot, name, proto, code), so you learn a button
-      // without opening its config (field feedback: show the code that was sent).
       const pressed = /^pressed:(\d+)$/.exec(text);
-      if (pressed) {
-        const n = Number(pressed[1]);
-        flashSlot(n);
-        setStatus(`button ${n} sent → ${slotSummary(n)}`, 'ok');
-        return;
-      }
-
-      // "err:empty:N" means that button has no code stored yet.
+      if (pressed) { const n = Number(pressed[1]); flashSlot(n); setStatus(`button ${n} sent → ${slotSummary(n)}`, 'ok'); return; }
       const empty = /^err:empty:(\d+)$/.exec(text);
       if (empty) { setStatus(`slot ${empty[1]} is empty — save a code to it first`, 'err'); return; }
-
+      if (text === 'sent:direct') { if (!idRunning) setStatus('sent ✓', 'ok'); return; }
       setStatus(`device: ${text}`, text.startsWith('err') ? 'err' : 'ok');
     });
 
@@ -510,7 +554,6 @@ async function connect() {
   }
 }
 
-// What a slot will transmit, named if it came from the library.
 function slotSummary(slot) {
   const code = ($(`#code${slot}`)?.value || '').trim();
   if (!code) return 'empty';
@@ -521,140 +564,106 @@ function slotSummary(slot) {
 
 async function write(characteristic, payload) {
   const bytes = new TextEncoder().encode(JSON.stringify(payload));
-  // writeValue is deprecated; prefer the explicit form where available.
-  if (characteristic.writeValueWithResponse) {
-    await characteristic.writeValueWithResponse(bytes);
-  } else {
-    await characteristic.writeValue(bytes);
-  }
+  if (characteristic.writeValueWithResponse) await characteristic.writeValueWithResponse(bytes);
+  else await characteristic.writeValue(bytes);
+}
+
+// Direct send: fire a code without touching a slot (Identify / Favorites).
+async function sendDirect(proto, code, bits) {
+  if (!connected()) { setStatus('not connected', 'err'); return false; }
+  if (!DIRECT_OK.has(proto)) { setStatus(`${proto} not sendable`, 'err'); return false; }
+  try { await write(triggerChar, { proto, code, bits: Number(bits) || 32 }); return true; }
+  catch (err) { setStatus(`send failed: ${err.message}`, 'err'); return false; }
 }
 
 async function saveSlot(slot) {
   if (!connected()) return setStatus('not connected', 'err');
   const code = $(`#code${slot}`).value.trim();
   if (!code) return setStatus(`slot ${slot}: enter a hex code first`, 'err');
-
-  const payload = {
-    slot,
-    proto: $(`#proto${slot}`).value,
-    code,
-    bits: Number($(`#bits${slot}`).value) || 32,
-  };
   try {
     setStatus(`saving slot ${slot}…`);
-    await write(configChar, payload);
-  } catch (err) {
-    setStatus(`save failed: ${err.message}`, 'err');
-  }
+    await write(configChar, { slot, proto: $(`#proto${slot}`).value, code, bits: Number($(`#bits${slot}`).value) || 32 });
+  } catch (err) { setStatus(`save failed: ${err.message}`, 'err'); }
 }
 
 async function testSlot(slot) {
   if (!connected()) return setStatus('not connected', 'err');
-  try {
-    setStatus(`triggering slot ${slot} → ${slotSummary(slot)}…`);
-    await write(triggerChar, { slot });
-  } catch (err) {
-    setStatus(`test failed: ${err.message}`, 'err');
-  }
+  try { setStatus(`triggering slot ${slot} → ${slotSummary(slot)}…`); await write(triggerChar, { slot }); }
+  catch (err) { setStatus(`test failed: ${err.message}`, 'err'); }
 }
 
 // ── code library ────────────────────────────────────────────────────────────
-// search.json (one small record per brand) is the front door: type a brand,
-// model, or function and jump to matching brands. index.json + brand shards
-// drive the dropdown fallback and lazy-load a brand's actual codes. All served
-// statically alongside the app, so this works on Pages and localhost alike.
-
 const DATA_BASE = '../data';
-let libIndex = null;            // index.json (dropdown fallback)
-let searchRecs = [];           // search.json (brand records)
-const shardCache = new Map();  // file -> entries[]
+let libIndex = null, searchRecs = [];
+const shardCache = new Map();
 
-// Canonical functions in a useful order. Discrete power_on/power_off come first:
-// in AV work toggle is dangerous (it turns already-on gear off), so discrete
-// beats toggle wherever a brand has it (field feedback).
 const FUNC_ORDER = [
   'power_on', 'power_off', 'power_toggle', 'source_cycle',
   'input_hdmi', 'input_hdmi1', 'input_hdmi2', 'input_hdmi3', 'input_hdmi4',
   'input_vga', 'input_comp', 'vol_up', 'vol_dn', 'mute', 'menu',
 ];
-const funcRank = (n) => {
-  const i = FUNC_ORDER.indexOf(n);
-  return i === -1 ? FUNC_ORDER.length : i;
-};
+const funcRank = (n) => { const i = FUNC_ORDER.indexOf(n); return i === -1 ? FUNC_ORDER.length : i; };
 
 const libSearch = $('#libSearch'), libResults = $('#libResults');
 const libBrandView = $('#libBrandView'), libInfo = $('#libInfo');
 
+async function fetchJson(url) {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+async function fetchShard(file) {
+  let entries = shardCache.get(file);
+  if (entries) return entries;
+  entries = await fetchJson(`${DATA_BASE}/db/${file}`);
+  shardCache.set(file, entries);
+  return entries;
+}
+
 async function loadLibrary() {
   try {
-    const [idxRes, srchRes] = await Promise.all([
-      fetch(`${DATA_BASE}/db/index.json`),
-      fetch(`${DATA_BASE}/db/search.json`),
+    const [idx, srch] = await Promise.all([
+      fetchJson(`${DATA_BASE}/db/index.json`),
+      fetchJson(`${DATA_BASE}/db/search.json`),
     ]);
-    if (!idxRes.ok) throw new Error(`index HTTP ${idxRes.status}`);
-    if (!srchRes.ok) throw new Error(`search HTTP ${srchRes.status}`);
-    libIndex = await idxRes.json();
-    searchRecs = await srchRes.json();
-
-    // dropdown fallback
+    libIndex = idx; searchRecs = srch;
     fillSelect(libCategory, Object.entries(libIndex).map(([slug, c]) => ({
-      value: slug,
-      label: `${c.label} (${Object.keys(c.brands).length} brands)`,
+      value: slug, label: `${c.label} (${Object.keys(c.brands).length} brands)`,
     })), 'Select category…');
-
     libSearch.disabled = false;
-    const brands = searchRecs.length;
     const codes = searchRecs.reduce((n, r) => n + r.n, 0);
-    libInfo.textContent =
-      `${brands} brands · ${codes} codes. Type to search, or browse by category below.`;
+    libInfo.textContent = `${searchRecs.length} brands · ${codes} codes. Type to search, or browse by category below.`;
   } catch (err) {
     libInfo.textContent = `Code library unavailable: ${err.message}`;
     libCategory.innerHTML = '<option value="">unavailable</option>';
   }
 }
 
-// ── search ────────────────────────────────────────────────────────────────
 let searchTimer = null;
-libSearch.addEventListener('input', () => {
-  clearTimeout(searchTimer);
-  searchTimer = setTimeout(runSearch, 120);
-});
+libSearch.addEventListener('input', () => { clearTimeout(searchTimer); searchTimer = setTimeout(runSearch, 120); });
 
 function runSearch() {
   const q = libSearch.value.trim().toLowerCase();
-  libBrandView.hidden = true;
-  libBrandView.innerHTML = '';
+  libBrandView.hidden = true; libBrandView.innerHTML = '';
   if (!q) { libResults.innerHTML = ''; return; }
-
   const terms = q.split(/\s+/);
   const scored = [];
   for (const r of searchRecs) {
-    // Build the haystack once per record: brand, category, functions, models.
-    const hay = (r._hay ||= [
-      r.b, r.cl, r.c, r.fn.join(' '), r.m.join(' '),
-    ].join(' ').toLowerCase());
+    const hay = (r._hay ||= [r.b, r.cl, r.c, r.fn.join(' '), r.m.join(' ')].join(' ').toLowerCase());
     if (!terms.every(t => hay.includes(t))) continue;
-
-    // Rank: brand-name hits beat model/function hits; more codes breaks ties.
     const brandHit = terms.some(t => r.b.toLowerCase().includes(t));
-    scored.push({ r, score: (brandHit ? 0 : 1), n: r.n });
+    scored.push({ r, score: brandHit ? 0 : 1, n: r.n });
   }
   scored.sort((a, b) => a.score - b.score || b.n - a.n || a.r.b.localeCompare(b.r.b));
-
   if (!scored.length) { libResults.innerHTML = `<div class="muted" style="margin-top:8px">No matches.</div>`; return; }
-
   const shown = scored.slice(0, 40);
   libResults.innerHTML = shown.map(({ r }, i) => {
     const gen = r.g ? `<span class="badge">${r.g} generic</span>` : '';
-    return `<div class="hit" data-i="${i}">
-      <div>
-        <div class="name">${esc(r.b)}</div>
-        <div class="meta">${esc(r.cl)} · ${r.n} codes${r.m.length > 1 ? ` · ${r.m.length} models` : ''}</div>
-      </div>${gen}
-    </div>`;
-  }).join('') + (scored.length > 40
-      ? `<div class="muted" style="margin-top:8px">+${scored.length - 40} more — refine the search.</div>` : '');
-
+    return `<div class="hit" data-i="${i}"><div>
+      <div class="name">${esc(r.b)}</div>
+      <div class="meta">${esc(r.cl)} · ${r.n} codes${r.m.length > 1 ? ` · ${r.m.length} models` : ''}</div>
+    </div>${gen}</div>`;
+  }).join('') + (scored.length > 40 ? `<div class="muted" style="margin-top:8px">+${scored.length - 40} more — refine the search.</div>` : '');
   libResults._hits = shown.map(s => s.r);
 }
 
@@ -665,15 +674,10 @@ libResults.addEventListener('click', (e) => {
   if (rec) openBrand(rec);
 });
 
-// ── brand view: a brand's codes, generic (blanket) first ────────────────────
-async function fetchShard(file) {
-  let entries = shardCache.get(file);
-  if (entries) return entries;
-  const res = await fetch(`${DATA_BASE}/db/${file}`);
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  entries = await res.json();
-  shardCache.set(file, entries);
-  return entries;
+// star button markup shared by library, keymap, identify rows
+function starBtn(e) {
+  const on = isFav(e.proto, e.code);
+  return `<button class="star${on ? ' on' : ''}" data-star="${esc(e.proto)}|${esc(e.code)}|${e.bits}|${esc(entryLabel(e))}|${esc(e.brand || '')}|${esc(e.name || '')}" title="Favorite">${on ? '★' : '☆'}</button>`;
 }
 
 async function openBrand(rec) {
@@ -681,26 +685,13 @@ async function openBrand(rec) {
   libBrandView.hidden = false;
   libBrandView.innerHTML = `<div class="muted">Loading ${esc(rec.b)}…</div>`;
   let entries;
-  try {
-    entries = await fetchShard(rec.f);
-  } catch (err) {
-    libBrandView.innerHTML = `<div class="muted">Could not load ${esc(rec.b)}: ${esc(err.message)}</div>`;
-    return;
-  }
+  try { entries = await fetchShard(rec.f); }
+  catch (err) { libBrandView.innerHTML = `<div class="muted">Could not load ${esc(rec.b)}: ${esc(err.message)}</div>`; return; }
 
-  // Only sendable protocols; RAW and RC5/RC6 stay in the data but are hidden
-  // until Sitting B adds firmware support (no re-scrape needed then).
   const sendable = entries.filter(e => SENDABLE.has(e.proto));
   const hidden = entries.length - sendable.length;
-
-  // Assigning a code binds the WHOLE brand keymap to the slot, so the slot's
-  // Function dropdown can later swap power → input without returning here. Use a
-  // stable ordering so an entry's index is the same in the row and the slot.
-  const ordered = sendable.slice().sort((a, b) =>
-    funcRank(a.name) - funcRank(b.name) || a.orig.localeCompare(b.orig));
+  const ordered = sendable.slice().sort((a, b) => funcRank(a.name) - funcRank(b.name) || a.orig.localeCompare(b.orig));
   libBrandView._entries = ordered;
-  libBrandView._brand = rec.b;
-
   const generic = ordered.filter(e => e.generic);
   const rest = ordered.filter(e => !e.generic);
 
@@ -708,88 +699,449 @@ async function openBrand(rec) {
     const idx = ordered.indexOf(e);
     const isToggle = e.name === 'power_toggle';
     const tag = e.name.startsWith('other:') ? '' :
-      `<span class="ctag">${esc(e.name)}${e.nmodels ? ` · ${e.nmodels} models` : ''}` +
-      `${isToggle ? ' · toggle (fallback)' : ''}</span>`;
+      `<span class="ctag">${esc(e.name)}${e.nmodels ? ` · ${e.nmodels} models` : ''}${isToggle ? ' · toggle (fallback)' : ''}</span>`;
     return `<div class="code${e.generic ? ' gen' : ''}">
-      <div class="cinfo">
-        <div class="cname">${esc(e.orig)}</div>
-        ${tag}
-        <div class="chex">${e.proto} ${e.code} · ${e.bits} bits</div>
-      </div>
+      <div class="cinfo"><div class="cname">${esc(e.orig)}</div>${tag}
+        <div class="chex">${e.proto} ${e.code} · ${e.bits} bits</div></div>
+      ${starBtn(e)}
       <button class="small" data-assign="${idx}">Assign</button>
     </div>`;
   };
 
   let html = `<span class="backlink" id="libBack">← back to search</span>
     <div style="margin-top:8px"><strong>${esc(rec.b)}</strong>
-      <span class="muted">· ${esc(rec.cl)} · ${sendable.length} sendable codes` +
-      `${hidden ? ` · ${hidden} hidden (RAW/RC5/RC6)` : ''}</span></div>`;
-
-  if (generic.length) {
-    html += `<div class="grp generic"><div class="glabel">★ Generic — blanket codes (work across many models; try these first)</div>` +
-      generic.map(row).join('') + `</div>`;
-  }
-  html += `<div class="grp"><div class="glabel">All codes</div>` +
-    rest.map(row).join('') + `</div>`;
-
+      <span class="muted">· ${esc(rec.cl)} · ${sendable.length} sendable codes${hidden ? ` · ${hidden} hidden (RAW/RC5/RC6)` : ''}</span></div>`;
+  if (generic.length) html += `<div class="grp generic"><div class="glabel">★ Generic — blanket codes (work across many models; try these first)</div>${generic.map(row).join('')}</div>`;
+  html += `<div class="grp"><div class="glabel">All codes</div>${rest.map(row).join('')}</div>`;
   libBrandView.innerHTML = html;
 }
 
 libBrandView.addEventListener('click', (e) => {
-  if (e.target.id === 'libBack') {
-    libBrandView.hidden = true;
-    runSearch();
-    return;
-  }
+  if (e.target.id === 'libBack') { libBrandView.hidden = true; runSearch(); return; }
+  if (handleStarClick(e)) return;
   const a = e.target.dataset.assign;
   if (a === undefined) return;
   const entries = libBrandView._entries || [];
-  const idx = Number(a);
-  const chosen = entries[idx];
+  const chosen = entries[Number(a)];
   if (!chosen) return;
   const slot = Number($('#libSlot').value);
-  assignDevice(slot, { brand: chosen.brand, model: chosen.model, entries }, idx);
+  assignDevice(slot, { brand: chosen.brand, model: chosen.model, entries }, Number(a));
+  // Collapse the library once a code is assigned — the picker has done its
+  // job, and leaving a long brand list open buries the slot you just filled
+  // (which is what the scrollIntoView below is trying to get you to).
+  closeLibrary();
   flashSlot(slot);
   document.getElementById(`slot${slot}`)?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  setStatus(`slot ${slot} ← ${chosen.brand}: ${entryLabel(chosen)} ` +
-            `(${entries.length} functions available)`, 'ok');
+  setStatus(`slot ${slot} ← ${chosen.brand}: ${entryLabel(chosen)} (${entries.length} functions available)`, 'ok');
 });
 
-// ── dropdown fallback (browse by category) ──────────────────────────────────
-const libCategory = $('#libCategory'), libBrand = $('#libBrand'), libModel = $('#libModel');
-
-function fillSelect(sel, items, placeholder) {
-  sel.innerHTML = `<option value="">${placeholder}</option>` +
-    items.map(({ value, label }) =>
-      `<option value="${esc(value)}">${esc(label)}</option>`).join('');
-  sel.disabled = items.length === 0;
+function closeLibrary() {
+  libBrandView.hidden = true;
+  libBrandView.innerHTML = '';
+  libBrandView._entries = null;
+  libResults.innerHTML = '';
+  libResults._hits = null;
+  libSearch.value = '';
+  libSearch.blur();               // drop the iOS keyboard too
 }
 
+// ── dropdown fallback ───────────────────────────────────────────────────────
+const libCategory = $('#libCategory'), libBrand = $('#libBrand'), libModel = $('#libModel');
+function fillSelect(sel, items, placeholder) {
+  sel.innerHTML = `<option value="">${placeholder}</option>` +
+    items.map(({ value, label }) => `<option value="${esc(value)}">${esc(label)}</option>`).join('');
+  sel.disabled = items.length === 0;
+}
 libCategory.addEventListener('change', () => {
   const cat = libIndex?.[libCategory.value];
   clearSel(libBrand); clearSel(libModel);
   if (!cat) return;
-  const brands = Object.entries(cat.brands)
-    .sort((a, b) => a[0].localeCompare(b[0]))
-    .map(([name, b]) => ({ value: name, label: `${name} (${b.total})` }));
-  fillSelect(libBrand, brands, 'Select brand…');
+  fillSelect(libBrand, Object.entries(cat.brands).sort((a, b) => a[0].localeCompare(b[0]))
+    .map(([name, b]) => ({ value: name, label: `${name} (${b.total})` })), 'Select brand…');
 });
-
 libBrand.addEventListener('change', () => {
   clearSel(libModel);
   const cat = libIndex?.[libCategory.value];
   const brand = cat?.brands[libBrand.value];
   if (!brand) return;
-  // Reuse the brand view — same lazy fetch, generic-first rendering.
-  openBrand({ b: libBrand.value, cl: cat.label, c: libCategory.value, f: brand.file,
-              n: brand.total, g: brand.generic || 0, m: [] });
+  openBrand({ b: libBrand.value, cl: cat.label, c: libCategory.value, f: brand.file, n: brand.total, g: brand.generic || 0, m: [] });
+});
+function clearSel(sel) { sel.innerHTML = '<option value="">—</option>'; sel.disabled = true; }
+
+// ── Favorites ───────────────────────────────────────────────────────────────
+const FAV_KEY = 'irremote.favorites.v1';
+let favorites = loadFavs();
+
+function loadFavs() { try { return JSON.parse(localStorage.getItem(FAV_KEY) || '[]'); } catch { return []; } }
+function persistFavs() { try { localStorage.setItem(FAV_KEY, JSON.stringify(favorites)); } catch {} renderFavs(); refreshStars(); }
+function isFav(proto, code) { return favorites.some(f => f.proto === proto && f.code === code); }
+
+function addFav(e) {
+  if (isFav(e.proto, e.code)) return;
+  favorites.push({
+    id: 'f' + Date.now() + favorites.length,
+    name: e.label || entryLabel(e),
+    proto: e.proto, code: e.code, bits: Number(e.bits) || 32,
+    brand: e.brand || '', func: e.name || '',
+  });
+  persistFavs();
+  setStatus(`favorited: ${e.label || entryLabel(e)}`, 'ok');
+}
+function removeFavByCode(proto, code) { favorites = favorites.filter(f => !(f.proto === proto && f.code === code)); persistFavs(); }
+
+function renderFavs() {
+  const wrap = $('#favWrap'), grid = $('#favGrid');
+  wrap.hidden = favorites.length === 0;
+  grid.innerHTML = favorites.map(f => `
+    <div class="fav" data-id="${f.id}">
+      <button class="send" data-send="${f.id}">${esc(f.name)}<span class="fcode">${f.proto} ${f.code}</span></button>
+      <div class="fctrl">
+        <select data-slot="${f.id}" title="push to slot">
+          <option value="">→ slot…</option>
+          <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+        </select>
+        <button class="ghost" data-rename="${f.id}" title="rename">✎</button>
+        <button class="danger" data-del="${f.id}" title="remove">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+$('#favGrid').addEventListener('click', (e) => {
+  const send = e.target.closest('[data-send]')?.dataset.send;
+  if (send) { const f = favorites.find(x => x.id === send); if (f) sendDirect(f.proto, f.code, f.bits).then(ok => ok && setStatus(`sent ${f.name}`, 'ok')); return; }
+  const rn = e.target.dataset.rename;
+  if (rn) { startRename(rn); return; }
+  const del = e.target.dataset.del;
+  if (del) { favorites = favorites.filter(x => x.id !== del); persistFavs(); return; }
+});
+$('#favGrid').addEventListener('change', (e) => {
+  const id = e.target.dataset.slot;
+  if (!id) return;
+  const slot = Number(e.target.value);
+  const f = favorites.find(x => x.id === id);
+  if (f && slot) pushToSlot(slot, { proto: f.proto, code: f.code, bits: f.bits, label: f.name, name: f.func, brand: f.brand });
+  e.target.value = '';
+});
+function startRename(id) {
+  const f = favorites.find(x => x.id === id); if (!f) return;
+  const pad = document.querySelector(`.fav[data-id="${id}"]`); if (!pad) return;
+  pad.innerHTML = `<input class="rename" value="${esc(f.name)}"><div class="fctrl">
+    <button class="small" data-savename="${id}">Save name</button>
+    <button class="ghost small" data-cancelname="1">Cancel</button></div>`;
+  const inp = pad.querySelector('input'); inp.focus(); inp.select();
+  pad.addEventListener('click', (e) => {
+    if (e.target.dataset.savename) { f.name = inp.value.trim() || f.name; persistFavs(); }
+    if (e.target.dataset.cancelname) renderFavs();
+  });
+  inp.addEventListener('keydown', (e) => { if (e.key === 'Enter') { f.name = inp.value.trim() || f.name; persistFavs(); } });
+}
+
+// star clicks (shared across library / keymap / identify)
+function handleStarClick(e) {
+  const s = e.target.dataset.star;
+  if (!s) return false;
+  const [proto, code, bits, label, brand, name] = s.split('|');
+  if (isFav(proto, code)) removeFavByCode(proto, code);
+  else addFav({ proto, code, bits: Number(bits), label, brand, name });
+  return true;
+}
+function refreshStars() {
+  document.querySelectorAll('[data-star]').forEach(btn => {
+    const [proto, code] = btn.dataset.star.split('|');
+    const on = isFav(proto, code);
+    btn.classList.toggle('on', on);
+    btn.textContent = on ? '★' : '☆';
+  });
+}
+
+// export / import
+$('#favExport').addEventListener('click', () => {
+  const text = JSON.stringify(favorites, null, 2);
+  $('#favJson').value = text;
+  try {
+    const blob = new Blob([text], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = 'ir-favorites.json';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    setStatus(`exported ${favorites.length} favorites`, 'ok');
+  } catch { setStatus('export: copy the text below', 'ok'); }
+});
+$('#favImport').addEventListener('click', () => importFavsText($('#favJson').value));
+$('#favFile').addEventListener('change', (e) => {
+  const file = e.target.files[0]; if (!file) return;
+  const r = new FileReader();
+  r.onload = () => { importFavsText(String(r.result)); e.target.value = ''; };
+  r.readAsText(file);
+});
+function importFavsText(text) {
+  let incoming;
+  try { incoming = JSON.parse(text); } catch { setStatus('import failed: not valid JSON', 'err'); return; }
+  if (!Array.isArray(incoming)) { setStatus('import failed: expected a JSON array', 'err'); return; }
+  let added = 0;
+  for (const f of incoming) {
+    if (!f || !f.proto || !f.code) continue;
+    if (isFav(f.proto, f.code)) continue;
+    favorites.push({
+      id: 'f' + Date.now() + favorites.length + added,
+      name: f.name || `${f.proto} ${f.code}`,
+      proto: f.proto, code: f.code, bits: Number(f.bits) || 32,
+      brand: f.brand || '', func: f.func || '',
+    });
+    added++;
+  }
+  persistFavs();
+  setStatus(`imported ${added} new favorite${added === 1 ? '' : 's'} (duplicates skipped)`, 'ok');
+}
+
+// ── Identify mode ───────────────────────────────────────────────────────────
+const SWEEP_FILES = { tv: 'sweep-tv.json', projector: 'sweep-projector.json', monitor: 'sweep-tv.json' };
+let idQueue = [], idPos = 0, idTimer = null, idRunning = false;
+let idHistory = [];               // entries sent, in send order
+let bisect = null;                // { pool:[...], subset:[...]|null }
+
+const idProg = $('#idProg'), idNow = $('#idNow'), idHistEl = $('#idHist');
+const idBisectEl = $('#idBisect'), idActionsEl = $('#idActions'), idKeymapEl = $('#idKeymap');
+const idInterval = () => Math.max(150, Number($('#idInterval').value) || 400);
+
+async function buildQueue(type, brandGuess) {
+  const base = await fetchJson(`${DATA_BASE}/${SWEEP_FILES[type]}`);
+  let queue = base.slice();
+  if (brandGuess) {
+    const g = brandGuess.toLowerCase();
+    const cat = type === 'projector' ? 'projectors' : 'tvs';
+    const rec = searchRecs.find(r => r.c === cat && r.b.toLowerCase() === g)
+             || searchRecs.find(r => r.c === cat && r.b.toLowerCase().includes(g));
+    if (rec) {
+      const entries = await fetchShard(rec.f);   // also caches shard for keymap unlock
+      const seen = new Set(queue.map(e => e.proto + e.code));
+      const pre = [];
+      for (const e of entries) {
+        if (!SENDABLE.has(e.proto) || !e.name.startsWith('power_')) continue;
+        const k = e.proto + e.code;
+        if (seen.has(k)) continue;
+        seen.add(k);
+        pre.push({ proto: e.proto, code: e.code, bits: e.bits, name: e.name, orig: e.orig, brand: e.brand });
+      }
+      queue = pre.concat(queue);
+      setStatus(`brand guess: ${rec.b} — ${pre.length} codes tried first`, 'ok');
+    } else setStatus(`no brand matching "${brandGuess}" in ${cat}; using full list`, 'ok');
+  }
+  return queue;
+}
+
+async function idStart() {
+  if (!connected()) return setStatus('connect first', 'err');
+  if (idRunning) return;
+  idActionsEl.hidden = true; idBisectEl.hidden = true; idKeymapEl.innerHTML = '';
+  try {
+    idQueue = await buildQueue($('#idType').value, $('#idBrand').value.trim());
+  } catch (err) { setStatus(`sweep list failed: ${err.message}`, 'err'); return; }
+  idPos = 0; idHistory = [];
+  idRunning = true;
+  $('#idStart').disabled = true; $('#idStep').disabled = true; $('#idStop').disabled = false;
+  setStatus(`sweeping ${idQueue.length} codes @ ${idInterval()}ms — watch the device`, 'ok');
+  sweepStep();
+}
+
+async function sweepStep() {
+  if (!idRunning) return;
+  if (idPos >= idQueue.length) { stopSweep('reached end of list'); return; }
+  const e = idQueue[idPos];
+  await sendDirect(e.proto, e.code, e.bits);
+  idHistory.push(e); idPos++;
+  renderProgress(); renderHistory();
+  if (idRunning) idTimer = setTimeout(sweepStep, idInterval());
+}
+
+async function idStepOne() {
+  if (!connected()) return setStatus('connect first', 'err');
+  if (idRunning) return;
+  if (!idQueue.length || idPos >= idQueue.length) {
+    try { idQueue = await buildQueue($('#idType').value, $('#idBrand').value.trim()); idPos = 0; idHistory = []; }
+    catch (err) { setStatus(`sweep list failed: ${err.message}`, 'err'); return; }
+  }
+  const e = idQueue[idPos];
+  if (!e) { setStatus('end of list', 'ok'); return; }
+  await sendDirect(e.proto, e.code, e.bits);
+  idHistory.push(e); idPos++;
+  renderProgress(); renderHistory();
+  setStatus(`step ${idPos}/${idQueue.length}: ${e.proto} ${e.code}`, 'ok');
+  if (idPos >= idQueue.length) stopSweep('reached end of list');
+}
+
+function stopSweep(why) {
+  idRunning = false;
+  clearTimeout(idTimer); idTimer = null;
+  $('#idStart').disabled = false; $('#idStep').disabled = false; $('#idStop').disabled = true;
+  idNow.textContent = `stopped (${why}) — ${idHistory.length} codes sent. The device stays on; re-send any code below, or bisect.`;
+  if (idHistory.length) startBisect(idHistory.slice());
+  setStatus(`stopped — ${idHistory.length} sent`, 'ok');
+}
+
+function renderProgress() {
+  const pct = idQueue.length ? Math.round((idPos / idQueue.length) * 100) : 0;
+  idProg.style.width = pct + '%';
+  const cur = idHistory[idHistory.length - 1];
+  idNow.textContent = `${idPos}/${idQueue.length}` + (cur ? ` — last sent ${cur.proto} ${cur.code}${cur.brand ? ' (' + cur.brand + ')' : ''}` : '');
+}
+
+// Full history, newest first, each re-sendable + favoritable + selectable-as-hit.
+function renderHistory() {
+  if (!idHistory.length) { idHistEl.innerHTML = ''; return; }
+  const rows = idHistory.map((e, i) => ({ e, n: i + 1 })).reverse();
+  idHistEl.innerHTML = `<div class="grp"><div class="glabel">Sent this run (newest first) — tap ⚑ to mark the winner</div>` +
+    rows.map(({ e, n }) => `<div class="code">
+      <div class="cinfo"><div class="cname">#${n} ${esc(e.orig || e.name || 'code')}${e.brand ? ` · ${esc(e.brand)}` : ''}</div>
+        <div class="chex">${e.proto} ${e.code} · ${e.bits} bits</div></div>
+      <button class="small ghost" data-resend="${idHistory.indexOf(e)}">Re-send</button>
+      ${starBtn(e)}
+      <button class="small" data-hit="${idHistory.indexOf(e)}" title="mark as the winner">⚑</button>
+    </div>`).join('') + `</div>`;
+}
+
+idHistEl.addEventListener('click', (e) => {
+  if (handleStarClick(e)) return;
+  const rs = e.target.dataset.resend;
+  if (rs !== undefined) { const en = idHistory[Number(rs)]; if (en) sendDirect(en.proto, en.code, en.bits).then(ok => ok && setStatus(`re-sent ${en.proto} ${en.code}`, 'ok')); return; }
+  const h = e.target.dataset.hit;
+  if (h !== undefined) selectHit(idHistory[Number(h)]);
 });
 
-function clearSel(sel) { sel.innerHTML = '<option value="">—</option>'; sel.disabled = true; }
+// Bisect: device is ON and STAYS on. Power it off, replay a half, and tell the
+// app whether it reacted — halving the candidate range each round.
+function startBisect(pool) {
+  bisect = { pool, subset: null };
+  renderBisect();
+}
+function renderBisect() {
+  if (!bisect) { idBisectEl.hidden = true; return; }
+  idBisectEl.hidden = false;
+  const n = bisect.pool.length;
+  if (n <= 1) {
+    const only = bisect.pool[0];
+    idBisectEl.innerHTML = `<div class="glabel">Bisect</div>` +
+      (only ? `<div style="margin:6px 0">Narrowed to <strong>1</strong>: ${esc(only.orig || only.code)} — ${only.proto} ${only.code}</div>
+        <div class="row"><button class="small" data-bishit="1">This is the one ▸</button></div>`
+            : `<div class="muted">No candidates left.</div>`);
+    return;
+  }
+  if (bisect.subset) {
+    idBisectEl.innerHTML = `<div class="glabel">Bisect · ${n} candidates</div>
+      <div style="margin:6px 0">Replayed ${bisect.subset.length} codes. Did the device react?</div>
+      <div class="row"><button class="small" data-bisyes="1">Yes — it's in that half</button>
+        <button class="small ghost" data-bisno="1">No — the other half</button></div>`;
+    return;
+  }
+  const half = Math.ceil(n / 2);
+  idBisectEl.innerHTML = `<div class="glabel">Bisect · ${n} candidates</div>
+    <div style="margin:6px 0">Power the device <strong>OFF</strong>, then replay a half (${idInterval()}ms/code):</div>
+    <div class="row"><button class="small" data-bisfirst="1">Replay first ${half}</button>
+      <button class="small" data-bissecond="1">Replay second ${n - half}</button></div>`;
+}
+async function replaySubset(sub) {
+  setStatus(`replaying ${sub.length} codes…`, 'ok');
+  for (const e of sub) {
+    if (!connected()) { setStatus('link lost during replay', 'err'); return false; }
+    await sendDirect(e.proto, e.code, e.bits);
+    await new Promise(r => setTimeout(r, idInterval()));
+  }
+  return true;
+}
+idBisectEl.addEventListener('click', async (e) => {
+  if (!bisect) return;
+  const n = bisect.pool.length, half = Math.ceil(n / 2);
+  if (e.target.dataset.bisfirst) { bisect.subset = bisect.pool.slice(0, half); await replaySubset(bisect.subset); renderBisect(); }
+  else if (e.target.dataset.bissecond) { bisect.subset = bisect.pool.slice(half); await replaySubset(bisect.subset); renderBisect(); }
+  else if (e.target.dataset.bisyes) { bisect.pool = bisect.subset; bisect.subset = null; renderBisect(); }
+  else if (e.target.dataset.bisno) { const sub = bisect.subset; bisect.pool = bisect.pool.filter(x => !sub.includes(x)); bisect.subset = null; renderBisect(); }
+  else if (e.target.dataset.bishit) { selectHit(bisect.pool[0]); }
+});
+
+// A confirmed hit: offer favorite / save-to-slot / keymap unlock.
+function selectHit(e) {
+  if (!e) return;
+  idActionsEl.hidden = false;
+  idActionsEl.innerHTML = `<div class="glabel">Winner</div>
+    <div style="margin:6px 0">${esc(e.orig || e.name || 'code')} — <strong>${e.proto} ${e.code}</strong> (${e.bits} bits)</div>
+    <div class="row">
+      ${starBtn(e)}
+      <select id="hitSlot"><option value="">Save to slot…</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select>
+      <button class="small" id="hitKeymap">Unlock keymap ⚿</button>
+    </div>`;
+  idActionsEl.querySelector('#hitSlot').addEventListener('change', (ev) => {
+    const slot = Number(ev.target.value);
+    if (slot) pushToSlot(slot, e);
+    ev.target.value = '';
+  });
+  idActionsEl.querySelector('#hitKeymap').addEventListener('click', () => showKeymap(e));
+  idActionsEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  showKeymap(e);
+}
+
+// ── keymap unlock ───────────────────────────────────────────────────────────
+// All buttons on one remote share protocol + address; only the command differs.
+// Compute an address key per protocol (BigInt — 32-bit codes overflow JS bitwise
+// ops) and surface every same-address entry from the shards already loaded.
+function addrKey(proto, codeStr) {
+  let code; try { code = BigInt(codeStr); } catch { return null; }
+  switch (proto) {
+    case 'NEC': case 'SAMSUNG': return (code & 0xFFFF0000n).toString(16);
+    case 'SONY': return (code >> 7n).toString(16);
+    case 'RC5':  return (code >> 6n).toString(16);
+    case 'RC6':  return (code >> 8n).toString(16);
+    default: return null;
+  }
+}
+function unlockKeymap(hit) {
+  const key = addrKey(hit.proto, hit.code);
+  if (key === null) return [];
+  const out = [], seen = new Set();
+  for (const entries of shardCache.values()) {
+    for (const e of entries) {
+      if (e.proto !== hit.proto || !DIRECT_OK.has(e.proto)) continue;
+      if (addrKey(e.proto, e.code) !== key) continue;
+      const k = e.proto + e.code;
+      if (seen.has(k)) continue;
+      seen.add(k);
+      out.push(e);
+    }
+  }
+  return out.sort((a, b) => funcRank(a.name) - funcRank(b.name) || (a.orig || '').localeCompare(b.orig || ''));
+}
+function showKeymap(hit) {
+  const rows = unlockKeymap(hit);
+  if (!rows.length) {
+    idKeymapEl.innerHTML = `<div class="hbar"><div class="glabel">Keymap unlock</div>
+      <div class="muted" style="margin-top:6px">No matching device loaded. Search the brand in the library (below) to load its shard, then unlock again — matches this code's protocol + address.</div></div>`;
+    return;
+  }
+  const brand = rows.find(r => r.brand)?.brand || '';
+  idKeymapEl.innerHTML = `<div class="hbar"><div class="glabel">Keymap unlock — ${rows.length} same-address codes${brand ? ` · ${esc(brand)}` : ''}</div>
+    <div class="muted" style="margin:4px 0 8px">Device is on — tap to test inputs/functions live.</div>` +
+    rows.map(e => `<div class="code">
+      <div class="cinfo"><div class="cname">${esc(e.orig)}${e.name && !e.name.startsWith('other:') ? ` · ${esc(e.name)}` : ''}</div>
+        <div class="chex">${e.proto} ${e.code} · ${e.bits} bits</div></div>
+      <button class="small ghost" data-kmsend="${esc(e.proto)}|${esc(e.code)}|${e.bits}">Test</button>
+      ${starBtn(e)}
+    </div>`).join('') + `</div>`;
+}
+idKeymapEl.addEventListener('click', (e) => {
+  if (handleStarClick(e)) return;
+  const s = e.target.dataset.kmsend;
+  if (!s) return;
+  const [proto, code, bits] = s.split('|');
+  sendDirect(proto, code, Number(bits)).then(ok => ok && setStatus(`sent ${proto} ${code}`, 'ok'));
+});
+
+$('#idStart').addEventListener('click', idStart);
+$('#idStop').addEventListener('click', () => stopSweep('stopped by user'));
+$('#idStep').addEventListener('click', idStepOne);
 
 // ── init ────────────────────────────────────────────────────────────────────
 buildSlots();
 refreshButtons();
+renderFavs();
 loadLibrary();
 $('#connect').addEventListener('click', connect);
 
